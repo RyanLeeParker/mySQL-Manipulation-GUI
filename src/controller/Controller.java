@@ -1,6 +1,5 @@
-package sample;
+package controller;
 
-import helper.JDBC;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import java.net.URL;

@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Main" type="Application" factoryName="Application">
-    <option name="MAIN_CLASS_NAME" value="sample.Main" />
+    <option name="MAIN_CLASS_NAME" value="controller.Main" />
     <module name="C195_RyanParker_Assessment" />
     <option name="VM_PARAMETERS" value="--module-path ${PATH_TO_FX} --add-modules javafx.fxml,javafx.controls,javafx.graphics" />
     <extension name="coverage">
