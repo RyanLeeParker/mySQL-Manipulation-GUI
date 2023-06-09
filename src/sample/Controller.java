@@ -1,5 +1,6 @@
 package sample;
 
+import helper.JDBC;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import java.net.URL;
@@ -18,4 +19,6 @@ public class Controller implements Initializable
     {
         System.out.println("Button Pressed");
     }
+
+    // only translate login screen, America doesn't have to be translated
 }

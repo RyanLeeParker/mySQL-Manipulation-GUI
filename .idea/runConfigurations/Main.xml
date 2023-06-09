@@ -5,7 +5,7 @@
     <option name="VM_PARAMETERS" value="--module-path ${PATH_TO_FX} --add-modules javafx.fxml,javafx.controls,javafx.graphics" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="sample.*" />
+        <option name="PATTERN" value="helper.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

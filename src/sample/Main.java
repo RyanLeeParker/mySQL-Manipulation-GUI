@@ -5,9 +5,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import helper.JDBC;
 
 public class Main extends Application
 {
+
+
 
     @Override
     public void start(Stage primaryStage) throws Exception
@@ -19,7 +22,12 @@ public class Main extends Application
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
+        JDBC.openConnection();
         launch(args);
+
+
+        JDBC.closeConnection();
     }
 }
