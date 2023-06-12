@@ -19,5 +19,6 @@ public class Controller implements Initializable
         System.out.println("Button Pressed");
     }
 
+    // two main model obj classes, Customer & Appointments
     // only translate login screen, America doesn't have to be translated
 }
