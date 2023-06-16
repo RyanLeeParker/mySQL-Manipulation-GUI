@@ -4,6 +4,7 @@ import helper.JDBC;
 import javafx.geometry.Pos;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public abstract class Customers
@@ -43,8 +44,19 @@ public abstract class Customers
         return 0;
     }
 
+    public static void select() throws SQLException {
+        String sql = "SELECT * FROM FRUITS";
+        PreparedStatement ps = JDBC.connection.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
 
-
+        while(rs.next())
+        {
+            int fruitId = rs.getInt("FRUIT_ID");
+            String fruitName = rs.getString("Fruit_Name");
+            System.out.println(fruitId + "   ");
+            System.out.println(fruitName + "\n");
+        }
+    }
 
 
 

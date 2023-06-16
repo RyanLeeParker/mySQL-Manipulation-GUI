@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+            prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controller.Controller">
+    <children>
+        <TextField layoutX="53.0" layoutY="87.0" promptText="Customer Name"/>
+        <TextField layoutX="53.0" layoutY="128.0" promptText="Address"/>
+        <TextField layoutX="53.0" layoutY="170.0" promptText="Postal Code"/>
+        <TextField layoutX="53.0" layoutY="210.0" promptText="Phone Number"/>
+        <TextField fx:id="Customer_ID_Field" editable="false" layoutX="53.0" layoutY="49.0" promptText="Customer ID"/>
+        <Button layoutX="497.0" layoutY="343.0" mnemonicParsing="false" text="Cancel"/>
+        <ComboBox layoutX="320.0" layoutY="49.0" prefHeight="0.0" prefWidth="150.0" promptText="Country"/>
+        <ComboBox layoutX="320.0" layoutY="87.0" prefWidth="150.0" promptText="State/Province"/>
+    </children>
+</AnchorPane>
