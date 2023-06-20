@@ -1,4 +1,4 @@
-package dao;
+package model;
 
 import helper.JDBC;
 import javafx.geometry.Pos;

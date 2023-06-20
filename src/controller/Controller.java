@@ -28,7 +28,7 @@ public class Controller implements Initializable
             FXMLLoader fxmlLoader = new FXMLLoader(Controller.class.getResource("/views/Customer.fxml"));
             Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
             Scene scene = new Scene(fxmlLoader.load(), 1000, 600);
-            stage.setTitle("Add Customer");
+            stage.setTitle("Customer Records");
             stage.setScene(scene);
             stage.show();
         }

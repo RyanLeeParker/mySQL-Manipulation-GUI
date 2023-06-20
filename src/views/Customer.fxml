@@ -5,7 +5,43 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.Customer_Controller" prefHeight="400.0" prefWidth="600.0">
 
+<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.Customer_Controller" prefHeight="600.0" prefWidth="1000.0">
+<children>
+    <AnchorPane layoutY="7.0" prefHeight="400.0" prefWidth="600.0">
+        <children>
+            <Label layoutX="35.0" layoutY="35.0" text="Customer">
+                <font>
+                    <Font name="System Bold" size="12.0" />
+                </font>
+            </Label>
+            <Label layoutX="43.0" layoutY="118.0" text="ID" />
+            <Label layoutX="43.0" layoutY="161.0" text="Name" />
+            <Label layoutX="43.0" layoutY="202.0" text="Inv" />
+            <Label layoutX="43.0" layoutY="245.0" text="Price" />
+            <Label layoutX="43.0" layoutY="284.0" text="Max" />
+            <Label layoutX="279.0" layoutY="284.0" text="Min" />
+            <TextField fx:id="Customer_ID_Input" layoutX="107.0" layoutY="114.0" />
+            <TextField fx:id="Customer_Name_Input" layoutX="107.0" layoutY="157.0" />
+            <TextField fx:id="Customer_Address_Input" layoutX="107.0" layoutY="198.0" />
+            <TextField fx:id="Customer_PostalCode_Input" layoutX="107.0" layoutY="241.0" />
+            <TextField fx:id="Customer_PhoneNumber_Input" layoutX="107.0" layoutY="280.0" />
+        </children>
+    </AnchorPane>
+    <TableView fx:id="Customer_Table" layoutX="528.0" layoutY="75.0" prefHeight="165.0" prefWidth="448.0">
+        <columns>
+            <TableColumn fx:id="Customer_ID_Column" prefWidth="75.0" text="Customer ID" />
+            <TableColumn fx:id="Customer_Name_Column" prefWidth="112.0" text="Customer Name" />
+            <TableColumn fx:id="Customer_Address_Column" prefWidth="135.0" text="Customer Address" />
+            <TableColumn fx:id="Customer_PostalCode_Column" prefWidth="127.0" text="Customer Postal Code" />
+        </columns>
+    </TableView>
+    <Button fx:id="AddButton" layoutX="938.0" layoutY="255.0" mnemonicParsing="false" onAction="#Add_Button" text="Add Customer" />
+    <Button fx:id="Edit_Button" layoutX="924.0" layoutY="555.0" mnemonicParsing="false" onAction="#Edit_Button" text="Edit Customer" />
+    <Button fx:id="DeleteButton" layoutX="832.0" layoutY="511.0" mnemonicParsing="false" onAction="#Delete_Button" text="Delete Customer" />
+    <Button fx:id="SaveButton" layoutX="832.0" layoutY="555.0" mnemonicParsing="false" onAction="#Save_Button" text="Save" />
+    <Button fx:id="Cancel_Button" layoutX="924.0" layoutY="555.0" mnemonicParsing="false" onAction="#Cancel_Button" text="Cancel" />
+</children>
 </AnchorPane>
