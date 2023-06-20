@@ -4,11 +4,11 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Controller">
     <children>
-        <Button fx:id="Customer_Button" layoutX="51.0" layoutY="74.0" mnemonicParsing="false" onAction="#Custtomer_Press" text="Customer" />
+        <Button fx:id="Customer_Button" layoutX="51.0" layoutY="74.0" mnemonicParsing="false" onAction="#Customer_Press" text="Customer" />
         <Button fx:id="Appointment_Button" layoutX="51.0" layoutY="124.0" mnemonicParsing="false" onAction="#Appointment_Press" text="Appointments" />
         <Button fx:id="Reports_Button" layoutX="51.0" layoutY="175.0" mnemonicParsing="false" onAction="#Reports_Press" text="Reports" />
-        <Button layoutX="502.0" layoutY="325.0" mnemonicParsing="false" text="Exit" />
+        <Button fx:id="Exit_Button" layoutX="502.0" layoutY="325.0" mnemonicParsing="false" onAction="#Exit_Press" text="Exit" />
     </children>
 </AnchorPane>
