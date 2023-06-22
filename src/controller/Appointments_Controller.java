@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 
 public class Appointments_Controller
@@ -37,4 +38,43 @@ public class Appointments_Controller
     public DatePicker Appt_EndDate_Picker;
     public ComboBox Appointment_TimeStart_CB;
     public RadioButton All_Radio;
+
+    public void Add_Button(ActionEvent actionEvent) {
+    }
+
+    public void Edit_Button(ActionEvent actionEvent) {
+    }
+
+    public void Delete_Button(ActionEvent actionEvent) {
+    }
+
+    public void Save_Button(ActionEvent actionEvent) {
+    }
+
+    public void Cancel_Button(ActionEvent actionEvent) {
+    }
+
+    public void EndTime_CB_Select(ActionEvent actionEvent) {
+    }
+
+    public void Appt_Cont_CB_Select(ActionEvent actionEvent) {
+    }
+
+    public void Appt_StartDate_Picked(ActionEvent actionEvent) {
+    }
+
+    public void Appt_EndDate_Picked(ActionEvent actionEvent) {
+    }
+
+    public void TimeStart_CB_Select(ActionEvent actionEvent) {
+    }
+
+    public void All_Radio_Selected(ActionEvent actionEvent) {
+    }
+
+    public void Week_Radio_Selected(ActionEvent actionEvent) {
+    }
+
+    public void Month_Radio_Selected(ActionEvent actionEvent) {
+    }
 }
