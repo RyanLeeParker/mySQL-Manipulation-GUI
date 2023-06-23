@@ -1,10 +1,7 @@
 package controller;
 
 import javafx.event.ActionEvent;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 public class Customer_Controller 
 {
@@ -23,6 +20,8 @@ public class Customer_Controller
     public Button DeleteButton;
     public Button SaveButton;
     public Button Cancel_Button;
+    public ComboBox CustomerUpdate_Country_CB;
+    public ComboBox CustomerUpdate_State;
 
     public void Cancel_Button(ActionEvent actionEvent) 
     {
@@ -39,5 +38,11 @@ public class Customer_Controller
     }
 
     public void Edit_Button(ActionEvent actionEvent) {
+    }
+
+    public void UpdateCountry_CB_Select(ActionEvent actionEvent) {
+    }
+
+    public void UpdateState_CB_Select(ActionEvent actionEvent) {
     }
 }
