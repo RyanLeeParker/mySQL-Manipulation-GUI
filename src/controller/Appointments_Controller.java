@@ -65,13 +65,19 @@ public class Appointments_Controller
         }
     }
 
-    public void Edit_Button(ActionEvent actionEvent) {
+    public void Edit_Button(ActionEvent actionEvent)
+    {
+
     }
 
-    public void Delete_Button(ActionEvent actionEvent) {
+    public void Delete_Button(ActionEvent actionEvent)
+    {
+
     }
 
-    public void Save_Button(ActionEvent actionEvent) {
+    public void Save_Button(ActionEvent actionEvent)
+    {
+
     }
 
     public void Cancel_Button(ActionEvent actionEvent)
