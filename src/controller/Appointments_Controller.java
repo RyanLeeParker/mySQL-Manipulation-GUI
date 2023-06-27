@@ -1,7 +1,13 @@
 package controller;
 
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class Appointments_Controller
 {
@@ -39,7 +45,24 @@ public class Appointments_Controller
     public ComboBox Appointment_TimeStart_CB;
     public RadioButton All_Radio;
 
-    public void Add_Button(ActionEvent actionEvent) {
+    public void Add_Button(ActionEvent actionEvent)
+    {
+        try
+        {
+            FXMLLoader fxmlLoader = new FXMLLoader(Controller.class.getResource("/views/Add_Appointments.fxml"));
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            Scene scene = new Scene(fxmlLoader.load(), 900, 600);
+            stage.setTitle("Add Appointments");
+            stage.setScene(scene);
+            stage.show();
+        }
+        catch (IllegalStateException | IOException e)
+        {
+            Alert alert_err = new Alert(Alert.AlertType.WARNING);
+            alert_err.setTitle("Something went wrong.");
+            alert_err.setContentText("Please restart the program and try again.");
+            alert_err.showAndWait();
+        }
     }
 
     public void Edit_Button(ActionEvent actionEvent) {
@@ -51,7 +74,24 @@ public class Appointments_Controller
     public void Save_Button(ActionEvent actionEvent) {
     }
 
-    public void Cancel_Button(ActionEvent actionEvent) {
+    public void Cancel_Button(ActionEvent actionEvent)
+    {
+        try
+        {
+            FXMLLoader fxmlLoader = new FXMLLoader(Controller.class.getResource("/views/Main_Screen.fxml"));
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            Scene scene = new Scene(fxmlLoader.load(), 900, 600);
+            stage.setTitle("Inventory Management System");
+            stage.setScene(scene);
+            stage.show();
+        }
+        catch (IllegalStateException | IOException e)
+        {
+            Alert alert_err = new Alert(Alert.AlertType.WARNING);
+            alert_err.setTitle("Something went wrong.");
+            alert_err.setContentText("Please restart the program and try again.");
+            alert_err.showAndWait();
+        }
     }
 
     public void EndTime_CB_Select(ActionEvent actionEvent) {

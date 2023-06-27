@@ -18,7 +18,7 @@ public class Controller implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
-        System.out.println("Mic check 1, 2, 1, 2");
+        System.out.println("Main Controller");
     }
 
     public void Customer_Press(ActionEvent actionEvent) throws Exception

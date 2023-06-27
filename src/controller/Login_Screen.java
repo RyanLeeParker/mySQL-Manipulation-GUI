@@ -15,9 +15,15 @@ public class Login_Screen
     public Button Login_Button;
     public Button CancelButton;
 
-    public void Login_Button_Press(ActionEvent actionEvent) {
+    public void Login_Button_Press(ActionEvent actionEvent)
+    {
+
+
+
     }
 
-    public void Cancel_Press(ActionEvent actionEvent) {
+    public void Cancel_Press(ActionEvent actionEvent)
+    {
+        System.exit(0);
     }
 }

@@ -1,10 +1,13 @@
 package controller;
 
 import javafx.event.ActionEvent;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class AddAppointments_Controller {
     public TextField Appt_ID_Input;
@@ -31,8 +34,26 @@ public class AddAppointments_Controller {
     public void Save_Button(ActionEvent actionEvent) {
     }
 
-    public void Cancel_Button(ActionEvent actionEvent) {
+    public void Cancel_Button(ActionEvent actionEvent)
+    {
+        try
+        {
+        FXMLLoader fxmlLoader = new FXMLLoader(Controller.class.getResource("/views/Appointments.fxml"));
+        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        Scene scene = new Scene(fxmlLoader.load(), 900, 900);
+        stage.setTitle("Appointments");
+        stage.setScene(scene);
+        stage.show();
+        }
+        catch (IllegalStateException | IOException e)
+        {
+            Alert alert_err = new Alert(Alert.AlertType.WARNING);
+            alert_err.setTitle("Something went wrong.");
+            alert_err.setContentText("Please restart the program and try again.");
+            alert_err.showAndWait();
+        }
     }
+
 
     public void EndTime_CB_Select(ActionEvent actionEvent) {
     }

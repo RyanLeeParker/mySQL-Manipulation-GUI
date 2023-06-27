@@ -1,7 +1,16 @@
 package controller;
 
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.chart.ScatterChart;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class Customer_Controller 
 {
@@ -23,9 +32,36 @@ public class Customer_Controller
     public ComboBox CustomerUpdate_Country_CB;
     public ComboBox CustomerUpdate_State;
 
-    public void Cancel_Button(ActionEvent actionEvent) 
+    public void initialize(URL url, ResourceBundle resourceBundle)
     {
-        
+        try
+        {
+
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void Cancel_Button(ActionEvent actionEvent) throws IOException
+    {
+        try
+        {
+            FXMLLoader fxmlLoader = new FXMLLoader(Controller.class.getResource("/views/Main_Screen.fxml"));
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            Scene scene = new Scene(fxmlLoader.load(), 900, 600);
+            stage.setTitle("Main Screen");
+            stage.setScene(scene);
+            stage.show();
+        }
+        catch (IllegalStateException e)
+        {
+            Alert alert_err = new Alert(Alert.AlertType.WARNING);
+            alert_err.setTitle("Something went wrong.");
+            alert_err.setContentText("Please restart the program and try again.");
+            alert_err.showAndWait();
+        }
     }
 
     public void Save_Button(ActionEvent actionEvent) {
@@ -44,5 +80,11 @@ public class Customer_Controller
     }
 
     public void UpdateState_CB_Select(ActionEvent actionEvent) {
+    }
+
+    public void Country_CB_Select(ActionEvent actionEvent) {
+    }
+
+    public void State_CB_Select(ActionEvent actionEvent) {
     }
 }
