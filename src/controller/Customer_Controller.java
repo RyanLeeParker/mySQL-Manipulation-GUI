@@ -1,5 +1,9 @@
 package controller;
 
+import com.sun.jdi.connect.spi.Connection;
+import dao.Country_Access;
+import helper.JDBC;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -7,10 +11,10 @@ import javafx.scene.Scene;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import helper.JDBC;
 
 public class Customer_Controller 
 {
@@ -36,7 +40,9 @@ public class Customer_Controller
     {
         try
         {
+            Connection connection = (Connection) JDBC.getConnection();
 
+            ObservableList<Country_Access> Countries_All = Country_Access.getCountries();
         }
         catch (Exception e)
         {
@@ -64,7 +70,9 @@ public class Customer_Controller
         }
     }
 
-    public void Save_Button(ActionEvent actionEvent) {
+    public void Save_Button(ActionEvent actionEvent)
+    {
+
     }
 
     public void Delete_Button(ActionEvent actionEvent) {

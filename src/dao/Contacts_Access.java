@@ -1,4 +1,5 @@
 package dao;
 
-public class Contacts_Access {
+public class Contacts_Access
+{
 }
