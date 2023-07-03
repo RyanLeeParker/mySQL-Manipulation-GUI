@@ -1,4 +1,6 @@
 package dao;
 
-public class FirstLevelDivision_Access {
+public class FirstLevelDivision_Access
+{
+
 }

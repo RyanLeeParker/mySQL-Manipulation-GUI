@@ -1,4 +1,6 @@
 package dao;
 
-public class Customer_Access {
+public class Customer_Access
+{
+
 }

@@ -1,4 +1,6 @@
 package dao;
 
-public class Report_Access {
+public class Report_Access
+{
+
 }
