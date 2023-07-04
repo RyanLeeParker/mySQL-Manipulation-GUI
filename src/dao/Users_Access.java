@@ -16,13 +16,18 @@ public class Users_Access extends Users
         super();
     }
 
-    public void validation(String userName, String password) throws SQLException        //compare allUsersObsList to user input
+    public int validation(String userName, String password) throws SQLException        //compare allUsersObsList to user input
     {
         String query = "SELECT * FROM users WHERE user_name = '" + userName + "' AND password = '" + password + "'";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(query);            //might need to use setpreparedStatement()
         ResultSet rs = ps.executeQuery();
 
-        // if compare
+        if ((rs.getString("User_Name").equals(userName)) && (rs.getString("Password").equals(password)))
+        {
+            return rs.getInt("User_ID");
+        }
+
+        return -1;
     }
 
     public static ObservableList<Users_Access> getUsersList() throws Exception
@@ -43,7 +48,4 @@ public class Users_Access extends Users
 
         return allUsersObsList;
     }
-
-
-
 }
