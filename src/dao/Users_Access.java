@@ -16,7 +16,7 @@ public class Users_Access extends Users
         super();
     }
 
-    public int validation(String userName, String password) throws SQLException        //compare allUsersObsList to user input
+    public static int validation(String userName, String password) throws SQLException        //compare allUsersObsList to user input
     {
         String query = "SELECT * FROM users WHERE user_name = '" + userName + "' AND password = '" + password + "'";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(query);            //might need to use setpreparedStatement()

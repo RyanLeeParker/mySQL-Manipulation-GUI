@@ -40,7 +40,7 @@ public class AddAppointments_Controller {
         {
         FXMLLoader fxmlLoader = new FXMLLoader(Controller.class.getResource("/views/Appointments.fxml"));
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-        Scene scene = new Scene(fxmlLoader.load(), 900, 900);
+        Scene scene = new Scene(fxmlLoader.load(), 1000, 1000);
         stage.setTitle("Appointments");
         stage.setScene(scene);
         stage.show();

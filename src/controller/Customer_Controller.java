@@ -36,7 +36,7 @@ public class Customer_Controller
     public ComboBox CustomerUpdate_Country_CB;
     public ComboBox CustomerUpdate_State;
 
-    public void initialize(URL url, ResourceBundle resourceBundle)
+    public void initialize(URL url, ResourceBundle resourceBundle) throws Exception
     {
         try
         {
@@ -75,24 +75,38 @@ public class Customer_Controller
 
     }
 
-    public void Delete_Button(ActionEvent actionEvent) {
+    public void Delete_Button(ActionEvent actionEvent)
+    {
+
     }
 
-    public void Add_Button(ActionEvent actionEvent) {
+    public void Add_Button(ActionEvent actionEvent)
+    {
+
     }
 
-    public void Edit_Button(ActionEvent actionEvent) {
+    public void Edit_Button(ActionEvent actionEvent)
+    {
+
     }
 
-    public void UpdateCountry_CB_Select(ActionEvent actionEvent) {
+    public void UpdateCountry_CB_Select(ActionEvent actionEvent)
+    {
+
     }
 
-    public void UpdateState_CB_Select(ActionEvent actionEvent) {
+    public void UpdateState_CB_Select(ActionEvent actionEvent)
+    {
+
     }
 
-    public void Country_CB_Select(ActionEvent actionEvent) {
+    public void Country_CB_Select(ActionEvent actionEvent)
+    {
+
     }
 
-    public void State_CB_Select(ActionEvent actionEvent) {
+    public void State_CB_Select(ActionEvent actionEvent)
+    {
+
     }
 }
