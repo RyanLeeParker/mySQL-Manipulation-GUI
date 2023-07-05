@@ -2,7 +2,10 @@ package controller;
 
 import com.sun.jdi.connect.spi.Connection;
 import dao.Country_Access;
+import dao.Customer_Access;
+import dao.FirstLevelDivision_Access;
 import helper.JDBC;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -10,11 +13,14 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import helper.JDBC;
+import model.Customers;
+import model.*;
 
 public class Customer_Controller 
 {
@@ -35,6 +41,10 @@ public class Customer_Controller
     public Button Cancel_Button;
     public ComboBox CustomerUpdate_Country_CB;
     public ComboBox CustomerUpdate_State;
+    public TableColumn Customer_Phone_Column;
+    public TableColumn Customer_FLD_Column;
+    public ComboBox Customer_State;
+    public ComboBox Customer_Country_CB;
 
     public void initialize(URL url, ResourceBundle resourceBundle) throws Exception
     {
@@ -43,6 +53,28 @@ public class Customer_Controller
             Connection connection = (Connection) JDBC.getConnection();
 
             ObservableList<Country_Access> Countries_All = Country_Access.getCountries();
+            ObservableList<FirstLevelDivision_Access> First_Level_Divisions_All = FirstLevelDivision_Access.getFirst_Level_Division();
+            ObservableList<Customers> Customers_All = Customer_Access.getCustomers((java.sql.Connection) connection);
+            ObservableList<String> Countries = FXCollections.observableArrayList();
+            ObservableList<String> First_Level_Divisions_Names = FXCollections.observableArrayList();
+
+            Customer_ID_Column.setCellValueFactory(new PropertyValueFactory<>("Customer_ID"));
+            Customer_Name_Column.setCellValueFactory(new PropertyValueFactory<>("Customer_Name"));
+            Customer_Address_Column.setCellValueFactory(new PropertyValueFactory<>("Address"));
+            Customer_PostalCode_Column.setCellValueFactory(new PropertyValueFactory<>("Postal_Code"));
+            Customer_Phone_Column.setCellValueFactory(new PropertyValueFactory<>("Phone"));
+            Customer_FLD_Column.setCellValueFactory(new PropertyValueFactory<>("Division_ID"));
+
+//            for (Country country : Country_Access.getCountries())
+//            {
+//                Countries.add(String.valueOf(country));
+//            }
+
+            for (Country country : Country_Access.getCountries())
+            {
+                Countries.add(String.valueOf(country));
+            }
+
         }
         catch (Exception e)
         {
@@ -82,6 +114,8 @@ public class Customer_Controller
 
     public void Add_Button(ActionEvent actionEvent)
     {
+        Connection Connection = (com.sun.jdi.connect.spi.Connection) JDBC.getConnection();
+
 
     }
 

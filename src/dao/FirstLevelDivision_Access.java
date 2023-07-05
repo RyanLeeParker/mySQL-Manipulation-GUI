@@ -16,7 +16,7 @@ public class FirstLevelDivision_Access extends First_Level_Division
         super(division_ID, division_name, country_ID);
     }
 
-    public ObservableList<FirstLevelDivision_Access> getFirst_Level_Division() throws SQLException
+    public static ObservableList<FirstLevelDivision_Access> getFirst_Level_Division() throws SQLException
     {
         ObservableList<FirstLevelDivision_Access> ObservableList_First_Level_Divisions = FXCollections.observableArrayList();
         String sql = "SELECT * FROM first_level_divisions";
