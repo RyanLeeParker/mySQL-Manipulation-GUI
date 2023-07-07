@@ -6,8 +6,9 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class Appointments_Controller
 {
@@ -45,6 +46,14 @@ public class Appointments_Controller
     public ComboBox Appointment_TimeStart_CB;
     public RadioButton All_Radio;
 
+    public void initialize(URL url, ResourceBundle resourceBundle) throws Exception
+    {
+        //contact name assigned to appt using drop down menu or CB
+        // appt id autogen
+        // time should be stored UTC, but converted to local time for user      3 timezones: UTC, EST, SystemDefault
+
+    }
+
     public void Add_Button(ActionEvent actionEvent)
     {
         try
@@ -72,7 +81,7 @@ public class Appointments_Controller
 
     public void Delete_Button(ActionEvent actionEvent)
     {
-
+        //custom message displayed
     }
 
     public void Save_Button(ActionEvent actionEvent)

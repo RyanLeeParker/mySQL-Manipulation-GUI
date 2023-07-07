@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class Reports_Controller {
     public Tab SchedByContact_Tab;
@@ -33,6 +34,14 @@ public class Reports_Controller {
     public TableColumn CustomersByState_Column;
     public TableColumn CustomersByStateTotals_Column;
     public Button Cancel_Button;
+
+    public void initialize() throws SQLException
+    {
+        // gen total # of cust appts by type and month
+        // a schedule from each contact in org, includes most attributes   (apptID, title, type, desc, start, end, custID)
+        // addtl report, count something, list something
+    }
+
 
     public void SchedByContact_Tab_Selected(Event event) {
     }

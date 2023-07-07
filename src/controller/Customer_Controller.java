@@ -107,12 +107,12 @@ public class Customer_Controller
 
     }
 
-    public void Delete_Button(ActionEvent actionEvent)
+    public void Delete_Button(ActionEvent actionEvent)          //When deleting customers, delete their appointments first
     {
-
+        // Are you sure warning
     }
 
-    public void Add_Button(ActionEvent actionEvent)
+    public void Add_Button(ActionEvent actionEvent)             //Autogen customer ID
     {
         Connection Connection = (com.sun.jdi.connect.spi.Connection) JDBC.getConnection();
 
@@ -139,7 +139,7 @@ public class Customer_Controller
 
     }
 
-    public void State_CB_Select(ActionEvent actionEvent)
+    public void State_CB_Select(ActionEvent actionEvent)        //50 states, 12 provinces, etc.     Shouldn't populate until Country CB is selected
     {
 
     }

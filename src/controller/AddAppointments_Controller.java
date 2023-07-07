@@ -6,7 +6,6 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 
 public class AddAppointments_Controller {
@@ -31,7 +30,12 @@ public class AddAppointments_Controller {
     public void Appt_EndDate_Picked(ActionEvent actionEvent) {
     }
 
-    public void Save_Button(ActionEvent actionEvent) {
+    public void Save_Button(ActionEvent actionEvent)
+    {
+        // error check for only during business hours, customer message specific to each
+        // sched outside 8am-10pm, EST
+        // sched overlapping appts for customers, not contacts, users
+
     }
 
     public void Cancel_Button(ActionEvent actionEvent)

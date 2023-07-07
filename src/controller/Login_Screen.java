@@ -10,7 +10,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
@@ -26,12 +25,18 @@ public class Login_Screen
 
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
+        //Locale.setDefault(new Locale("fr"));
 
     }
 
 
     public void Login_Button_Press(ActionEvent actionEvent) throws SQLException
     {
+        // check if users appt is within 15mins, if so include apptId, date, time.  If no 15min appt then display mess saying no upcoming appts
+        // can't use DB.now()m time must originate from program
+        // write to file if user successfully logs in, login attempts, dates, timestamps, whether successful to file named "login_activity.txt"
+        // append each record to existing file, save to root folder of application
+
         String username = Username_textfield.getText();
         String password = Password_textfield.getText();
         int userId = Users_Access.validation( username, password);
