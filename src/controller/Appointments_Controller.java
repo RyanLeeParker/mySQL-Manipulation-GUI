@@ -12,7 +12,6 @@ import java.util.ResourceBundle;
 
 public class Appointments_Controller
 {
-
     public TextField Appt_ID_Input;
     public TextField Appt_Name_Input;
     public TextField Appt_Desc_Input;

@@ -27,7 +27,7 @@ public class Users_Access extends Users
             return rs.getInt("User_ID");
         }
 
-        return -1;
+        return 0;           // 0 might be a problem, can try -1
     }
 
     public static ObservableList<Users_Access> getUsersList() throws Exception

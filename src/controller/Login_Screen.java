@@ -3,6 +3,7 @@ package controller;
 import dao.Users_Access;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -10,11 +11,17 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
-public class Login_Screen
+public class Login_Screen implements Initializable
 {
     public TextField Username_textfield;
     public TextField Password_textfield;
@@ -25,38 +32,73 @@ public class Login_Screen
 
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
+        //timezone stuff
         //Locale.setDefault(new Locale("fr"));
+
+
 
     }
 
 
     public void Login_Button_Press(ActionEvent actionEvent) throws SQLException
     {
-        // check if users appt is within 15mins, if so include apptId, date, time.  If no 15min appt then display mess saying no upcoming appts
-        // can't use DB.now()m time must originate from program
-        // write to file if user successfully logs in, login attempts, dates, timestamps, whether successful to file named "login_activity.txt"
-        // append each record to existing file, save to root folder of application
-
-        String username = Username_textfield.getText();
-        String password = Password_textfield.getText();
-        int userId = Users_Access.validation( username, password);
-
-        if (userId != 0)
+        try
         {
-            try
+            // check if users appt is within 15mins, if so include apptId, date, time.  If no 15min appt then display mess saying no upcoming appts
+            // can't use DB.now()m time must originate from program
+            // write to file if user successfully logs in, login attempts, dates, timestamps, whether successful to file named "login_activity.txt"
+            // append each record to existing file, save to root folder of application
+
+            FileWriter WriteToFile = new FileWriter("login_activity.txt");      //add bool param?
+            PrintWriter recordFile = new PrintWriter(WriteToFile);
+
+            String username = Username_textfield.getText();
+            String password = Password_textfield.getText();
+            int userId = Users_Access.validation(username, password);
+
+            if (userId != 0)
             {
-                FXMLLoader fxmlLoader = new FXMLLoader(Controller.class.getResource("/views/Main_Screen.fxml"));
-                Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-                Scene scene = new Scene(fxmlLoader.load(), 1000, 600);
-                stage.setTitle("Main Screen");
-                stage.setScene(scene);
-                stage.show();
+                try {
+                    FXMLLoader fxmlLoader = new FXMLLoader(Controller.class.getResource("/views/Main_Screen.fxml"));
+                    Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+                    Scene scene = new Scene(fxmlLoader.load(), 1000, 600);
+                    stage.setTitle("Main Screen");
+                    stage.setScene(scene);
+                    stage.show();
+
+                    //log login
+                    recordFile.print(Username_textfield + " Logged in." + Timestamp.valueOf(LocalDateTime.now()) + "\n");     // reqs need user printed too?
+
+                    //check for upcoming appts
+
+
+                    //notifications needed for appts
+
+                }
+                catch (Exception e)
+                {
+                    Alert alert_err = new Alert(Alert.AlertType.WARNING);
+                    alert_err.setTitle("Invalid Login");
+                    alert_err.setContentText("Please reenter and try again.");
+                    alert_err.showAndWait();
+                }
             }
-            catch (Exception e) {
+            else    // if does eq 0
+            {
+                //log failed attempt
+                recordFile.print(Username_textfield + " Failed to login.");
+
                 Alert alert_err = new Alert(Alert.AlertType.WARNING);
-                alert_err.setTitle("Something went wrong.");
-                alert_err.setContentText("Please restart the program and try again.");
-                alert_err.showAndWait();}
+                alert_err.setTitle("Invalid Login");
+                alert_err.setContentText("Please reenter and try again.");
+                alert_err.showAndWait();
+            }
+
+            recordFile.close();
+        }
+        catch (SQLException | IOException f)
+        {
+            f.printStackTrace();
         }
 
     }
