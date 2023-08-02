@@ -19,7 +19,9 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Locale;
 import java.util.ResourceBundle;
+import java.time.ZoneId;
 
 public class Login_Screen implements Initializable
 {
@@ -30,13 +32,18 @@ public class Login_Screen implements Initializable
     public Button Login_Button;
     public Button CancelButton;
 
-    public void initialize(URL url, ResourceBundle resourceBundle)
+    public void initialize(URL url, ResourceBundle resourcebundle)
     {
         //timezone stuff
         //Locale.setDefault(new Locale("fr"));
 
-
-
+        Locale locale = Locale.getDefault();
+        Locale.setDefault(locale);
+        ZoneId zoneid = ZoneId.systemDefault();
+        resourcebundle = ResourceBundle.getBundle("language/login", Locale.getDefault());
+        Username_textfield.setText(resourcebundle.getString("Username"));
+        Password_textfield.setText(resourcebundle.getString("Password"));
+        Location_label.setText(resourcebundle.getString("Location"));
     }
 
 

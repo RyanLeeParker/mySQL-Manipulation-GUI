@@ -13,7 +13,8 @@ public class Main extends Application
     @Override
     public void start(Stage stage) throws Exception
     {
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/views/Main_Screen.fxml"));
+        //FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/views/Main_Screen.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/views/LoginView.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 900, 600);
         stage.setScene(scene);
         stage.show();
