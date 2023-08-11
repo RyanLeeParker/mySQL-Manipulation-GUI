@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.ResponseCache;
 import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -33,20 +34,30 @@ public class Login_Screen implements Initializable
     public Button Login_Button;
     public Button CancelButton;
 
-    public void initialize(URL url, ResourceBundle resourcebundle)
+    public void initialize(URL url, ResourceBundle rb)
     {
         try
         {
             //timezone stuff
             //Locale.setDefault(new Locale("fr"));
+            // name rbname_langcode_optcountrycode.properties
 
             Locale locale = Locale.getDefault();
             Locale.setDefault(locale);
             ZoneId zone_id = ZoneId.systemDefault();
-            resourcebundle = ResourceBundle.getBundle("language/login", Locale.getDefault());
-            Username_textfield.setText(resourcebundle.getString("username"));
-            Password_textfield.setText(resourcebundle.getString("password"));
-            Location_label.setText(resourcebundle.getString("location"));
+            //ResourceBundle rb = ResourceBundle.getBundle("language/login", Locale.getDefault());
+            //rb = ResourceBundle.getBundle("language/login", Locale.UnitedStates);
+            rb = ResourceBundle.getBundle("language.language_english/login", Locale.getDefault());           // this line not working, path probably wrong
+            Username_textfield.setText(rb.getString("username"));
+            Password_textfield.setText(rb.getString("password"));
+            Location_label.setText(rb.getString("location"));
+
+            if(Locale.getDefault().getLanguage().equals("en") || Locale.getDefault().getLanguage().equals("fr"))
+            {
+                System.out.println(rb.getString("username"));
+            }
+
+
         }
         catch (Exception e)
         {
