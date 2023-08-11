@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.time.ZoneId;
+import java.util.MissingResourceException;
 
 public class Login_Screen implements Initializable
 {
@@ -34,16 +35,24 @@ public class Login_Screen implements Initializable
 
     public void initialize(URL url, ResourceBundle resourcebundle)
     {
-        //timezone stuff
-        //Locale.setDefault(new Locale("fr"));
+        try
+        {
+            //timezone stuff
+            //Locale.setDefault(new Locale("fr"));
 
-        Locale locale = Locale.getDefault();
-        Locale.setDefault(locale);
-        ZoneId zoneid = ZoneId.systemDefault();
-        resourcebundle = ResourceBundle.getBundle("language/login", Locale.getDefault());
-        Username_textfield.setText(resourcebundle.getString("Username"));
-        Password_textfield.setText(resourcebundle.getString("Password"));
-        Location_label.setText(resourcebundle.getString("Location"));
+            Locale locale = Locale.getDefault();
+            Locale.setDefault(locale);
+            ZoneId zone_id = ZoneId.systemDefault();
+            resourcebundle = ResourceBundle.getBundle("language/login", Locale.getDefault());
+            Username_textfield.setText(resourcebundle.getString("username"));
+            Password_textfield.setText(resourcebundle.getString("password"));
+            Location_label.setText(resourcebundle.getString("location"));
+        }
+        catch (Exception e)
+        {
+            System.out.println("resourcebundle not found");
+        }
+
     }
 
 
