@@ -47,7 +47,7 @@ public class Login_Screen implements Initializable
             ZoneId zone_id = ZoneId.systemDefault();
             //ResourceBundle rb = ResourceBundle.getBundle("language/login", Locale.getDefault());
             //rb = ResourceBundle.getBundle("language/login", Locale.UnitedStates);
-            rb = ResourceBundle.getBundle("language.language_english/login", Locale.getDefault());           // this line not working, path probably wrong
+            rb = ResourceBundle.getBundle("/language/language_english/login.properties", Locale.getDefault());           // this line not working, path probably wrong
             Username_textfield.setText(rb.getString("username"));
             Password_textfield.setText(rb.getString("password"));
             Location_label.setText(rb.getString("location"));
