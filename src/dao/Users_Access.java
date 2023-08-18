@@ -18,13 +18,20 @@ public class Users_Access extends Users
 
     public static int validation(String userName, String password) throws SQLException        //compare allUsersObsList to user input
     {
-        String query = "SELECT * FROM users WHERE user_name = '" + userName + "' AND password = '" + password + "'";
-        PreparedStatement ps = JDBC.getConnection().prepareStatement(query);            //might need to use setpreparedStatement()
-        ResultSet rs = ps.executeQuery();
-
-        if ((rs.getString("User_Name").equals(userName)) && (rs.getString("Password").equals(password)))
+        try
         {
-            return rs.getInt("User_ID");
+            String query = "SELECT * FROM users WHERE user_name = '" + userName + "' AND password = '" + password + "'";
+            PreparedStatement ps = JDBC.getConnection().prepareStatement(query);            //might need to use setpreparedStatement()
+            ResultSet rs = ps.executeQuery();
+
+            if ((rs.getString("User_Name").equals(userName)) && (rs.getString("Password").equals(password)))
+            {
+                return rs.getInt("User_ID");
+            }
+        }
+        catch (SQLException d)
+        {
+            d.printStackTrace();
         }
 
         return 0;           // 0 might be a problem, can try -1
@@ -32,20 +39,20 @@ public class Users_Access extends Users
 
     public static ObservableList<Users_Access> getUsersList() throws Exception
     {
-        ObservableList<Users_Access> allUsersObsList = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM users";
-        PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
-        ResultSet result = ps.executeQuery();
+            ObservableList<Users_Access> allUsersObsList = FXCollections.observableArrayList();
+            String sql = "SELECT * FROM users";
+            PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
+            ResultSet result = ps.executeQuery();
 
-        while (result.next())
-        {
-            int userId = result.getInt("User_ID");
-            String userName = result.getString("User_Name");
-            String password = result.getString("Password");
-            Users_Access userResult = new Users_Access(userId, userName, password);
-            allUsersObsList.add(userResult);
-        }
+            while (result.next())
+            {
+                int userId = result.getInt("User_ID");
+                String userName = result.getString("User_Name");
+                String password = result.getString("Password");
+                Users_Access userResult = new Users_Access(userId, userName, password);
+                allUsersObsList.add(userResult);
+            }
 
-        return allUsersObsList;
+            return allUsersObsList;
     }
 }
