@@ -15,7 +15,6 @@ import javafx.stage.Stage;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.ResponseCache;
 import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -23,7 +22,6 @@ import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.time.ZoneId;
-import java.util.MissingResourceException;
 
 public class Login_Screen implements Initializable
 {
@@ -47,10 +45,10 @@ public class Login_Screen implements Initializable
             ZoneId zone_id = ZoneId.systemDefault();
             //ResourceBundle rb = ResourceBundle.getBundle("language/login", Locale.getDefault());
             //rb = ResourceBundle.getBundle("language/login", Locale.UnitedStates);
-            rb = ResourceBundle.getBundle("/language/language_english/login.properties", Locale.getDefault());           // this line not working, path probably wrong
-            Username_textfield.setText(rb.getString("username"));
-            Password_textfield.setText(rb.getString("password"));
-            Location_label.setText(rb.getString("location"));
+            rb = ResourceBundle.getBundle("language/login", Locale.getDefault());
+            //Username_textfield.setText(rb.getString("username"));
+            //Password_textfield.setText(rb.getString("password"));
+            Location_label.setText(rb.getString("Locale"));
 
             if(Locale.getDefault().getLanguage().equals("en") || Locale.getDefault().getLanguage().equals("fr"))
             {
