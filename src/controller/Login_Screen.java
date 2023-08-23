@@ -50,10 +50,10 @@ public class Login_Screen implements Initializable
             //Password_textfield.setText(rb.getString("password"));
             Location_label.setText(rb.getString("Locale"));
 
-            if(Locale.getDefault().getLanguage().equals("en") || Locale.getDefault().getLanguage().equals("fr"))
-            {
-                System.out.println(rb.getString("username"));
-            }
+//            if(Locale.getDefault().getLanguage().equals("en") || Locale.getDefault().getLanguage().equals("fr"))
+//            {
+//                System.out.println(rb.getString("username"));
+//            }
 
 
         }
@@ -74,16 +74,17 @@ public class Login_Screen implements Initializable
             // write to file if user successfully logs in, login attempts, dates, timestamps, whether successful to file named "login_activity.txt"
             // append each record to existing file, save to root folder of application
 
-            FileWriter WriteToFile = new FileWriter("login_activity.txt");      //add bool param?
+            FileWriter WriteToFile = new FileWriter("login_activity.txt", true);
             PrintWriter recordFile = new PrintWriter(WriteToFile);
 
-            String username = Username_textfield.getText();
+            String userName = Username_textfield.getText();
             String password = Password_textfield.getText();
-            int userId = Users_Access.validation(username, password);
+            int userId = Users_Access.validation(userName, password);
 
-            if (userId != 0)
+            if (userId > 0)
             {
-                try {
+                try
+                {
                     FXMLLoader fxmlLoader = new FXMLLoader(Controller.class.getResource("/views/Main_Screen.fxml"));
                     Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
                     Scene scene = new Scene(fxmlLoader.load(), 1000, 600);
@@ -92,7 +93,7 @@ public class Login_Screen implements Initializable
                     stage.show();
 
                     //log login
-                    recordFile.print(Username_textfield + " Logged in." + Timestamp.valueOf(LocalDateTime.now()) + "\n");     // reqs need user printed too?
+                    recordFile.print(userName + " Logged in at " + Timestamp.valueOf(LocalDateTime.now()) + "\n");     // reqs need user printed too?
 
                     //check for upcoming appts
 
@@ -108,15 +109,17 @@ public class Login_Screen implements Initializable
                     alert_err.showAndWait();
                 }
             }
-            else    // if does eq 0
+            else if (userId < 0)
             {
-                //log failed attempt
-                recordFile.print(Username_textfield + " Failed to login.");
+
 
                 Alert alert_err = new Alert(Alert.AlertType.WARNING);
                 alert_err.setTitle("Invalid Login");
                 alert_err.setContentText("Please reenter and try again.");
                 alert_err.showAndWait();
+
+                //log failed attempt
+                recordFile.print(userName + " Failed to login." + Timestamp.valueOf(LocalDateTime.now()) + "\n");           //moved to after
             }
 
             recordFile.close();
