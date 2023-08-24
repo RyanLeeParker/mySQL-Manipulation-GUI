@@ -16,9 +16,11 @@ public class Customer_Access
     public static ObservableList<Customers> getCustomers(Connection connection) throws SQLException                //dbl chk query text
     {
         ObservableList<Customers> ObservableList_Customers = FXCollections.observableArrayList();
-        String query = "SELECT customers.Customer_ID, customers.Customer_Name, customers.Address, customers.Postal_Code, customers.Phone" +
-                "customers.Division_ID, first_level_division.Division FROM customers INNER JOIN first_level_division on customers.Division_ID" +
-                "= first_level_division.Division_ID";
+
+        String query = "SELECT customers.Customer_ID, customers.Customer_Name, customers.Address, customers.Postal_Code, " +
+                "customers.Phone, customers.Division_ID, first_level_divisions.Division from customers INNER JOIN  " +
+                "first_level_divisions ON customers.Division_ID = first_level_divisions.Division_ID";
+
         PreparedStatement ps = JDBC.getConnection().prepareStatement(query);          //might need to use setpreparedStatement()
         ResultSet rs = ps.executeQuery();
 

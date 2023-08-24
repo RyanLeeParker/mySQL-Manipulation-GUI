@@ -1,6 +1,6 @@
 package controller;
 
-import com.sun.jdi.connect.spi.Connection;
+
 import dao.Country_Access;
 import dao.Customer_Access;
 import dao.FirstLevelDivision_Access;
@@ -9,6 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.ScatterChart;
@@ -21,8 +22,9 @@ import java.util.ResourceBundle;
 import helper.JDBC;
 import model.Customers;
 import model.*;
+import java.sql.Connection;
 
-public class Customer_Controller 
+public class Customer_Controller implements Initializable
 {
     public TextField Customer_ID_Input;
     public TextField Customer_Name_Input;
@@ -46,17 +48,27 @@ public class Customer_Controller
     public ComboBox Customer_State;
     public ComboBox Customer_Country_CB;
 
-    public void initialize(URL url, ResourceBundle resourceBundle) throws Exception
+
+
+    public void initialize(URL url, ResourceBundle resourceBundle)
     {
         try
         {
-            Connection connection = (Connection) JDBC.getConnection();
-
+            Connection connect = JDBC.openConnection();
+            System.out.println("Creating lists 1");
             ObservableList<Country_Access> Countries_All = Country_Access.getCountries();
+            System.out.println("Creating lists 2");
             ObservableList<FirstLevelDivision_Access> First_Level_Divisions_All = FirstLevelDivision_Access.getFirst_Level_Division();
-            ObservableList<Customers> Customers_All = Customer_Access.getCustomers((java.sql.Connection) connection);
+            System.out.println("Creating lists 3");
+            ObservableList<Customers> Customers_All = Customer_Access.getCustomers((java.sql.Connection) connect);      // breaks here
+            System.out.println("Creating lists 4");
             ObservableList<String> Countries = FXCollections.observableArrayList();
+            System.out.println("Creating lists 5");
             ObservableList<String> First_Level_Divisions_Names = FXCollections.observableArrayList();
+            System.out.println("Creating lists 6");
+
+
+            Customer_Table.setItems(Customers_All);
 
             Customer_ID_Column.setCellValueFactory(new PropertyValueFactory<>("Customer_ID"));
             Customer_Name_Column.setCellValueFactory(new PropertyValueFactory<>("Customer_Name"));
@@ -70,10 +82,10 @@ public class Customer_Controller
 //                Countries.add(String.valueOf(country));
 //            }
 
-            for (Country country : Country_Access.getCountries())
-            {
-                Countries.add(String.valueOf(country));
-            }
+//            for (Country country : Country_Access.getCountries())
+//            {
+//                Countries.add(String.valueOf(country));
+//            }
 
         }
         catch (Exception e)
@@ -114,7 +126,7 @@ public class Customer_Controller
 
     public void Add_Button(ActionEvent actionEvent)             //Autogen customer ID
     {
-        Connection Connection = (com.sun.jdi.connect.spi.Connection) JDBC.getConnection();
+        //Connection Connection = (com.sun.jdi.connect.spi.Connection) JDBC.getConnection();
 
 
     }
