@@ -59,18 +59,11 @@ public class Customer_Controller implements Initializable
         try
         {
             Connection connect = JDBC.openConnection();
-            System.out.println("Creating lists 1");
             ObservableList<Country_Access> Countries_All = Country_Access.getCountries();
-            System.out.println("Creating lists 2");
             ObservableList<FirstLevelDivision_Access> First_Level_Divisions_All = FirstLevelDivision_Access.getFirst_Level_Division();
-            System.out.println("Creating lists 3");
             ObservableList<Customers> Customers_All = Customer_Access.getCustomers((java.sql.Connection) connect);      // breaks here
-            System.out.println("Creating lists 4");
             ObservableList<String> Countries = FXCollections.observableArrayList();
-            System.out.println("Creating lists 5");
             ObservableList<String> First_Level_Divisions_Names = FXCollections.observableArrayList();
-            System.out.println("Creating lists 6");
-
 
             Customer_Table.setItems(Customers_All);
 
@@ -164,14 +157,16 @@ public class Customer_Controller implements Initializable
                     JDBC.setPreparedStatement(JDBC.getConnection(), deleteStatementAppointments);
                 }
             }
+
+            psDelete.setInt(1, Cust_to_del2);
+            psDelete.execute();
+            ObservableList<Customers> refreshCustomersList = Customer_Access.getCustomers(connect);
+            Customer_Table.setItems(refreshCustomersList);
         }
         else if (result.get() == ButtonType.CANCEL)
         {
             return;
         }
-
-
-
     }
 
     public void Add_Button(ActionEvent actionEvent)             //Autogen customer ID
