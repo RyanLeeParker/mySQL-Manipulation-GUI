@@ -1,6 +1,7 @@
 package controller;
 
 
+import dao.Appointments_Access;
 import dao.Country_Access;
 import dao.Customer_Access;
 import dao.FirstLevelDivision_Access;
@@ -18,6 +19,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import helper.JDBC;
 import model.Customers;
@@ -119,9 +123,55 @@ public class Customer_Controller implements Initializable
 
     }
 
-    public void Delete_Button(ActionEvent actionEvent)          //When deleting customers, delete their appointments first
+    public void Delete_Button(ActionEvent actionEvent) throws Exception          //When deleting customers, delete their appointments first
     {
-        // Are you sure warning
+        Connection connect = JDBC.openConnection();
+        ObservableList<Appointments> All_Appointments = Appointments_Access.getAppointments();
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete Confirmation");
+        alert.setContentText("Are you sure you want to delete this item?");
+        alert.setHeaderText("Confirm Deletion");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if(result.get() == ButtonType.OK)
+        {
+            //int deleteCustomerID = Customer_Table.getSelectionModel().getSelectedItem().getCustomer_ID();
+
+            Customers Selected_Customer = (Customers) Customer_Table.getSelectionModel().getSelectedItem();
+            int Cust_to_del = Selected_Customer.getCustomer_ID();
+
+            if (Selected_Customer == null) {return;}
+
+            Appointments_Access.removeAppointment(Cust_to_del, connect);                        //dbl chk appts shld be del after cust
+            String sqlDelete = "DELETE FROM customers WHERE Customer_ID = ?";
+            JDBC.setPreparedStatement(JDBC.getConnection(), sqlDelete);
+            PreparedStatement psDelete = JDBC.getPreparedStatement();
+
+
+            //int customerFromTable = Customer_Table.getSelectionModel().getSelectedItem().getCustomer_ID();
+            Customers Selected_Customer2 = (Customers) Customer_Table.getSelectionModel().getSelectedItem();
+            int Cust_to_del2 = Selected_Customer.getCustomer_ID();
+
+            //Delete all customer appointments from database.
+            for (Appointments appointment : All_Appointments)
+            {
+                int customerFromAppointments = appointment.getCustomer_ID();
+
+                if (Cust_to_del2 == customerFromAppointments)
+                {
+                    String deleteStatementAppointments = "DELETE FROM appointments WHERE Appointment_ID = ?";
+                    JDBC.setPreparedStatement(JDBC.getConnection(), deleteStatementAppointments);
+                }
+            }
+        }
+        else if (result.get() == ButtonType.CANCEL)
+        {
+            return;
+        }
+
+
+
     }
 
     public void Add_Button(ActionEvent actionEvent)             //Autogen customer ID

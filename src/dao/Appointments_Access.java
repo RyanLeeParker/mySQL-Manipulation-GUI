@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 public class Appointments_Access
 {
-    public ObservableList<Appointments> getAppointments() throws SQLException
+    public static ObservableList<Appointments> getAppointments() throws SQLException
     {
         ObservableList<Appointments> ObservableList_Appointments = FXCollections.observableArrayList();
         String sql = "SELECT * FROM appointments";
@@ -41,7 +41,7 @@ public class Appointments_Access
 
     //CRUD imp
 
-    public int removeAppointment(int Customer, Connection connection) throws SQLException
+    public static int removeAppointment(int Customer, Connection connection) throws SQLException
     {
         String query = "DELETE FROM appointments WHERE Appointment_ID=?";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(query);
