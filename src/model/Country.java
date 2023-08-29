@@ -3,7 +3,7 @@ package model;
 public class Country
 {
     private int Country_ID;
-    private String Country_Name;
+    private static String Country_Name;
 
     public Country(int Country_ID, String Country_Name)
     {
@@ -15,7 +15,7 @@ public class Country
         return Country_ID;
     }
 
-    public String getCountry_Name() {
+    public static String getCountry_Name() {
         return Country_Name;
     }
 }
