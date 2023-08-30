@@ -22,7 +22,7 @@ public class Country_Access extends Country
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);          //might need to use setpreparedStatement()
         ResultSet rs = ps.executeQuery();
 
-        System.out.println("Countries access, in getCountries()");
+        //System.out.println("Countries access, in getCountries()");
 
         while (rs.next())
         {
@@ -32,7 +32,7 @@ public class Country_Access extends Country
             ObservableList_Countries.add(country);
 
 
-            System.out.println(country);
+            //System.out.println(country);
         }
         return ObservableList_Countries;
     }

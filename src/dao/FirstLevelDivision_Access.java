@@ -28,8 +28,10 @@ public class FirstLevelDivision_Access extends First_Level_Division
             int division_ID = rs.getInt("Division_ID");
             String division_name = rs.getString("Division");
             int country_ID = rs.getInt("Country_ID");
-            FirstLevelDivision_Access FirstLevelDivision = new FirstLevelDivision_Access(division_ID, division_name, country_ID);
-            ObservableList_First_Level_Divisions.add(FirstLevelDivision);
+
+            FirstLevelDivision_Access First_Level_Division = new FirstLevelDivision_Access(division_ID, division_name, country_ID);         // wonky
+            ObservableList_First_Level_Divisions.add(First_Level_Division);
+
         }
         return ObservableList_First_Level_Divisions;
     }

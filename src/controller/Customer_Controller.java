@@ -55,6 +55,7 @@ public class Customer_Controller implements Initializable
     public ComboBox Customer_State;                                 // actual state CB
     public ComboBox Customer_Country_CB;                            // actual country CB
 
+    public static int Cust_ID;
 
 
     public void initialize(URL url, ResourceBundle resourceBundle)
@@ -68,8 +69,10 @@ public class Customer_Controller implements Initializable
             ObservableList<String> Countries = FXCollections.observableArrayList();
             ObservableList<String> First_Level_Divisions_Names = FXCollections.observableArrayList();
 
+
             Customer_ID_Input.setText("Auto Gen - Disabled");
             Customer_ID_Input.setDisable(true);
+            Cust_ID = Customers_All.size();
 
             Customer_Table.setItems(Customers_All);
 
@@ -84,19 +87,22 @@ public class Customer_Controller implements Initializable
 
             for (Country country : Countries_All)
             {
-                //String temp = Country.getCountry_Name();
-                Countries.add(Country.getCountry_Name());
-                System.out.println(country);
+                Countries.add(country.getCountry_Name());
+                //System.out.println(country);
             }
 
-            Customer_Country_CB.setItems(Countries);                // all 3 are Canada
+            Customer_Country_CB.setItems(Countries);
 
             for (First_Level_Division firstLevelDivision : First_Level_Divisions_All)
             {
                 First_Level_Divisions_Names.add(firstLevelDivision.getDivision_name());
+//                System.out.println(firstLevelDivision);
+//                System.out.println(firstLevelDivision.getDivision_ID());
+//                System.out.println(firstLevelDivision.getDivision_name());
+//                System.out.println(firstLevelDivision.getCountry_ID());
             }
 
-            Customer_State.setItems(First_Level_Divisions_All);     // options are dao.FirstLevelDivision_Access@b3dd0af
+            Customer_State.setItems(First_Level_Divisions_Names);
 
         }
         catch (Exception e)
@@ -175,6 +181,8 @@ public class Customer_Controller implements Initializable
             psDelete.execute();
             ObservableList<Customers> refreshCustomersList = Customer_Access.getCustomers(connect);
             Customer_Table.setItems(refreshCustomersList);
+
+            //Cust_ID--;
         }
         else if (result.get() == ButtonType.CANCEL)
         {
@@ -199,9 +207,9 @@ public class Customer_Controller implements Initializable
             }
         }
 
-        ObservableList<Customers> Customers_All = Customer_Access.getCustomers((java.sql.Connection) connect);
-        int Cust_ID = Customers_All.size();
-        Cust_ID++;
+        //ObservableList<Customers> Customers_All = Customer_Access.getCustomers((java.sql.Connection) connect);
+        //Cust_ID = Customers_All.size();
+        Cust_ID++;      // leads to corner case of using program multiple times, and making deletions that mess up the ID
 
         String insertStatement = "INSERT INTO customers (Customer_ID, Customer_Name, Address, Postal_Code, Phone, Create_Date, Created_By, Last_Update, Last_Updated_By, Division_ID) VALUES (?,?,?,?,?,?,?,?,?,?)";
         JDBC.setPreparedStatement(JDBC.getConnection(), insertStatement);

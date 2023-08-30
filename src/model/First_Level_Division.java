@@ -13,15 +13,18 @@ public class First_Level_Division
         this.country_ID = country_ID;
     }
 
-    public int getDivision_ID() {
+    public int getDivision_ID()
+    {
         return division_ID;
     }
 
-    public String getDivision_name() {
+    public String getDivision_name()
+    {
         return division_name;
     }
 
-    public int getCountry_ID() {
+    public int getCountry_ID()
+    {
         return country_ID;
     }
 }
