@@ -195,8 +195,54 @@ public class Customer_Controller implements Initializable
         Connection connect = JDBC.openConnection();
 
         // check all data is entered correctly
-
-
+        if(Customer_Name_Input.getText().isEmpty())
+        {
+            Alert alert_err = new Alert(Alert.AlertType.WARNING);
+            alert_err.setTitle("Unable to add Customer.");
+            alert_err.setContentText("Please enter a valid Name to add Customer.");
+            alert_err.showAndWait();
+            return;
+        }
+        if(Customer_Address_Input.getText().isEmpty())
+        {
+            Alert alert_err = new Alert(Alert.AlertType.WARNING);
+            alert_err.setTitle("Unable to add Customer.");
+            alert_err.setContentText("Please enter a valid Address to add Customer.");
+            alert_err.showAndWait();
+            return;
+        }
+        if(Customer_PostalCode_Input.getText().isEmpty())
+        {
+            Alert alert_err = new Alert(Alert.AlertType.WARNING);
+            alert_err.setTitle("Unable to add Customer.");
+            alert_err.setContentText("Please enter a valid Postal Code to add Customer.");
+            alert_err.showAndWait();
+            return;
+        }
+        if(Customer_PhoneNumber_Input.getText().isEmpty())
+        {
+            Alert alert_err = new Alert(Alert.AlertType.WARNING);
+            alert_err.setTitle("Unable to add Customer.");
+            alert_err.setContentText("Please enter a valid Phone Number to add Customer.");
+            alert_err.showAndWait();
+            return;
+        }
+        if(Customer_State.getValue() == null)
+        {
+            Alert alert_err = new Alert(Alert.AlertType.WARNING);
+            alert_err.setTitle("Unable to add Customer.");
+            alert_err.setContentText("Please select a valid State to add Customer.");
+            alert_err.showAndWait();
+            return;
+        }
+        if(Customer_Country_CB.getValue() == null)
+        {
+            Alert alert_err = new Alert(Alert.AlertType.WARNING);
+            alert_err.setTitle("Unable to add Customer.");
+            alert_err.setContentText("Please Select a valid Country to add Customer.");
+            alert_err.showAndWait();
+            return;
+        }
 
         int firstLevelDivisionName = 0;
         for (FirstLevelDivision_Access firstLevelDivision : FirstLevelDivision_Access.getFirst_Level_Division())
@@ -207,12 +253,9 @@ public class Customer_Controller implements Initializable
             }
         }
 
-        //ObservableList<Customers> Customers_All = Customer_Access.getCustomers((java.sql.Connection) connect);
-        //Cust_ID = Customers_All.size();
         Cust_ID++;      // leads to corner case of using program multiple times, and making deletions that mess up the ID
 
         String insertStatement = "INSERT INTO customers (Customer_ID, Customer_Name, Address, Postal_Code, Phone, Create_Date, Created_By, Last_Update, Last_Updated_By, Division_ID) VALUES (?,?,?,?,?,?,?,?,?,?)";
-        JDBC.setPreparedStatement(JDBC.getConnection(), insertStatement);
         JDBC.setPreparedStatement(JDBC.getConnection(), insertStatement);
         PreparedStatement ps = JDBC.getPreparedStatement();
         ps.setInt(1, Cust_ID);
@@ -239,26 +282,6 @@ public class Customer_Controller implements Initializable
     }
 
     public void Edit_Button(ActionEvent actionEvent)                                        // populates text fields
-    {
-
-    }
-
-    public void UpdateCountry_CB_Select(ActionEvent actionEvent)                            // shouldn't need the bellow 4 to be functions
-    {
-
-    }
-
-    public void UpdateState_CB_Select(ActionEvent actionEvent)
-    {
-
-    }
-
-    public void Country_CB_Select(ActionEvent actionEvent)
-    {
-
-    }
-
-    public void State_CB_Select(ActionEvent actionEvent)        //50 states, 12 provinces, etc.     Shouldn't populate until Country CB is selected
     {
 
     }
