@@ -29,6 +29,7 @@ import helper.JDBC;
 import model.Customers;
 import model.*;
 import java.sql.Connection;
+import model.Country;
 
 public class Customer_Controller implements Initializable
 {
@@ -51,8 +52,8 @@ public class Customer_Controller implements Initializable
     public ComboBox CustomerUpdate_State;
     public TableColumn Customer_Phone_Column;
     public TableColumn Customer_FLD_Column;
-    public ComboBox Customer_State;
-    public ComboBox Customer_Country_CB;
+    public ComboBox Customer_State;                                 // actual state CB
+    public ComboBox Customer_Country_CB;                            // actual country CB
 
 
 
@@ -83,7 +84,9 @@ public class Customer_Controller implements Initializable
 
             for (Country country : Countries_All)
             {
+                //String temp = Country.getCountry_Name();
                 Countries.add(Country.getCountry_Name());
+                System.out.println(country);
             }
 
             Customer_Country_CB.setItems(Countries);                // all 3 are Canada
