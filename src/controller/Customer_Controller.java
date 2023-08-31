@@ -133,6 +133,97 @@ public class Customer_Controller implements Initializable
 
     public void Save_Button(ActionEvent actionEvent)                            // push everything to actual mySQL DB from updated text fields
     {
+        try {
+            Connection connect = JDBC.openConnection();
+
+            if(Customer_Name_Input.getText().isEmpty())
+            {
+                Alert alert_err = new Alert(Alert.AlertType.WARNING);
+                alert_err.setTitle("Unable to add Customer.");
+                alert_err.setContentText("Please enter a valid Name to add Customer.");
+                alert_err.showAndWait();
+                return;
+            }
+            if(Customer_Address_Input.getText().isEmpty())
+            {
+                Alert alert_err = new Alert(Alert.AlertType.WARNING);
+                alert_err.setTitle("Unable to add Customer.");
+                alert_err.setContentText("Please enter a valid Address to add Customer.");
+                alert_err.showAndWait();
+                return;
+            }
+            if(Customer_PostalCode_Input.getText().isEmpty())
+            {
+                Alert alert_err = new Alert(Alert.AlertType.WARNING);
+                alert_err.setTitle("Unable to add Customer.");
+                alert_err.setContentText("Please enter a valid Postal Code to add Customer.");
+                alert_err.showAndWait();
+                return;
+            }
+            if(Customer_PhoneNumber_Input.getText().isEmpty())
+            {
+                Alert alert_err = new Alert(Alert.AlertType.WARNING);
+                alert_err.setTitle("Unable to add Customer.");
+                alert_err.setContentText("Please enter a valid Phone Number to add Customer.");
+                alert_err.showAndWait();
+                return;
+            }
+            if(Customer_State.getValue() == null)
+            {
+                Alert alert_err = new Alert(Alert.AlertType.WARNING);
+                alert_err.setTitle("Unable to add Customer.");
+                alert_err.setContentText("Please select a valid State to add Customer.");
+                alert_err.showAndWait();
+                return;
+            }
+            if(Customer_Country_CB.getValue() == null)
+            {
+                Alert alert_err = new Alert(Alert.AlertType.WARNING);
+                alert_err.setTitle("Unable to add Customer.");
+                alert_err.setContentText("Please Select a valid Country to add Customer.");
+                alert_err.showAndWait();
+                return;
+            }
+
+            int temp_FLD_ID = 0;
+
+            for (FirstLevelDivision_Access firstLevelDivision : FirstLevelDivision_Access.getFirst_Level_Division()) {
+                if (Customer_State.getSelectionModel().getSelectedItem().equals(firstLevelDivision.getDivision_name())) {
+                    temp_FLD_ID = firstLevelDivision.getDivision_ID();
+                }
+            }
+
+            String insertStatement = "UPDATE customers SET Customer_ID = ?, Customer_Name = ?, Address = ?, Postal_Code = ?, Phone = ?, Create_Date = ?, Created_By = ?, Last_Update = ?, Last_Updated_By = ?, Division_ID = ? WHERE Customer_ID = ?";
+            JDBC.setPreparedStatement(JDBC.getConnection(), insertStatement);
+            PreparedStatement ps = JDBC.getPreparedStatement();
+            ps.setInt(1, Integer.parseInt(Customer_ID_Input.getText()));
+            ps.setString(2, Customer_Name_Input.getText());
+            ps.setString(3, Customer_Address_Input.getText());
+            ps.setString(4, Customer_PostalCode_Input.getText());
+            ps.setString(5, Customer_PhoneNumber_Input.getText());
+            ps.setTimestamp(6, Timestamp.valueOf(LocalDateTime.now()));
+            ps.setString(7, "test");
+            ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
+            ps.setString(9, "test");
+            ps.setInt(10, temp_FLD_ID);
+            ps.setInt(11, Integer.parseInt(Customer_ID_Input.getText()));
+            ps.execute();
+
+            Customer_ID_Input.clear();
+            Customer_Name_Input.clear();
+            Customer_Address_Input.clear();
+            Customer_PostalCode_Input.clear();
+            Customer_PhoneNumber_Input.clear();
+
+            ObservableList<Customers> refreshCustomersList = Customer_Access.getCustomers(connect);
+            Customer_Table.setItems(refreshCustomersList);
+
+
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
 
     }
 
@@ -283,6 +374,53 @@ public class Customer_Controller implements Initializable
 
     public void Edit_Button(ActionEvent actionEvent)                                        // populates text fields
     {
+        try
+        {
+            JDBC.openConnection();
+            Customers selectedCustomer = (Customers) Customer_Table.getSelectionModel().getSelectedItem();
 
+            String divisionName = "";
+            String countryName = "";
+
+            if (selectedCustomer != null)
+            {
+                ObservableList<Country_Access> getCountries = Country_Access.getCountries();
+                ObservableList<FirstLevelDivision_Access> getFirstleveldivision_Names = FirstLevelDivision_Access.getFirst_Level_Division();
+                ObservableList<String> allFirstleveldivisionivision = FXCollections.observableArrayList();
+
+                Customer_State.setItems(allFirstleveldivisionivision);
+
+                Customer_ID_Input.setText(String.valueOf((selectedCustomer.getCustomer_ID())));
+                Customer_Name_Input.setText(selectedCustomer.getCustomer_Name());
+                Customer_Address_Input.setText(selectedCustomer.getAddress());
+                Customer_PostalCode_Input.setText(selectedCustomer.getPostal_Code());
+                Customer_PhoneNumber_Input.setText(selectedCustomer.getPhone());
+
+                for (First_Level_Division flDivision: getFirstleveldivision_Names)
+                {
+                    allFirstleveldivisionivision.add(flDivision.getDivision_name());
+                    int countryIDToSet = flDivision.getCountry_ID();
+
+                    if (flDivision.getDivision_ID() == selectedCustomer.getDivision_ID())
+                    {
+                        divisionName = flDivision.getDivision_name();
+
+                        for (Country country: getCountries)
+                        {
+                            if (country.getCountry_ID() == countryIDToSet)
+                            {
+                                countryName = country.getCountry_Name();
+                            }
+                        }
+                    }
+                }
+                Customer_State.setValue(divisionName);
+                Customer_Country_CB.setValue(countryName);
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 }

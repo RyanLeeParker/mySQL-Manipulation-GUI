@@ -36,7 +36,10 @@ public class Controller implements Initializable
             Alert alert_err = new Alert(Alert.AlertType.WARNING);
             alert_err.setTitle("Something went wrong.");
             alert_err.setContentText("Please restart the program and try again.");
-            alert_err.showAndWait();}
+            alert_err.showAndWait();
+            e.printStackTrace();
+        }
+
     }
 
     public void Appointment_Press(ActionEvent actionEvent) throws Exception
