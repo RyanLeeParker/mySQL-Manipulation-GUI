@@ -102,7 +102,21 @@ public class Customer_Controller implements Initializable
 //                System.out.println(firstLevelDivision.getCountry_ID());
             }
 
-            Customer_State.setItems(First_Level_Divisions_Names);
+//            if (Customer_Country_CB == U.S.)
+//            {
+//                then only display US states
+//            }
+//            else if(Customer_Country_CB == U.K)
+//            {
+//                only display UK states
+//            }
+//            else if(Customer_Country_CB == Canada)
+//            {
+//                only display Canada provinces
+//            }
+
+
+            Customer_State.setItems(First_Level_Divisions_Names);       // Country selection probably needs to then only display that Countrys states.
 
         }
         catch (Exception e)
