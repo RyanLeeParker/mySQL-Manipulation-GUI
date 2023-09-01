@@ -39,7 +39,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import model.*;
 import dao.*;
-import views.Appointments.fxml;
 
 import dao.Appointments_Access;
 import dao.Country_Access;
@@ -162,42 +161,38 @@ public class Appointments_Controller
 
         try
         {
-
-            //Customers Selected_Customer = (Customers) Customer_Table.getSelectionModel().getSelectedItem();
-            Customers Selected_Customer2 = (Customers) Customer_Table.getSelectionModel().getSelectedItem();
-
             Connection connect = JDBC.openConnection();
-            int deleteAppointmentID = Appointment_Table.getSelectionModel().getSelectedItem().getAppointment_ID();
             Appointments tempAppointment_1 = (Appointments)  Appointment_Table.getSelectionModel().getSelectedItem();
-            int Appt_to_del_1 = Selected_Customer.getCustomer_ID();
+            int Appt_to_del_id_1 = tempAppointment_1.getCustomer_ID();
+            String App_to_del_type_1 = tempAppointment_1.getType();
 
+            //lert alert = new Alert(Alert.AlertType.CONFIRMATION, "Delete the selected appointment with appointment id: " + Appt_to_del_id_1 + " and appointment type " + App_to_del_type_1);
 
+            //Optional<ButtonType> confirmation = alert.showAndWait();
 
-            String deleteAppointmentType = Appointment_Table.getSelectionModel().getSelectedItem().getType();
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Delete Confirmation");
+            alert.setContentText("Do you want to delete ID: "  + Appt_to_del_id_1  + " Type: " + App_to_del_type_1 + "?");
+            alert.setHeaderText("Confirm Deletion");
 
-
-
-
-
-
-
-
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Delete the selected appointment with appointment id: " + deleteAppointmentID + " and appointment type " + deleteAppointmentType);
-
-            Optional<ButtonType> confirmation = alert.showAndWait();
-
-//            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);                            // use this one
-//            alert.setTitle("Delete Confirmation");
-//            alert.setContentText("Are you sure you want to delete this item?");
-//            alert.setHeaderText("Confirm Deletion");
-
-            if (confirmation.isPresent() && confirmation.get() == ButtonType.OK)
+            Optional<ButtonType> result = alert.showAndWait();
+            if(result.get() == ButtonType.OK)
             {
-                Appointments_Access.removeAppointment(deleteAppointmentID, connect);
+                Appointments_Access.removeAppointment(Appt_to_del_id_1, connect);
 
                 ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();
                 Appointment_Table.setItems(allAppointmentsList);
+
             }
+            else if (result.get() == ButtonType.CANCEL) {return;}
+
+//            if (confirmation.isPresent() && confirmation.get() == ButtonType.OK)
+//            {
+//                Appointments_Access.removeAppointment(Appt_to_del_id_1, connect);
+//
+//                ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();
+//                Appointment_Table.setItems(allAppointmentsList);
+//            }
         } catch (Exception e)
         {
             e.printStackTrace();
