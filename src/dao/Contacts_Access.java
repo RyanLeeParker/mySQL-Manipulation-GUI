@@ -29,4 +29,15 @@ public class Contacts_Access
 
         return ObservableList_Contacts;
     }
+
+    public static String findContactID(String contactID) throws SQLException {
+        PreparedStatement ps = JDBC.getConnection().prepareStatement("SELECT * FROM contacts WHERE Contact_Name = ?");
+        ps.setString(1, contactID);
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) {
+            contactID = rs.getString("Contact_ID");
+        }
+        return contactID;
+    }
+
 }

@@ -70,6 +70,18 @@ import model.*;
 import java.sql.Connection;
 import model.Country;
 
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
+import helper.Time;
+
+import static helper.Time.convertTimeDateUTC;
+
 //import static Main.timeUtil.convertTimeDateUTC;
 
 public class Appointments_Controller
@@ -255,31 +267,18 @@ public class Appointments_Controller
         try
         {
 
-            Connection connection = JDBC.startConnection();
+            Connection connection = JDBC.openConnection();
 
-            if (!Appt_Name_Input.getText().isEmpty()
-                    && !Appt_Desc_Input.getText().isEmpty()
-                    && !Appt_Loc_Input.getText().isEmpty()
-                    && !Appt_Type_Input.getText().isEmpty()
-                    && Appt_StartDate_Picker.getValue() != null
-                    && Appt_EndDate_Picker.getValue() != null
-                    && !Appointment_TimeStart_CB.getValue().isEmpty()
-                    && !Appointment_EndTime.getValue().isEmpty() &&
-                    !Appt_Cust_ID_Input.getText().isEmpty())
+//            if (!Appt_Name_Input.getText().isEmpty()
+//                    && !Appt_Desc_Input.getText().isEmpty()
+//                    && !Appt_Loc_Input.getText().isEmpty()
+//                    && !Appt_Type_Input.getText().isEmpty()
+//                    && Appt_StartDate_Picker.getValue() != null
+//                    && Appt_EndDate_Picker.getValue() != null
+//                    && !Appointment_TimeStart_CB.getValue().isEmpty()
+//                    && !Appointment_EndTime.getValue().isEmpty() &&
+//                    !Appt_Cust_ID_Input.getText().isEmpty())
             {
-
-                Appt_ID_Input;
-                Appt_Name_Input;
-                Appt_Desc_Input;
-                Appt_Loc_Input;
-                Appt_Type_Input;
-                Appt_Cust_ID_Input;
-                Appt_StartDate_Picker;
-                Appt_EndDate_Picker;
-                Appointment_TimeStart_CB;
-                Appointment_EndTime;
-                Appt_UserID_Input;
-                Appointment_Contact_CB;
 
 
                 ObservableList<Customers> getAllCustomers = Customer_Access.getCustomers(connection);
@@ -303,8 +302,8 @@ public class Appointments_Controller
 
                 DateTimeFormatter minHourFormat = DateTimeFormatter.ofPattern("HH:mm");
 
-                LocalTime localTimeStart = LocalTime.parse(Appointment_TimeStart_CB.getValue(), minHourFormat);
-                LocalTime LocalTimeEnd = LocalTime.parse(Appointment_EndTime.getValue(), minHourFormat);
+                LocalTime localTimeStart = LocalTime.parse((CharSequence) Appointment_TimeStart_CB.getValue(), minHourFormat);
+                LocalTime LocalTimeEnd = LocalTime.parse((CharSequence) Appointment_EndTime.getValue(), minHourFormat);
 
                 LocalDateTime dateTimeStart = LocalDateTime.of(localDateStart, localTimeStart);
                 LocalDateTime dateTimeEnd = LocalDateTime.of(localDateEnd, LocalTimeEnd);
@@ -393,11 +392,11 @@ public class Appointments_Controller
                     }
                 }
 
-                String startDate = addAppointmentStartDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                String startTime = addAppointmentStartTime.getValue();
+                String startDate = Appt_StartDate_Picker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                String startTime = (String) Appointment_TimeStart_CB.getValue();
 
-                String endDate = addAppointmentEndDate.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-                String endTime = addAppointmentEndTime.getValue();
+                String endDate = Appt_EndDate_Picker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                String endTime = (String) Appointment_EndTime.getValue();
 
                 String startUTC = convertTimeDateUTC(startDate + " " + startTime + ":00");
                 String endUTC = convertTimeDateUTC(endDate + " " + endTime + ":00");
@@ -406,24 +405,39 @@ public class Appointments_Controller
 
                 JDBC.setPreparedStatement(JDBC.getConnection(), insertStatement);
                 PreparedStatement ps = JDBC.getPreparedStatement();
-                ps.setInt(1, Integer.parseInt(updateAppointmentID.getText()));
-                ps.setString(2, updateAppointmentTitle.getText());
-                ps.setString(3, addAppointmentDescription.getText());
-                ps.setString(4, addAppointmentLocation.getText());
-                ps.setString(5, addAppointmentType.getText());
+                ps.setInt(1, Integer.parseInt(Appt_ID_Input.getText()));
+                ps.setString(2, Appt_Name_Input.getText());
+                ps.setString(3, Appt_Desc_Input.getText());
+                ps.setString(4, Appt_Loc_Input.getText());
+                ps.setString(5, Appt_Type_Input.getText());
                 ps.setString(6, startUTC);
                 ps.setString(7, endUTC);
                 ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
                 ps.setString(9, "admin");
-                ps.setInt(10, Integer.parseInt(addAppointmentCustomerID.getText()));
-                ps.setInt(11, Integer.parseInt(addAppointmentUserID.getText()));
-                ps.setInt(12, Integer.parseInt(contactAccess.findContactID(addAppointmentContact.getValue())));
-                ps.setInt(13, Integer.parseInt(updateAppointmentID.getText()));
+                ps.setInt(10, Integer.parseInt(Appt_Cust_ID_Input.getText()));
+                ps.setInt(11, Integer.parseInt(Appt_UserID_Input.getText()));
+                ps.setInt(12, Integer.parseInt(Contacts_Access.findContactID((String) Appointment_Contact_CB.getValue())));
+                ps.setInt(13, Integer.parseInt(Appt_ID_Input.getText()));
 
+
+//                Appt_ID_Input;
+//                Appt_Name_Input;
+//                Appt_Desc_Input;
+//                Appt_Loc_Input;
+//                Appt_Type_Input;
+//                Appt_Cust_ID_Input;
+//                Appt_StartDate_Picker;
+//                Appt_EndDate_Picker;
+//                Appointment_TimeStart_CB;
+//                Appointment_EndTime;
+//                Appt_UserID_Input;
+//                Appointment_Contact_CB;
+//
+                
                 System.out.println("ps " + ps);
                 ps.execute();
-s
-                ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAllAppointments();
+
+                ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();
                 Appointment_Table.setItems(allAppointmentsList);
             }
 
