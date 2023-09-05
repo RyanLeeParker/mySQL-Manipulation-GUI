@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 public class Contacts_Access
 {
-    public ObservableList<Contacts> getContacts() throws SQLException
+    public static ObservableList<Contacts> getContacts() throws SQLException
     {
         ObservableList<Contacts> ObservableList_Contacts = FXCollections.observableArrayList();
         String sql = "SELECT * FROM contacts";
