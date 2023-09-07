@@ -262,25 +262,86 @@ public class Appointments_Controller
         }
     }
 
-    public void Save_Button(ActionEvent actionEvent)
+    public void Save_Button(ActionEvent actionEvent)                // every save adds 5hrs to appointment
     {
         try
         {
-
             Connection connection = JDBC.openConnection();
 
-//            if (!Appt_Name_Input.getText().isEmpty()
-//                    && !Appt_Desc_Input.getText().isEmpty()
-//                    && !Appt_Loc_Input.getText().isEmpty()
-//                    && !Appt_Type_Input.getText().isEmpty()
-//                    && Appt_StartDate_Picker.getValue() != null
-//                    && Appt_EndDate_Picker.getValue() != null
-//                    && !Appointment_TimeStart_CB.getValue().isEmpty()
-//                    && !Appointment_EndTime.getValue().isEmpty() &&
-//                    !Appt_Cust_ID_Input.getText().isEmpty())
+            if(Appt_Name_Input.getText().isEmpty())
             {
+                Alert alert_err = new Alert(Alert.AlertType.WARNING);
+                alert_err.setTitle("Unable to add Appointment.");
+                alert_err.setContentText("Please enter a valid Name to add Appointment.");
+                alert_err.showAndWait();
+                return;
+            }
+            if(Appt_Desc_Input.getText().isEmpty())
+            {
+                Alert alert_err = new Alert(Alert.AlertType.WARNING);
+                alert_err.setTitle("Unable to add Appointment.");
+                alert_err.setContentText("Please enter a valid Description to add Appointment.");
+                alert_err.showAndWait();
+                return;
+            }
+            if(Appt_Loc_Input.getText().isEmpty())
+            {
+                Alert alert_err = new Alert(Alert.AlertType.WARNING);
+                alert_err.setTitle("Unable to add Appointment.");
+                alert_err.setContentText("Please enter a valid Location to add Appointment.");
+                alert_err.showAndWait();
+                return;
+            }
+            if(Appt_Type_Input.getText().isEmpty())
+            {
+                Alert alert_err = new Alert(Alert.AlertType.WARNING);
+                alert_err.setTitle("Unable to add Appointment.");
+                alert_err.setContentText("Please enter a valid Type to add Appointment.");
+                alert_err.showAndWait();
+                return;
+            }
+            if(Appt_StartDate_Picker.getValue() == null)
+            {
+                Alert alert_err = new Alert(Alert.AlertType.WARNING);
+                alert_err.setTitle("Unable to add Appointment.");
+                alert_err.setContentText("Please enter a valid Start Date to add Appointment.");
+                alert_err.showAndWait();
+                return;
+            }
+            if(Appt_EndDate_Picker.getValue() == null)
+            {
+                Alert alert_err = new Alert(Alert.AlertType.WARNING);
+                alert_err.setTitle("Unable to add Appointment.");
+                alert_err.setContentText("Please enter a valid End Date to add Appointment.");
+                alert_err.showAndWait();
+                return;
+            }
+            if(Appointment_TimeStart_CB.getValue() == null)
+            {
+                Alert alert_err = new Alert(Alert.AlertType.WARNING);
+                alert_err.setTitle("Unable to add Appointment.");
+                alert_err.setContentText("Please enter a valid Start Time to add Appointment.");
+                alert_err.showAndWait();
+                return;
+            }
+            if(Appointment_EndTime.getValue() == null)
+            {
+                Alert alert_err = new Alert(Alert.AlertType.WARNING);
+                alert_err.setTitle("Unable to add Appointment.");
+                alert_err.setContentText("Please enter a valid End Time to add Appointment.");
+                alert_err.showAndWait();
+                return;
+            }
+            if(Appt_Cust_ID_Input.getText().isEmpty())
+            {
+                Alert alert_err = new Alert(Alert.AlertType.WARNING);
+                alert_err.setTitle("Unable to add Appointment.");
+                alert_err.setContentText("Please enter a valid Customer ID to add Appointment.");
+                alert_err.showAndWait();
+                return;
+            }
 
-
+            
                 ObservableList<Customers> getAllCustomers = Customer_Access.getCustomers(connection);
                 ObservableList<Integer> storeCustomerIDs = FXCollections.observableArrayList();
                 ObservableList<Users_Access> getAllUsers = Users_Access.getUsersList();
@@ -316,16 +377,16 @@ public class Appointments_Controller
 
                 if (convertStartEST.toLocalDate().getDayOfWeek().getValue() == (DayOfWeek.SATURDAY.getValue()) || convertStartEST.toLocalDate().getDayOfWeek().getValue() == (DayOfWeek.SUNDAY.getValue()) || convertEndEST.toLocalDate().getDayOfWeek().getValue() == (DayOfWeek.SATURDAY.getValue())  || convertEndEST.toLocalDate().getDayOfWeek().getValue() == (DayOfWeek.SUNDAY.getValue()) )
                 {
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Day is outside of business operations (Monday-Friday)");
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Please schedule within business hours. (Mon-Fri)");
                     Optional<ButtonType> confirmation = alert.showAndWait();
-                    System.out.println("day is outside of business hours");
+                    System.out.println("Please schedule within business hours.");
                     return;
                 }
 
                 if (convertStartEST.toLocalTime().isBefore(LocalTime.of(8, 0, 0)) || convertStartEST.toLocalTime().isAfter(LocalTime.of(22, 0, 0)) || convertEndEST.toLocalTime().isBefore(LocalTime.of(8, 0, 0)) || convertEndEST.toLocalTime().isAfter(LocalTime.of(22, 0, 0)))
                 {
-                    System.out.println("time is outside of business hours");
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Time is outside of business hours (8am-10pm EST): " + convertStartEST.toLocalTime() + " - " + convertEndEST.toLocalTime() + " EST");
+                    System.out.println("Please schedule within business hours.");
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Please schedule within business hours. (8am-10pm EST): " + convertStartEST.toLocalTime() + " - " + convertEndEST.toLocalTime() + " EST");
                     Optional<ButtonType> confirmation = alert.showAndWait();
                     return;
                 }
@@ -336,16 +397,16 @@ public class Appointments_Controller
 
                 if (dateTimeStart.isAfter(dateTimeEnd))
                 {
-                    System.out.println("Appointment has start time after end time");
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment has start time after end time");
+                    System.out.println("Please schedule within business hours.");
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Please schedule within business hours.");
                     Optional<ButtonType> confirmation = alert.showAndWait();
                     return;
                 }
 
                 if (dateTimeStart.isEqual(dateTimeEnd))
                 {
-                    System.out.println("Appointment has same start and end time");
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment has same start and end time");
+                    System.out.println("Appointment has the same start and end time");
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment has the same start and end time");
                     Optional<ButtonType> confirmation = alert.showAndWait();
                     return;
                 }
@@ -359,9 +420,9 @@ public class Appointments_Controller
                     if ((newCustomerID == appointment.getCustomer_ID()) && (appointmentID != appointment.getAppointment_ID()) &&
                             (dateTimeStart.isBefore(checkStart)) && (dateTimeEnd.isAfter(checkEnd)))
                     {
-                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment overlaps with existing appointment.");
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment already exists at that time.");
                         Optional<ButtonType> confirmation = alert.showAndWait();
-                        System.out.println("Appointment overlaps with existing appointment.");
+                        System.out.println("Appointment already exists at that time.");
                         return;
                     }
 
@@ -371,9 +432,9 @@ public class Appointments_Controller
 //                            (dateTimeStart.isEqual(checkEnd) || dateTimeStart.isBefore(checkEnd))) {
                             (dateTimeStart.isAfter(checkStart)) && (dateTimeStart.isBefore(checkEnd)))
                     {
-                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Start time overlaps with existing appointment.");
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment already exists at that time.");
                         Optional<ButtonType> confirmation = alert.showAndWait();
-                        System.out.println("Start time overlaps with existing appointment.");
+                        System.out.println("Appointment already exists at that time.");
                         return;
                     }
 
@@ -385,9 +446,9 @@ public class Appointments_Controller
 //                            (dateTimeEnd.isEqual(checkEnd) || dateTimeEnd.isBefore(checkEnd)))
                             (dateTimeEnd.isAfter(checkStart)) && (dateTimeEnd.isBefore(checkEnd)))
                     {
-                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "End time overlaps with existing appointment.");
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment already exists at that time.");
                         Optional<ButtonType> confirmation = alert.showAndWait();
-                        System.out.println("End time overlaps with existing appointment.");
+                        System.out.println("Appointment already exists at that time.");
                         return;
                     }
                 }
@@ -419,33 +480,29 @@ public class Appointments_Controller
                 ps.setInt(12, Integer.parseInt(Contacts_Access.findContactID((String) Appointment_Contact_CB.getValue())));
                 ps.setInt(13, Integer.parseInt(Appt_ID_Input.getText()));
 
-
-//                Appt_ID_Input;
-//                Appt_Name_Input;
-//                Appt_Desc_Input;
-//                Appt_Loc_Input;
-//                Appt_Type_Input;
-//                Appt_Cust_ID_Input;
-//                Appt_StartDate_Picker;
-//                Appt_EndDate_Picker;
-//                Appointment_TimeStart_CB;
-//                Appointment_EndTime;
-//                Appt_UserID_Input;
-//                Appointment_Contact_CB;
-//
-                
                 System.out.println("ps " + ps);
                 ps.execute();
 
                 ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();
                 Appointment_Table.setItems(allAppointmentsList);
-            }
 
-        } catch (Exception e)
+                Appt_ID_Input.clear();
+                Appt_Name_Input.clear();
+                Appt_Desc_Input.clear();
+                Appt_Loc_Input.clear();
+                Appt_Type_Input.clear();
+                Appt_Cust_ID_Input.clear();
+                Appt_UserID_Input.clear();
+                Appt_StartDate_Picker.setValue(null);
+                Appt_EndDate_Picker.setValue(null);
+                Appointment_TimeStart_CB.getItems().clear();
+                Appointment_EndTime.getItems().clear();
+                Appointment_Contact_CB.getItems().clear();
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
         }
-
     }
 
     public void Cancel_Button(ActionEvent actionEvent)
