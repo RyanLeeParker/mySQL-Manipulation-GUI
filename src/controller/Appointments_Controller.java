@@ -79,6 +79,7 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import helper.Time;
+import java.time.ZoneId;
 
 import static helper.Time.convertTimeDateUTC;
 
@@ -341,7 +342,7 @@ public class Appointments_Controller
                 return;
             }
 
-            
+
                 ObservableList<Customers> getAllCustomers = Customer_Access.getCustomers(connection);
                 ObservableList<Integer> storeCustomerIDs = FXCollections.observableArrayList();
                 ObservableList<Users_Access> getAllUsers = Users_Access.getUsersList();
@@ -364,15 +365,19 @@ public class Appointments_Controller
                 DateTimeFormatter minHourFormat = DateTimeFormatter.ofPattern("HH:mm");
 
                 LocalTime localTimeStart = LocalTime.parse((CharSequence) Appointment_TimeStart_CB.getValue(), minHourFormat);
+            //System.out.println("1: LocalTimeStart: " + localTimeStart);
                 LocalTime LocalTimeEnd = LocalTime.parse((CharSequence) Appointment_EndTime.getValue(), minHourFormat);
 
                 LocalDateTime dateTimeStart = LocalDateTime.of(localDateStart, localTimeStart);
+            //System.out.println("2: dateTimeStart: " + dateTimeStart);
                 LocalDateTime dateTimeEnd = LocalDateTime.of(localDateEnd, LocalTimeEnd);
 
                 ZonedDateTime zoneDtStart = ZonedDateTime.of(dateTimeStart, ZoneId.systemDefault());
+            //System.out.println("3: zondDTStart: " + zoneDtStart);
                 ZonedDateTime zoneDtEnd = ZonedDateTime.of(dateTimeEnd, ZoneId.systemDefault());
 
                 ZonedDateTime convertStartEST = zoneDtStart.withZoneSameInstant(ZoneId.of("America/New_York"));
+            //System.out.println("4: convertStartEST: " + convertStartEST);
                 ZonedDateTime convertEndEST = zoneDtEnd.withZoneSameInstant(ZoneId.of("America/New_York"));
 
                 if (convertStartEST.toLocalDate().getDayOfWeek().getValue() == (DayOfWeek.SATURDAY.getValue()) || convertStartEST.toLocalDate().getDayOfWeek().getValue() == (DayOfWeek.SUNDAY.getValue()) || convertEndEST.toLocalDate().getDayOfWeek().getValue() == (DayOfWeek.SATURDAY.getValue())  || convertEndEST.toLocalDate().getDayOfWeek().getValue() == (DayOfWeek.SUNDAY.getValue()) )
@@ -393,6 +398,11 @@ public class Appointments_Controller
 
                 int newCustomerID = Integer.parseInt(Appt_Cust_ID_Input.getText());
                 int appointmentID = Integer.parseInt(Appt_ID_Input.getText());
+
+//            System.out.println("5: LocalTimeStart: " + localTimeStart);
+//            System.out.println("6: dateTimeStart: " + dateTimeStart);
+//            System.out.println("7: zondDTStart: " + zoneDtStart);
+//            System.out.println("8: convertStartEST: " + convertStartEST);
 
 
                 if (dateTimeStart.isAfter(dateTimeEnd))
@@ -438,8 +448,6 @@ public class Appointments_Controller
                         return;
                     }
 
-
-
                     if (newCustomerID == appointment.getCustomer_ID() && (appointmentID != appointment.getAppointment_ID()) &&
 //                            Clarification on isEqual is that this does not count as an overlapping appointment
 //                            (dateTimeEnd.isEqual(checkStart) || dateTimeEnd.isAfter(checkStart)) &&
@@ -453,14 +461,37 @@ public class Appointments_Controller
                     }
                 }
 
+//            System.out.println("9: LocalTimeStart: " + localTimeStart);
+//            System.out.println("10: dateTimeStart: " + dateTimeStart);
+//            System.out.println("11: zoneDTStart: " + zoneDtStart);
+//            System.out.println("12: convertStartEST: " + convertStartEST);
+
                 String startDate = Appt_StartDate_Picker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 String startTime = (String) Appointment_TimeStart_CB.getValue();
 
                 String endDate = Appt_EndDate_Picker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 String endTime = (String) Appointment_EndTime.getValue();
 
-                String startUTC = convertTimeDateUTC(startDate + " " + startTime + ":00");
-                String endUTC = convertTimeDateUTC(endDate + " " + endTime + ":00");
+
+
+
+                //create test obj to run the convert, display out before and after
+                String tempUTC = convertTimeDateUTC(startDate + " " + startTime + ":00");
+
+
+
+
+
+                String startUTC = convertTimeDateUTC(startDate + " " + startTime + ":00");                                      // likely here
+                String endUTC = convertTimeDateUTC(endDate + " " + endTime + ":00");                                            // and here
+
+//            System.out.println("13: LocalTimeStart: " + localTimeStart);
+//            System.out.println("14: dateTimeStart: " + dateTimeStart);
+//            System.out.println("15: zondDTStart: " + zoneDtStart);
+//            System.out.println("16: convertStartEST: " + convertStartEST);
+//            System.out.println("17: startTine: " + startTime);
+
+            System.out.println("1: SUTC: " + startUTC + " EUTC: " + endUTC);                                                            // time change happens before here
 
                 String insertStatement = "UPDATE appointments SET Appointment_ID = ?, Title = ?, Description = ?, Location = ?, Type = ?, Start = ?, End = ?, Last_Update = ?, Last_Updated_By = ?, Customer_ID = ?, User_ID = ?, Contact_ID = ? WHERE Appointment_ID = ?";
 
@@ -481,7 +512,9 @@ public class Appointments_Controller
                 ps.setInt(13, Integer.parseInt(Appt_ID_Input.getText()));
 
                 System.out.println("ps " + ps);
+                //System.out.println("2: ST: " + startTime + " ET: " + endTime);
                 ps.execute();
+                //System.out.println("3: ST: " + startTime + " ET: " + endTime);
 
                 ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();
                 Appointment_Table.setItems(allAppointmentsList);
