@@ -502,6 +502,10 @@ public class Appointments_Controller
                 ps.setString(3, Appt_Desc_Input.getText());
                 ps.setString(4, Appt_Loc_Input.getText());
                 ps.setString(5, Appt_Type_Input.getText());
+
+            //ps.setTimestamp(6, Timestamp.valueOf(startUTC));
+            //ps.setTimestamp(7, Timestamp.valueOf(endUTC));
+
                 ps.setString(6, startUTC);
                 ps.setString(7, endUTC);
                 ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
