@@ -25,7 +25,9 @@ public class Appointments_Access
             String Description = rs.getString("Description");
             String Location = rs.getString("Location");
             String Type = rs.getString("Type");
+
             LocalDateTime Start = rs.getTimestamp("Start").toLocalDateTime();
+
             LocalDateTime End = rs.getTimestamp("End").toLocalDateTime();
             int Customer_ID = rs.getInt("Customer_ID");
             int User_ID = rs.getInt("User_ID");

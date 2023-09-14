@@ -124,8 +124,6 @@ public class Appointments_Controller
 
     public void initialize() throws Exception
     {
-        //contact name assigned to appt using drop down menu or CB
-        // appt id autogen
         // time should be stored UTC, but converted to local time for user      3 timezones: UTC, EST, SystemDefault
 
         ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();
@@ -141,7 +139,11 @@ public class Appointments_Controller
         Appt_ContactID_Column.setCellValueFactory(new PropertyValueFactory<>("Contact_ID"));
         Appt_UserID_Column.setCellValueFactory(new PropertyValueFactory<>("User_ID"));
 
-        Appointment_Table.setItems(allAppointmentsList);
+
+        // or for loop here to make local time, since it's already saved as UTC in DB?
+
+
+        Appointment_Table.setItems(allAppointmentsList);                                            // might just be populating with UTC, never converting back, edit grabs from here, propagates
 
         Appt_ID_Input.setText("Auto Gen - Disabled");
         Appt_ID_Input.setDisable(true);
@@ -475,10 +477,9 @@ public class Appointments_Controller
 
 
 
-                //create test obj to run the convert, display out before and after
-                String tempUTC = convertTimeDateUTC(startDate + " " + startTime + ":00");
 
-
+            //LocalDateTime startUTC = convertTimeDateUTC(startDate + " " + startTime + ":00");                                      // likely here
+            //LocalDateTime endUTC = convertTimeDateUTC(endDate + " " + endTime + ":00");                                            // and here
 
 
 
@@ -521,6 +522,12 @@ public class Appointments_Controller
                 //System.out.println("3: ST: " + startTime + " ET: " + endTime);
 
                 ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();
+
+                // loop here to reconvert back to local time, otherwise it displays UTC
+
+
+
+
                 Appointment_Table.setItems(allAppointmentsList);
 
                 Appt_ID_Input.clear();
