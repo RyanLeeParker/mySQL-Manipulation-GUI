@@ -8,10 +8,12 @@ import model.Appointments;
 
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 public class Appointments_Access
 {
-    public static ObservableList<Appointments> getAppointments() throws SQLException
+    public static <ZoneId> ObservableList<Appointments> getAppointments() throws SQLException
     {
         ObservableList<Appointments> ObservableList_Appointments = FXCollections.observableArrayList();
         String sql = "SELECT * FROM appointments";
@@ -25,8 +27,29 @@ public class Appointments_Access
             String Description = rs.getString("Description");
             String Location = rs.getString("Location");
             String Type = rs.getString("Type");
+            System.out.println("Start Pre: " + rs.getTimestamp("Start"));
+            LocalDateTime Start = rs.getTimestamp("Start").toLocalDateTime();           // stored as 12 UTC, shows up as 12 CST?!? Should be showing as 8am, it isn't converting to local
+            System.out.println("Start Post: " + Start);
+            //line to convert to local time
 
-            LocalDateTime Start = rs.getTimestamp("Start").toLocalDateTime();
+            // Assuming rs is your ResultSet
+            Timestamp timestamp = rs.getTimestamp("Start");
+
+            if (timestamp != null)
+            {
+                // Convert UTC Timestamp to LocalDateTime
+                LocalDateTime utcDateTime = timestamp.toLocalDateTime();
+
+                // Define the target time zone (e.g., your local time zone)
+                ZoneId targetZoneId = ZoneId.of("America/New_York"); // Replace "YourZoneId" with your actual time zone ID
+
+                // Convert LocalDateTime to local time
+                LocalDateTime localDateTime = utcDateTime.atZone(ZoneId.of("UTC")).withZoneSameInstant(targetZoneId).toLocalDateTime();
+
+                // Now, localDateTime contains the date and time in the local time zone
+            }
+
+
 
             LocalDateTime End = rs.getTimestamp("End").toLocalDateTime();
             int Customer_ID = rs.getInt("Customer_ID");

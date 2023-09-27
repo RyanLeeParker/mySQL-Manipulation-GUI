@@ -23,25 +23,10 @@ public class Main extends Application
 
     public static void main(String[] args) throws SQLException
     {
-        //Locale.setDefault(new Locale("fr"));
         JDBC.openConnection();
-
-//        int rowsAffected = Customers.insert(001, 1);        // testing link, can update with update to test further
-//
-//        if (rowsAffected > 0)
-//        {
-//            System.out.println("Insert Successful");
-//        }
-//        else
-//        {
-//            System.out.println("Insert Failed");
-//        }
 
         launch(args);
 
         JDBC.closeConnection();
     }
-
-    //obfuscate dao
-
 }
