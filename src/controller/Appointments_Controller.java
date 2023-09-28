@@ -127,7 +127,7 @@ public class Appointments_Controller
 
         ObservableList<Contacts> contactsObservableList = Contacts_Access.getContacts();
         ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();               // should be showing as local time
-        ObservableList<Appointments> temp_allAppointmentsList;
+        ObservableList<Appointments> temp_allAppointmentsList = FXCollections.observableArrayList();
         ObservableList<String> allContactsNames = FXCollections.observableArrayList();
 
         // lambda #2
@@ -150,11 +150,14 @@ public class Appointments_Controller
          //or for loop here to make local time, since it's already saved as UTC in DB?
         for (Appointments appointment : allAppointmentsList)
         {
-            //temp_allAppointmentsList.add(convertToLocal(allAppointmentsList.getAppointment(appointment)));
+            //(allAppointmentsList.getAppointments(appointment))
+
             LocalDateTime temp_Start = appointment.getStart();
-            System.out.println(temp_Start);
+            //System.out.println(temp_Start);
             LocalDateTime temp_End = appointment.getEnd();
-            System.out.println(temp_End);
+            //System.out.println(temp_End);
+            //temp_allAppointmentsList.add(temp_Start);
+
 
             // call function to convert UTC obj to local time
             // add to obslist to be be displayed in table
@@ -171,6 +174,42 @@ public class Appointments_Controller
                 firstAppointment = firstAppointment.plusMinutes(15);
             }
         }
+
+
+        ZoneId systemZone = ZoneId.systemDefault();                                     // suggestions
+
+        for (Appointments appointment : allAppointmentsList) {
+            LocalDateTime temp_Start = appointment.getStart();
+            LocalDateTime temp_End = appointment.getEnd();
+
+            // Convert UTC time to system's local time zone
+            ZonedDateTime localStart = temp_Start.atZone(ZoneId.of("UTC")).withZoneSameInstant(systemZone);
+            ZonedDateTime localEnd = temp_End.atZone(ZoneId.of("UTC")).withZoneSameInstant(systemZone);
+
+            // Update the appointment's start and end times
+            appointment.setStart(localStart.toLocalDateTime());
+            appointment.setEnd(localEnd.toLocalDateTime());
+        }
+
+        // ...
+
+        // Set the items in your TableView
+        Appointment_Table.setItems(allAppointmentsList);
+
+        // ...
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
         Appointment_TimeStart_CB.setItems(appointmentTimes);
         Appointment_EndTime.setItems(appointmentTimes);
@@ -296,8 +335,8 @@ public class Appointments_Controller
                 System.out.println("thisDate + thisStart " + appointmentStartDate + " " + appointmentStartTime + ":00");
 //                String startUTC = convertTimeDateUTC(appointmentStartDate + " " + appointmentStartTime + ":00");
 //                String endUTC = convertTimeDateUTC(endDate + " " + endTime + ":00");
-            String startUTC = convertTimeDateUTC(appointmentStartDate + " " + appointmentStartTime + ":00");
-            String endUTC = convertTimeDateUTC(endDate + " " + endTime + ":00");
+            String startUTC = appointmentStartDate + " " + appointmentStartTime + ":00";
+            String endUTC = endDate + " " + endTime + ":00";
 
 
                 LocalTime localTimeStart = LocalTime.parse((CharSequence) Appointment_TimeStart_CB.getValue(), minHourFormat);

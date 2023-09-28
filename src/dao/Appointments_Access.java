@@ -27,28 +27,7 @@ public class Appointments_Access
             String Description = rs.getString("Description");
             String Location = rs.getString("Location");
             String Type = rs.getString("Type");
-            //System.out.println("Start Pre: " + rs.getTimestamp("Start"));
             LocalDateTime Start = rs.getTimestamp("Start").toLocalDateTime();           // stored as 12 UTC, shows up as 12 CST?!? Should be showing as 8am, it isn't converting to local
-            //System.out.println("Start Post: " + Start);
-            //line to convert to local time
-
-
-//            LocalDateTime dateTimeStart = LocalDateTime.of(localDateStart, localTimeStart);
-//            //System.out.println("2: dateTimeStart: " + dateTimeStart);
-//            LocalDateTime dateTimeEnd = LocalDateTime.of(localDateEnd, LocalTimeEnd);
-//
-//            ZonedDateTime zoneDtStart = ZonedDateTime.of(dateTimeStart, java.time.ZoneId.systemDefault());
-//            //System.out.println("3: zondDTStart: " + zoneDtStart);
-//            ZonedDateTime zoneDtEnd = ZonedDateTime.of(dateTimeEnd, java.time.ZoneId.systemDefault());
-//
-//            ZonedDateTime convertStartEST = zoneDtStart.withZoneSameInstant(java.time.ZoneId.of("America/New_York"));                 // might be all this bullshit here
-//            //System.out.println("4: convertStartEST: " + convertStartEST);
-//            ZonedDateTime convertEndEST = zoneDtEnd.withZoneSameInstant(java.time.ZoneId.of("America/New_York"));
-
-
-
-
-
             LocalDateTime End = rs.getTimestamp("End").toLocalDateTime();
             int Customer_ID = rs.getInt("Customer_ID");
             int User_ID = rs.getInt("User_ID");
