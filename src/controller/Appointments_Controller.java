@@ -178,18 +178,19 @@ public class Appointments_Controller
 
         ZoneId systemZone = ZoneId.systemDefault();                                     // suggestions
 
-        for (Appointments appointment : allAppointmentsList) {
-            LocalDateTime temp_Start = appointment.getStart();
-            LocalDateTime temp_End = appointment.getEnd();
-
-            // Convert UTC time to system's local time zone
-            ZonedDateTime localStart = temp_Start.atZone(ZoneId.of("UTC")).withZoneSameInstant(systemZone);
-            ZonedDateTime localEnd = temp_End.atZone(ZoneId.of("UTC")).withZoneSameInstant(systemZone);
-
-            // Update the appointment's start and end times
-            appointment.setStart(localStart.toLocalDateTime());
-            appointment.setEnd(localEnd.toLocalDateTime());
-        }
+//        for (Appointments appointment : allAppointmentsList)
+//        {
+//            LocalDateTime temp_Start = appointment.getStart();
+//            LocalDateTime temp_End = appointment.getEnd();
+//
+//            // Convert UTC time to system's local time zone
+//            ZonedDateTime localStart = temp_Start.atZone(ZoneId.of("UTC")).withZoneSameInstant(systemZone);
+//            ZonedDateTime localEnd = temp_End.atZone(ZoneId.of("UTC")).withZoneSameInstant(systemZone);
+//
+//            // Update the appointment's start and end times
+//            appointment.setStart(localStart.toLocalDateTime());
+//            appointment.setEnd(localEnd.toLocalDateTime());
+//        }
 
         // ...
 
@@ -197,7 +198,7 @@ public class Appointments_Controller
         Appointment_Table.setItems(allAppointmentsList);
 
         // ...
-    }
+
 
 
 
