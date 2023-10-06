@@ -41,13 +41,13 @@
                             <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                     <children>
-                                        <TableView layoutX="99.0" layoutY="102.0" prefHeight="285.0" prefWidth="304.0">
+                                        <TableView fx:id="TotalApptsByType" layoutX="99.0" layoutY="102.0" prefHeight="285.0" prefWidth="304.0">
                                             <columns>
                                                 <TableColumn fx:id="AppointmentType_Column" prefWidth="157.0" text="Appointment Type" />
                                                 <TableColumn fx:id="AppointmentTypeTotals_Column" prefWidth="146.0" text="Total" />
                                             </columns>
                                         </TableView>
-                                        <TableView layoutX="533.0" layoutY="102.0" prefHeight="282.0" prefWidth="299.0">
+                                        <TableView fx:id="TotalApptsByMonth" layoutX="533.0" layoutY="102.0" prefHeight="282.0" prefWidth="299.0">
                                             <columns>
                                                 <TableColumn fx:id="AppointmentByMonth_Column" prefWidth="147.0" text="Appointments by Month" />
                                                 <TableColumn fx:id="AppointmentByMonthTotals_Column" prefWidth="151.0" text="Total" />
@@ -60,7 +60,7 @@
                             <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                     <children>
-                                        <TableView layoutX="161.0" layoutY="75.0" prefHeight="313.0" prefWidth="345.0">
+                                        <TableView fx:id="customerByState" layoutX="161.0" layoutY="75.0" prefHeight="313.0" prefWidth="345.0">
                                             <columns>
                                                 <TableColumn fx:id="CustomersByState_Column" prefWidth="173.0" text="State/Province" />
                                                 <TableColumn fx:id="CustomersByStateTotals_Column" prefWidth="171.0" text="Total" />

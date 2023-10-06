@@ -1,15 +1,40 @@
 package controller;
 
+import dao.Report_Access;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-
+import model.Contacts;
+import model.Reports;
 import java.io.IOException;
 import java.sql.SQLException;
+import dao.Appointments_Access;
+import dao.Contacts_Access;
+import dao.Report_Access;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
+import model.*;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.time.Month;
+import java.util.Collections;
+
 
 public class Reports_Controller {
     public Tab SchedByContact_Tab;
@@ -34,25 +59,120 @@ public class Reports_Controller {
     public TableColumn CustomersByState_Column;
     public TableColumn CustomersByStateTotals_Column;
     public Button Cancel_Button;
+    public TableView customerByState;
+    public TableView TotalApptsByMonth;
+    public TableView TotalApptsByType;
 
     public void initialize() throws SQLException
     {
         // gen total # of cust appts by type and month
         // a schedule from each contact in org, includes most attributes   (apptID, title, type, desc, start, end, custID)
         // addtl report, count something, list something
+
+        CustomersByState_Column.setCellValueFactory(new PropertyValueFactory<>("countryName"));
+        CustomersByStateTotals_Column.setCellValueFactory(new PropertyValueFactory<>("countryCount"));
+        Appointment_ID_Column.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
+        Appointment_Title_Column.setCellValueFactory(new PropertyValueFactory<>("appointmentTitle"));
+        Appointment_Desc_Column.setCellValueFactory(new PropertyValueFactory<>("appointmentDescription"));
+        Appt_Loc_Column.setCellValueFactory(new PropertyValueFactory<>("appointmentLocation"));
+        Appt_Type_Column.setCellValueFactory(new PropertyValueFactory<>("appointmentType"));
+        Appt_StartDateTime_Column.setCellValueFactory(new PropertyValueFactory<>("start"));
+        Appt_EndDateTime_Coulmn.setCellValueFactory(new PropertyValueFactory<>("end"));
+        Appt_CustID_Column.setCellValueFactory(new PropertyValueFactory<>("customerID"));
+        Appt_ContactID_Column.setCellValueFactory(new PropertyValueFactory<>("contactID"));
+        AppointmentType_Column.setCellValueFactory(new PropertyValueFactory<>("appointmentType"));
+        AppointmentTypeTotals_Column.setCellValueFactory(new PropertyValueFactory<>("appointmentTotal"));
+        AppointmentByMonth_Column.setCellValueFactory(new PropertyValueFactory<>("appointmentMonth"));
+        AppointmentByMonthTotals_Column.setCellValueFactory(new PropertyValueFactory<>("appointmentTotal"));
+
+        ObservableList<Contacts> contactsObservableList = Contacts_Access.getContacts();
+        ObservableList<String> allContactsNames = FXCollections.observableArrayList();
+        contactsObservableList.forEach(contacts -> allContactsNames.add(contacts.getContact_Name()));
+        Contact_CB.setItems(allContactsNames);
+
+
     }
 
 
-    public void SchedByContact_Tab_Selected(Event event) {
+    public void SchedByContact_Tab_Selected(Event event)
+    {
     }
 
     public void Contact_CB_Selected(ActionEvent actionEvent) {
     }
 
-    public void AppointmentTotals_Tab_Selected(Event event) {
+    public void AppointmentTotals_Tab_Selected(Event event) throws SQLException
+    {
+        try {
+            ObservableList<Appointments> getAllAppointments = Appointments_Access.getAppointments();
+            ObservableList<Month> appointmentMonths = FXCollections.observableArrayList();
+            ObservableList<Month> monthOfAppointments = FXCollections.observableArrayList();
+
+            ObservableList<String> appointmentType = FXCollections.observableArrayList();
+            ObservableList<String> uniqueAppointment = FXCollections.observableArrayList();
+
+            ObservableList<ReportType> reportType = FXCollections.observableArrayList();
+            ObservableList<ReportMonth> reportMonths = FXCollections.observableArrayList();
+
+
+            //IDE converted to Lambda
+            getAllAppointments.forEach(appointments -> {
+                appointmentType.add(appointments.getType());
+            });
+
+            //IDE converted to Lambda
+            getAllAppointments.stream().map(appointment -> {
+                return appointment.getStart().getMonth();
+            }).forEach(appointmentMonths::add);
+
+            //IDE converted to Lambda
+            appointmentMonths.stream().filter(month -> {
+                return !monthOfAppointments.contains(month);
+            }).forEach(monthOfAppointments::add);
+
+            for (Appointments appointments: getAllAppointments) {
+                String appointmentsAppointmentType = appointments.getType();
+                if (!uniqueAppointment.contains(appointmentsAppointmentType)) {
+                    uniqueAppointment.add(appointmentsAppointmentType);
+                }
+            }
+
+            for (Month month: monthOfAppointments) {
+                int totalMonth = Collections.frequency(appointmentMonths, month);
+                String monthName = month.name();
+                ReportMonth appointmentMonth = new ReportMonth(monthName, totalMonth);
+                reportMonths.add(appointmentMonth);
+            }
+            TotalApptsByMonth.setItems(reportMonths);
+
+            for (String type: uniqueAppointment) {
+                String typeToSet = type;
+                int typeTotal = Collections.frequency(appointmentType, type);
+                ReportType appointmentTypes = new ReportType(typeToSet, typeTotal);
+                reportType.add(appointmentTypes);
+            }
+            TotalApptsByType.setItems(reportType);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public void CustomersByState_Tab_Selected(Event event) {
+    public void CustomersByState_Tab_Selected(Event event) throws SQLException
+    {
+        try {
+
+            ObservableList<Reports> aggregatedCountries = Report_Access.getFirstLevelDivision();
+            ObservableList<Reports> countriesToAdd = FXCollections.observableArrayList();
+
+            //IDE converted
+            aggregatedCountries.forEach(countriesToAdd::add);
+
+            customerByState.setItems(countriesToAdd);
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
     }
 
     public void Cancel_Button(ActionEvent actionEvent)
