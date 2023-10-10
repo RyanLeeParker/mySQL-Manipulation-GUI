@@ -12,7 +12,7 @@ public class Reports
      * @param division_name
      * @param divisionCount
      */
-    public Reports(String division_name, int divisionCount)                    // do by customers by state
+    public Reports(String division_name, int divisionCount)
     {
         this.divisionCount = divisionCount;
         this.division_name = division_name;
