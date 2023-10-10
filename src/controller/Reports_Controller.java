@@ -3,6 +3,7 @@ package controller;
 import dao.Report_Access;
 import dao.Appointments_Access;
 import dao.Contacts_Access;
+import javafx.fxml.FXML;
 import model.Contacts;
 import model.Reports;
 import model.*;
@@ -25,6 +26,7 @@ import java.util.Collections;
 
 public class Reports_Controller
 {
+    @FXML
     public Tab SchedByContact_Tab;
     public TableView Appointment_Table;
     public TableColumn Appointment_ID_Column;
@@ -55,15 +57,16 @@ public class Reports_Controller
     {
         CustomersByState_Column.setCellValueFactory(new PropertyValueFactory<Reports, String>("division_name"));
         CustomersByStateTotals_Column.setCellValueFactory(new PropertyValueFactory<>("divisionCount"));
-        Appointment_ID_Column.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
-        Appointment_Title_Column.setCellValueFactory(new PropertyValueFactory<>("appointmentTitle"));
-        Appointment_Desc_Column.setCellValueFactory(new PropertyValueFactory<>("appointmentDescription"));
-        Appt_Loc_Column.setCellValueFactory(new PropertyValueFactory<>("appointmentLocation"));
-        Appt_Type_Column.setCellValueFactory(new PropertyValueFactory<>("appointmentType"));
+        Appointment_ID_Column.setCellValueFactory(new PropertyValueFactory<>("appointment_ID"));
+        Appointment_Title_Column.setCellValueFactory(new PropertyValueFactory<>("Title"));
+        Appointment_Desc_Column.setCellValueFactory(new PropertyValueFactory<>("Description"));
+        Appt_Loc_Column.setCellValueFactory(new PropertyValueFactory<>("Location"));
+        Appt_Type_Column.setCellValueFactory(new PropertyValueFactory<>("Type"));
         Appt_StartDateTime_Column.setCellValueFactory(new PropertyValueFactory<>("start"));
         Appt_EndDateTime_Coulmn.setCellValueFactory(new PropertyValueFactory<>("end"));
-        Appt_CustID_Column.setCellValueFactory(new PropertyValueFactory<>("customerID"));
-        Appt_ContactID_Column.setCellValueFactory(new PropertyValueFactory<>("contactID"));
+        Appt_CustID_Column.setCellValueFactory(new PropertyValueFactory<>("customer_ID"));
+        Appt_ContactID_Column.setCellValueFactory(new PropertyValueFactory<>("contact_ID"));
+        Appt_UserID_Column.setCellValueFactory(new PropertyValueFactory<>("user_ID"));
         AppointmentType_Column.setCellValueFactory(new PropertyValueFactory<>("appointmentType"));
         AppointmentTypeTotals_Column.setCellValueFactory(new PropertyValueFactory<>("appointmentTotal"));
         AppointmentByMonth_Column.setCellValueFactory(new PropertyValueFactory<>("appointmentMonth"));
@@ -76,11 +79,47 @@ public class Reports_Controller
     }
 
 
-    public void SchedByContact_Tab_Selected(Event event)
+    public void SchedByContact_Tab_Selected(Event event) throws SQLException
     {
+
     }
 
-    public void Contact_CB_Selected(ActionEvent actionEvent) {
+    public void Contact_CB_Selected(ActionEvent actionEvent) throws SQLException
+    {
+        try
+        {
+            int contactID = 0;
+
+            ObservableList<Appointments> getAllAppointmentData = Appointments_Access.getAppointments();
+            ObservableList<Appointments> appointmentInfo = FXCollections.observableArrayList();
+            ObservableList<Contacts> getAllContacts = Contacts_Access.getContacts();
+
+            Appointments contactAppointmentInfo;
+
+            String contactName = (String) Contact_CB.getSelectionModel().getSelectedItem();
+
+            for (Contacts contact: getAllContacts)
+            {
+                if (contactName.equals(contact.getContact_Name()))
+                {
+                    contactID = contact.getContact_ID();
+                }
+            }
+
+            for (Appointments appointment: getAllAppointmentData)
+            {
+                if (appointment.getContact_ID() == contactID)
+                {
+                    contactAppointmentInfo = appointment;
+                    appointmentInfo.add(contactAppointmentInfo);
+                }
+            }
+            Appointment_Table.setItems(appointmentInfo);
+        }
+        catch (SQLException throwables)
+        {
+            throwables.printStackTrace();
+        }
     }
 
     public void AppointmentTotals_Tab_Selected(Event event) throws SQLException
@@ -155,15 +194,7 @@ public class Reports_Controller
             //IDE converted
             aggregatedStates.forEach(statesToAdd::add);
 
-            for (Reports report : aggregatedStates)
-            {
-                System.out.println(aggregatedStates + " \n");
-                //System.out.println(statesToAdd + " \n");
-            }
-
             customerByState.setItems(statesToAdd);                   // exception in apply to table?
-            System.out.println("I got here 2.3");
-
         }
         catch (Exception exception)
         {

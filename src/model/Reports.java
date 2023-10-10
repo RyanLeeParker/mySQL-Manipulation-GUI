@@ -23,7 +23,7 @@ public class Reports
      * Returns division name for custom report.
      * @return division_name
      */
-    public String getDivision_name()
+    public String getDivision_name()                                                                        // don't change caps here
     {
         return this.division_name;
     }

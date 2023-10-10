@@ -40,43 +40,53 @@ public class Appointments
         this.Contact_ID = Contact_ID;
     }
 
-    public int getAppointment_ID() {
+    public int getAppointment_ID()
+    {
         return Appointment_ID;
     }
 
-    public String getTitle() {
+    public String getTitle()
+    {
         return Title;
     }
 
-    public String getDescription() {
+    public String getDescription()
+    {
         return Description;
     }
 
-    public String getLocation() {
+    public String getLocation()
+    {
         return Location;
     }
 
-    public String getType() {
+    public String getType()
+    {
         return Type;
     }
 
-    public LocalDateTime getStart() {
+    public LocalDateTime getStart()
+    {
         return Start;
     }
 
-    public LocalDateTime getEnd() {
+    public LocalDateTime getEnd()
+    {
         return End;
     }
 
-    public int getCustomer_ID() {
+    public int getCustomer_ID()
+    {
         return Customer_ID;
     }
 
-    public int getUser_ID() {
+    public int getUser_ID()
+    {
         return User_ID;
     }
 
-    public int getContact_ID() {
+    public int getContact_ID()
+    {
         return Contact_ID;
     }
 }
