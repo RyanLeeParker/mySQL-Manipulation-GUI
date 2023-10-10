@@ -13,11 +13,12 @@ import java.time.LocalDateTime;
 
 public class Report_Access extends Appointments
 {
-    public Report_Access(int Appointment_ID, String Title, String Description, String Location, String Type, LocalDateTime Start, LocalDateTime End, int Customer_ID, int User_ID, int Contact_ID) {
+    public Report_Access(int Appointment_ID, String Title, String Description, String Location, String Type, LocalDateTime Start, LocalDateTime End, int Customer_ID, int User_ID, int Contact_ID)
+    {
         super(Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID);
     }
 
-    public static ObservableList<Reports> getFirstLevelDivision() throws SQLException
+    public static ObservableList<Reports> getFirst_Level_Division() throws SQLException
     {
         ObservableList<Reports> FirstLevelDivisionObservableList = FXCollections.observableArrayList();
         //String sql = "select countries.Country, count(*) as countryCount from customers inner join first_level_divisions on customers.Division_ID = first_level_divisions.Division_ID inner join countries on countries.Country_ID = first_level_divisions.Country_ID where  customers.Division_ID = first_level_divisions.Division_ID group by first_level_divisions.Country_ID order by count(*) desc";

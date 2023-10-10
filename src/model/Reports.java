@@ -3,8 +3,8 @@ package model;
 public class Reports
 {
 
-    private int divisionCount;
-    private String division_name;
+    public int divisionCount;
+    public String division_name;
     public String appointmentMonth;
     public int appointmentTotal;
 
@@ -23,9 +23,9 @@ public class Reports
      * Returns division name for custom report.
      * @return division_name
      */
-    public String getDivision_Name()
+    public String getDivision_name()
     {
-        return division_name;
+        return this.division_name;
     }
 
     /**

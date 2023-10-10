@@ -1,6 +1,11 @@
 package controller;
 
 import dao.Report_Access;
+import dao.Appointments_Access;
+import dao.Contacts_Access;
+import model.Contacts;
+import model.Reports;
+import model.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -11,29 +16,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import model.Contacts;
-import model.Reports;
-import java.io.IOException;
-import java.sql.SQLException;
-import dao.Appointments_Access;
-import dao.Contacts_Access;
-import model.First_Level_Division;
-import dao.FirstLevelDivision_Access;
-import dao.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
-import model.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.Month;
 import java.util.Collections;
+
 
 
 public class Reports_Controller
@@ -57,7 +44,7 @@ public class Reports_Controller
     public TableColumn AppointmentByMonth_Column;
     public TableColumn AppointmentByMonthTotals_Column;
     public Tab CustomersByState_Tab;
-    public TableColumn<?, ?> CustomersByState_Column;
+    public TableColumn<Reports, String> CustomersByState_Column;
     public TableColumn<?, ?> CustomersByStateTotals_Column;
     public Button Cancel_Button;
     public TableView<Reports> customerByState;
@@ -66,7 +53,7 @@ public class Reports_Controller
 
     public void initialize() throws SQLException
     {
-        CustomersByState_Column.setCellValueFactory(new PropertyValueFactory<>("division_name"));
+        CustomersByState_Column.setCellValueFactory(new PropertyValueFactory<Reports, String>("division_name"));
         CustomersByStateTotals_Column.setCellValueFactory(new PropertyValueFactory<>("divisionCount"));
         Appointment_ID_Column.setCellValueFactory(new PropertyValueFactory<>("appointmentID"));
         Appointment_Title_Column.setCellValueFactory(new PropertyValueFactory<>("appointmentTitle"));
@@ -163,15 +150,16 @@ public class Reports_Controller
     {
         try
         {
-            ObservableList<Reports> aggregatedStates = Report_Access.getFirstLevelDivision();
+            ObservableList<Reports> aggregatedStates = Report_Access.getFirst_Level_Division();
             ObservableList<Reports> statesToAdd = FXCollections.observableArrayList();
             //IDE converted
             aggregatedStates.forEach(statesToAdd::add);
 
-//            for (Reports report : aggregatedStates)
-//            {
-//                System.out.println(aggregatedStates);
-//            }
+            for (Reports report : aggregatedStates)
+            {
+                System.out.println(aggregatedStates + " \n");
+                //System.out.println(statesToAdd + " \n");
+            }
 
             customerByState.setItems(statesToAdd);                   // exception in apply to table?
             System.out.println("I got here 2.3");
