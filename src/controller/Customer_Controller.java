@@ -68,11 +68,22 @@ public class Customer_Controller implements Initializable
             ObservableList<Customers> Customers_All = Customer_Access.getCustomers((java.sql.Connection) connect);
             ObservableList<String> Countries = FXCollections.observableArrayList();
             ObservableList<String> First_Level_Divisions_Names = FXCollections.observableArrayList();
+            ObservableList<String> US_FSD = FXCollections.observableArrayList();
+            ObservableList<String> UK_FSD = FXCollections.observableArrayList();
+            ObservableList<String> CAN_FSD = FXCollections.observableArrayList();
 
 
             Customer_ID_Input.setText("Auto Gen - Disabled");
             Customer_ID_Input.setDisable(true);
             Cust_ID = Customers_All.size();
+
+            for (Customers customer: Customers_All)                                         // fixes corner case of deletion OOO
+            {
+                while ((Cust_ID + 1) == customer.getCustomer_ID())
+                {
+                    Cust_ID++;
+                }
+            }
 
             Customer_Table.setItems(Customers_All);
 
@@ -85,38 +96,53 @@ public class Customer_Controller implements Initializable
             Customer_FLD_Column.setCellValueFactory(new PropertyValueFactory<>("Division_ID"));
 
 
-            for (Country country : Countries_All)
+            for (Country country : Countries_All)                                           // have three lists, per country
             {
                 Countries.add(country.getCountry_Name());
-                //System.out.println(country);
             }
+
 
             Customer_Country_CB.setItems(Countries);
 
             for (First_Level_Division firstLevelDivision : First_Level_Divisions_All)
             {
+
+                if (firstLevelDivision.getCountry_ID() == 1)
+                {
+                    US_FSD.add(firstLevelDivision.getDivision_name());
+                }
+                else if (firstLevelDivision.getCountry_ID() == 2)
+                {
+                    UK_FSD.add(firstLevelDivision.getDivision_name());
+                }
+                else if (firstLevelDivision.getCountry_ID() == 3)
+                {
+                    CAN_FSD.add(firstLevelDivision.getDivision_name());
+                }
+
                 First_Level_Divisions_Names.add(firstLevelDivision.getDivision_name());
-//                System.out.println(firstLevelDivision);
-//                System.out.println(firstLevelDivision.getDivision_ID());
-//                System.out.println(firstLevelDivision.getDivision_name());
-//                System.out.println(firstLevelDivision.getCountry_ID());
+
             }
 
-//            if (Customer_Country_CB == U.S.)
-//            {
-//                then only display US states
-//            }
-//            else if(Customer_Country_CB == U.K)
-//            {
-//                only display UK states
-//            }
-//            else if(Customer_Country_CB == Canada)
-//            {
-//                only display Canada provinces
-//            }
 
 
-            Customer_State.setItems(First_Level_Divisions_Names);       // Country selection probably needs to then only display that Countrys states.
+//            if (Customer_Country_CB.getSelectionModel().getSelectedItem().equals(Countries.getCountry_Name()))         //Countries.getCountry_ID()
+//            {
+//                Customer_State.setItems(US_FSD);
+//            }
+            if ("UK".equals(Customer_Country_CB.getSelectionModel().getSelectedItem()))         //Countries.getCountry_ID()
+            {
+                Customer_State.setItems(UK_FSD);
+            }
+            if (Customer_Country_CB.getSelectionModel().getSelectedItem() == "Canada")         //Countries.getCountry_ID()
+            {
+                Customer_State.setItems(CAN_FSD);
+            }
+
+
+
+
+            //Customer_State.setItems(First_Level_Divisions_Names);       // Country selection probably needs to then only display that Countrys states.
 
         }
         catch (Exception e)
@@ -383,6 +409,13 @@ public class Customer_Controller implements Initializable
 
         ObservableList<Customers> refreshCustomersList = Customer_Access.getCustomers(connect);
         Customer_Table.setItems(refreshCustomersList);
+
+        FXMLLoader fxmlLoader = new FXMLLoader(Controller.class.getResource("/views/Customer.fxml"));
+        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        Scene scene = new Scene(fxmlLoader.load(), 1000, 600);
+        stage.setTitle("Customer Records");
+        stage.setScene(scene);
+        stage.show();
 
     }
 
