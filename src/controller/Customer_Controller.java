@@ -17,6 +17,10 @@ import javafx.scene.chart.ScatterChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.PreparedStatement;
@@ -56,6 +60,19 @@ public class Customer_Controller implements Initializable
     public ComboBox Customer_Country_CB;                            // actual country CB
 
     public static int Cust_ID;
+
+    class ItemChangeListener implements ItemListener
+    {
+        @Override
+        public void itemStateChanged(ItemEvent event)
+        {
+            if (event.getStateChange() == ItemEvent.SELECTED)
+            {
+                Object item = event.getItem();
+                // do something with object
+            }
+        }
+    }
 
 
     public void initialize(URL url, ResourceBundle resourceBundle)
@@ -101,7 +118,6 @@ public class Customer_Controller implements Initializable
                 Countries.add(country.getCountry_Name());
             }
 
-
             Customer_Country_CB.setItems(Countries);
 
             for (First_Level_Division firstLevelDivision : First_Level_Divisions_All)
@@ -121,28 +137,23 @@ public class Customer_Controller implements Initializable
                 }
 
                 First_Level_Divisions_Names.add(firstLevelDivision.getDivision_name());
-
             }
 
-
-
-//            if (Customer_Country_CB.getSelectionModel().getSelectedItem().equals(Countries.getCountry_Name()))         //Countries.getCountry_ID()
-//            {
-//                Customer_State.setItems(US_FSD);
-//            }
-            if ("UK".equals(Customer_Country_CB.getSelectionModel().getSelectedItem()))         //Countries.getCountry_ID()
+            Customer_Country_CB.valueProperty().addListener((observable, oldValue, newValue) ->
             {
-                Customer_State.setItems(UK_FSD);
-            }
-            if (Customer_Country_CB.getSelectionModel().getSelectedItem() == "Canada")         //Countries.getCountry_ID()
-            {
-                Customer_State.setItems(CAN_FSD);
-            }
-
-
-
-
-            //Customer_State.setItems(First_Level_Divisions_Names);       // Country selection probably needs to then only display that Countrys states.
+                if ("U.S".equals(newValue))
+                {
+                    Customer_State.setItems(US_FSD);
+                }
+                if ("UK".equals(newValue))
+                {
+                    Customer_State.setItems(UK_FSD);
+                }
+                if ("Canada".equals(newValue))
+                {
+                    Customer_State.setItems(CAN_FSD);
+                }
+            });
 
         }
         catch (Exception e)
@@ -401,7 +412,7 @@ public class Customer_Controller implements Initializable
         ps.setInt(10, firstLevelDivisionName);
         ps.execute();
 
-        Customer_ID_Input.clear();
+        Customer_ID_Input.clear();                                                                                  // can probably drop this chunk if refreshing
         Customer_Name_Input.clear();
         Customer_Address_Input.clear();
         Customer_PostalCode_Input.clear();
@@ -435,7 +446,10 @@ public class Customer_Controller implements Initializable
                 ObservableList<FirstLevelDivision_Access> getFirstleveldivision_Names = FirstLevelDivision_Access.getFirst_Level_Division();
                 ObservableList<String> allFirstleveldivisionivision = FXCollections.observableArrayList();
 
-                Customer_State.setItems(allFirstleveldivisionivision);
+                ObservableList<String> US_FSD = FXCollections.observableArrayList();
+                ObservableList<String> UK_FSD = FXCollections.observableArrayList();
+                ObservableList<String> CAN_FSD = FXCollections.observableArrayList();
+                ObservableList<String> First_Level_Divisions_Names = FXCollections.observableArrayList();
 
                 Customer_ID_Input.setText(String.valueOf((selectedCustomer.getCustomer_ID())));
                 Customer_Name_Input.setText(selectedCustomer.getCustomer_Name());
@@ -461,8 +475,53 @@ public class Customer_Controller implements Initializable
                         }
                     }
                 }
-                Customer_State.setValue(divisionName);
+                //Customer_State.setValue(divisionName);
                 Customer_Country_CB.setValue(countryName);
+
+
+
+
+                for (First_Level_Division firstLevelDivision : getFirstleveldivision_Names)
+                {
+
+                    if (firstLevelDivision.getCountry_ID() == 1)
+                    {
+                        US_FSD.add(firstLevelDivision.getDivision_name());
+                    }
+                    else if (firstLevelDivision.getCountry_ID() == 2)
+                    {
+                        UK_FSD.add(firstLevelDivision.getDivision_name());
+                    }
+                    else if (firstLevelDivision.getCountry_ID() == 3)
+                    {
+                        CAN_FSD.add(firstLevelDivision.getDivision_name());
+                    }
+
+                    First_Level_Divisions_Names.add(firstLevelDivision.getDivision_name());
+                }
+
+                String finalDivisionName = divisionName;
+                Customer_Country_CB.valueProperty().addListener((observable, oldValue, newValue) ->
+                {
+                    if ("U.S".equals(newValue))
+                    {
+                        Customer_State.setItems(US_FSD);
+                        Customer_State.setValue(finalDivisionName);
+                    }
+                    if ("UK".equals(newValue))
+                    {
+                        Customer_State.setItems(UK_FSD);
+                        Customer_State.setValue(finalDivisionName);
+
+                    }
+                    if ("Canada".equals(newValue))
+                    {
+                        Customer_State.setItems(CAN_FSD);
+                        Customer_State.setValue(finalDivisionName);
+                    }
+                });
+
+
             }
         }
         catch (Exception e)
