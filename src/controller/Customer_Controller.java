@@ -427,7 +427,6 @@ public class Customer_Controller implements Initializable
         stage.setTitle("Customer Records");
         stage.setScene(scene);
         stage.show();
-
     }
 
     public void Edit_Button(ActionEvent actionEvent)                                        // populates text fields
@@ -475,11 +474,8 @@ public class Customer_Controller implements Initializable
                         }
                     }
                 }
-                //Customer_State.setValue(divisionName);
+
                 Customer_Country_CB.setValue(countryName);
-
-
-
 
                 for (First_Level_Division firstLevelDivision : getFirstleveldivision_Names)
                 {
@@ -500,28 +496,21 @@ public class Customer_Controller implements Initializable
                     First_Level_Divisions_Names.add(firstLevelDivision.getDivision_name());
                 }
 
-                String finalDivisionName = divisionName;
-                Customer_Country_CB.valueProperty().addListener((observable, oldValue, newValue) ->
+                if (countryName.equals("U.S"))
                 {
-                    if ("U.S".equals(newValue))
-                    {
-                        Customer_State.setItems(US_FSD);
-                        Customer_State.setValue(finalDivisionName);
-                    }
-                    if ("UK".equals(newValue))
-                    {
-                        Customer_State.setItems(UK_FSD);
-                        Customer_State.setValue(finalDivisionName);
-
-                    }
-                    if ("Canada".equals(newValue))
-                    {
-                        Customer_State.setItems(CAN_FSD);
-                        Customer_State.setValue(finalDivisionName);
-                    }
-                });
-
-
+                    Customer_State.setItems(US_FSD);
+                    Customer_State.setValue(divisionName);
+                }
+                if (countryName.equals("UK"))
+                {
+                    Customer_State.setItems(UK_FSD);
+                    Customer_State.setValue(divisionName);
+                }
+                if (countryName.equals("Canada"))
+                {
+                    Customer_State.setItems(CAN_FSD);
+                    Customer_State.setValue(divisionName);
+                }
             }
         }
         catch (Exception e)
