@@ -547,7 +547,7 @@ public class Appointments_Controller
         }
     }
 
-    public void Delete_Button(ActionEvent actionEvent) throws Exception                     // not working on custom appts?
+    public void Delete_Button(ActionEvent actionEvent) throws Exception
     {
         //custom message displayed
 
@@ -557,6 +557,7 @@ public class Appointments_Controller
             Appointments tempAppointment_1 = (Appointments)  Appointment_Table.getSelectionModel().getSelectedItem();
             int Appt_to_del_id_1 = tempAppointment_1.getCustomer_ID();
             String App_to_del_type_1 = tempAppointment_1.getType();
+            int Appt_to_del_ApptID = tempAppointment_1.getAppointment_ID();
 
             //lert alert = new Alert(Alert.AlertType.CONFIRMATION, "Delete the selected appointment with appointment id: " + Appt_to_del_id_1 + " and appointment type " + App_to_del_type_1);
 
@@ -564,13 +565,14 @@ public class Appointments_Controller
 
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Delete Confirmation");
-            alert.setContentText("Do you want to delete ID: "  + Appt_to_del_id_1  + " Type: " + App_to_del_type_1 + "?");
+            alert.setContentText("Do you want to delete Appointment ID: "  + Appt_to_del_ApptID  + " Type: " + App_to_del_type_1 + "?");
             alert.setHeaderText("Confirm Deletion");
 
             Optional<ButtonType> result = alert.showAndWait();
             if(result.get() == ButtonType.OK)
             {
-                Appointments_Access.removeAppointment(Appt_to_del_id_1, connect);
+                System.out.println("Apt ID: " + Appt_to_del_ApptID);
+                Appointments_Access.removeAppointment(Appt_to_del_ApptID, connect);
 
                 ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();
                 Appointment_Table.setItems(allAppointmentsList);
@@ -585,7 +587,9 @@ public class Appointments_Controller
 //                ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();
 //                Appointment_Table.setItems(allAppointmentsList);
 //            }
-        } catch (Exception e)
+
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
         }

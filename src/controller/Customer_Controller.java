@@ -278,7 +278,7 @@ public class Customer_Controller implements Initializable
 
     }
 
-    public void Delete_Button(ActionEvent actionEvent) throws Exception          //When deleting customers, delete their appointments first
+    public void Delete_Button(ActionEvent actionEvent) throws Exception
     {
         Connection connect = JDBC.openConnection();
         ObservableList<Appointments> All_Appointments = Appointments_Access.getAppointments();
@@ -297,13 +297,11 @@ public class Customer_Controller implements Initializable
 
             if (Selected_Customer == null) {return;}
 
-            Appointments_Access.removeAppointment(Cust_to_del, connect);                        //dbl chk appts shld be del after cust
+            Appointments_Access.removeAppointment(Cust_to_del, connect);
             String sqlDelete = "DELETE FROM customers WHERE Customer_ID = ?";
             JDBC.setPreparedStatement(JDBC.getConnection(), sqlDelete);
             PreparedStatement psDelete = JDBC.getPreparedStatement();
 
-
-            //int customerFromTable = Customer_Table.getSelectionModel().getSelectedItem().getCustomer_ID();
             Customers Selected_Customer2 = (Customers) Customer_Table.getSelectionModel().getSelectedItem();
             int Cust_to_del2 = Selected_Customer.getCustomer_ID();
 
@@ -324,7 +322,11 @@ public class Customer_Controller implements Initializable
             ObservableList<Customers> refreshCustomersList = Customer_Access.getCustomers(connect);
             Customer_Table.setItems(refreshCustomersList);
 
-            //Cust_ID--;
+            Alert alert_err = new Alert(Alert.AlertType.WARNING);
+            alert_err.setTitle("Customer deleted successfully!");
+            alert_err.setContentText("Customer deleted successfully!");
+            alert_err.showAndWait();
+
         }
         else if (result.get() == ButtonType.CANCEL)
         {
