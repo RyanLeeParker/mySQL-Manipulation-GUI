@@ -242,13 +242,29 @@ public class Appointments_Controller
 
             ObservableList<Users_Access> UsersObservableList = Users_Access.getUsersList();                                 // user access not working
             ObservableList<Customers> CustomersObservableList = Customer_Access.getCustomers(connection);
+            ObservableList<Users_Access> getAllUsers = Users_Access.getUsersList();
+            ObservableList<Customers> getAllCustomers = Customer_Access.getCustomers(connection);
+            ObservableList<Integer> storeCustomerIDs = FXCollections.observableArrayList();
+            ObservableList<Integer> storeUserIDs = FXCollections.observableArrayList();
+            ObservableList<Appointments> getAllAppointments = Appointments_Access.getAppointments();
 
-            for(Users user : UsersObservableList)
+            for(Users user : UsersObservableList)                                                                       //basically 3 test loops that do fuck all atm
             {
                 System.out.println("PRE User ID: " + user.getUserId());
                 System.out.println("PRE Username: " + user.getUserName());
                 System.out.println("PRE Userpassword: " + user.getPassword());
             }
+            for (Users user : getAllUsers)
+            {
+                storeUserIDs.add(user.getUserId());
+                System.out.println("User:" + user);
+                System.out.println("UserID: " + user.getUserId());
+            }
+            for (Integer temp : storeUserIDs)
+            {
+                System.out.println("Int?: " + temp);
+            }
+
 
             if(Appt_Name_Input.getText().isEmpty())
             {
@@ -374,18 +390,6 @@ public class Appointments_Controller
                 alert_err.showAndWait();
                 return;
             }
-
-
-
-
-
-
-
-                ObservableList<Customers> getAllCustomers = Customer_Access.getCustomers(connection);
-                ObservableList<Integer> storeCustomerIDs = FXCollections.observableArrayList();
-                ObservableList<Users_Access> getAllUsers = Users_Access.getUsersList();
-                ObservableList<Integer> storeUserIDs = FXCollections.observableArrayList();
-                ObservableList<Appointments> getAllAppointments = Appointments_Access.getAppointments();
 
                 //IDE converted
                 getAllCustomers.stream().map(Customers::getCustomer_ID).forEach(storeCustomerIDs::add);
