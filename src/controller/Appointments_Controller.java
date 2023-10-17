@@ -121,14 +121,16 @@ public class Appointments_Controller
 
     public static int Appt_ID;
 
-    public void initialize() throws Exception
+    public void initialize() throws Exception                                                                               // apply cust id fix to appts
     {
         // time should be stored UTC, but converted to local time for user      3 timezones: UTC, EST, SystemDefault
+        Connection connect = JDBC.openConnection();
 
         ObservableList<Contacts> contactsObservableList = Contacts_Access.getContacts();
         ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();               // should be showing as local time
         ObservableList<Appointments> temp_allAppointmentsList = FXCollections.observableArrayList();
         ObservableList<String> allContactsNames = FXCollections.observableArrayList();
+
 
         // lambda #2
         contactsObservableList.forEach(contacts -> allContactsNames.add(contacts.getContact_Name()));
@@ -216,20 +218,37 @@ public class Appointments_Controller
         Appointment_EndTime.setItems(appointmentTimes);
         Appointment_Contact_CB.setItems(allContactsNames);
         //Appointment_Table.setItems(appointmentTimes);
-        Appointment_Table.setItems(allAppointmentsList);                                            // might just be populating with UTC, never converting back, edit grabs from here, propagates
+        Appointment_Table.setItems(allAppointmentsList);                                     // might just be populating with UTC, never converting back, edit grabs from here, propagates
 
         Appt_ID_Input.setText("Auto Gen - Disabled");
         Appt_ID_Input.setDisable(true);
         Appt_ID = allAppointmentsList.size();
 
+        for (Appointments appointment: allAppointmentsList)                                   // fixes corner case of deletion OOO
+        {
+            while ((Appt_ID + 1) == appointment.getAppointment_ID())
+            {
+                Appt_ID++;
+            }
+        }
+
     }
 
-    public void Add_Button(ActionEvent actionEvent) throws Exception                        // Make sure Cust ID and maybe user ID are within range
+    public void Add_Button(ActionEvent actionEvent) throws Exception
     {
         try
         {
-
             Connection connection = JDBC.openConnection();
+
+            ObservableList<Users_Access> UsersObservableList = Users_Access.getUsersList();                                 // user access not working
+            ObservableList<Customers> CustomersObservableList = Customer_Access.getCustomers(connection);
+
+            for(Users user : UsersObservableList)
+            {
+                System.out.println("PRE User ID: " + user.getUserId());
+                System.out.println("PRE Username: " + user.getUserName());
+                System.out.println("PRE Userpassword: " + user.getPassword());
+            }
 
             if(Appt_Name_Input.getText().isEmpty())
             {
@@ -295,11 +314,55 @@ public class Appointments_Controller
                 alert_err.showAndWait();
                 return;
             }
-            if(Appt_Cust_ID_Input.getText().isEmpty())
+
+            boolean Cust_Valid = false;
+
+            for (Customers customer : CustomersObservableList)                                                          // checks that custID is in range
+            {
+                //System.out.println("I got here 1, Cust_Valid: " + Cust_Valid);
+                String tempID = String.valueOf(customer.getCustomer_ID());
+                Integer tempIntID = customer.getCustomer_ID();;
+                //System.out.println("I got here 1.1, CustID: " + tempIntID);
+                //System.out.println("I got here 1.2,tempID: " + tempID);
+                if (Appt_Cust_ID_Input.getText().equals(tempID))
+                {
+                    //System.out.println("I got here 1.3,Cust_Input: " + Appt_UserID_Input);
+                    Cust_Valid = true;
+                    //System.out.println("I got here 2, Cust_Valid: " + Cust_Valid);
+                }
+            }
+
+            if((Appt_Cust_ID_Input.getText().isEmpty()) || (!Cust_Valid))
             {
                 Alert alert_err = new Alert(Alert.AlertType.WARNING);
                 alert_err.setTitle("Unable to add Appointment.");
                 alert_err.setContentText("Please enter a valid Customer ID to add Appointment.");
+                alert_err.showAndWait();
+                return;
+            }
+
+            boolean User_Valid = false;
+
+            for (Users user : UsersObservableList)
+            {
+                System.out.println("I got here 1, User_Valid: " + User_Valid);
+                String tempID = String.valueOf(user.getUserId());
+                Integer tempIntID = user.getUserId();;
+                System.out.println("I got here 1.1, User_Valid: " + tempIntID);
+                System.out.println("I got here 1.2,tempID: " + tempID);
+                if (Appt_UserID_Input.getText().equals(tempID))
+                {
+                    //System.out.println("I got here 1.3,User_Valid: " + Appt_UserID_Input);
+                    User_Valid = true;
+                    System.out.println("I got here 2, User_Valid: " + User_Valid);
+                }
+            }
+
+            if((Appt_UserID_Input.getText().isEmpty()) || (!User_Valid))
+            {
+                Alert alert_err = new Alert(Alert.AlertType.WARNING);
+                alert_err.setTitle("Unable to add Appointment.");
+                alert_err.setContentText("Please enter a valid User ID to add Appointment.");
                 alert_err.showAndWait();
                 return;
             }
@@ -307,10 +370,15 @@ public class Appointments_Controller
             {
                 Alert alert_err = new Alert(Alert.AlertType.WARNING);
                 alert_err.setTitle("Unable to add Appointment.");
-                alert_err.setContentText("Please enter a valid Customer ID to add Appointment.");
+                alert_err.setContentText("Please enter a valid Contact to add Appointment.");
                 alert_err.showAndWait();
                 return;
             }
+
+
+
+
+
 
 
                 ObservableList<Customers> getAllCustomers = Customer_Access.getCustomers(connection);
@@ -470,13 +538,13 @@ public class Appointments_Controller
             }
         catch (SQLException throwables)
         {
-            throwables.printStackTrace();
+            //throwables.printStackTrace();
         }
 
         FXMLLoader fxmlLoader = new FXMLLoader(Controller.class.getResource("/views/Appointments.fxml"));
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         Scene scene = new Scene(fxmlLoader.load(), 1000, 600);
-        stage.setTitle("Add Appointments");
+        stage.setTitle("Appointments");
         stage.setScene(scene);
         stage.show();
 
@@ -595,7 +663,7 @@ public class Appointments_Controller
         }
     }
 
-    public void Save_Button(ActionEvent actionEvent) throws Exception         // every save adds 5hrs to appointment
+    public void Save_Button(ActionEvent actionEvent) throws Exception         // every save adds 5hrs to appointment      // Make sure Cust ID and maybe user ID are within range
     {
         try
         {
@@ -670,6 +738,14 @@ public class Appointments_Controller
                 Alert alert_err = new Alert(Alert.AlertType.WARNING);
                 alert_err.setTitle("Unable to add Appointment.");
                 alert_err.setContentText("Please enter a valid Customer ID to add Appointment.");
+                alert_err.showAndWait();
+                return;
+            }
+            if(Appt_UserID_Input.getText().isEmpty())
+            {
+                Alert alert_err = new Alert(Alert.AlertType.WARNING);
+                alert_err.setTitle("Unable to add Appointment.");
+                alert_err.setContentText("Please enter a valid User ID to add Appointment.");
                 alert_err.showAndWait();
                 return;
             }

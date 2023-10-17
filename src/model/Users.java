@@ -1,11 +1,11 @@
 package model;
 
 public class Users {
-    private int userId;
-    private String userName;
-    private String password;
+    public int userId;
+    public String userName;
+    public String password;
 
-    public Users()                      //int userId, String userName, String password
+    public Users()
     {
         this.userId = userId;
         this.userName = userName;

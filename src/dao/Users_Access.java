@@ -19,33 +19,23 @@ public class Users_Access extends Users
     {
         try
         {
-            //System.out.println("Validation 1 reached");
             String query = "SELECT * FROM users WHERE user_name = '" + userName + "' AND password = '" + password + "'";
-            //System.out.println("Validation 2 reached");
-            PreparedStatement ps = JDBC.getConnection().prepareStatement(query);            //might need to use setpreparedStatement()
-            //System.out.println("Validation 3 reached");
+            PreparedStatement ps = JDBC.getConnection().prepareStatement(query);
             ResultSet rs = ps.executeQuery();
-            //System.out.println("Validation 4 reached");                 // reaches here, something above casues SQL exception, prob preparedstatement above
             rs.next();
-            //System.out.println("Validation 5 reached");
-
-
 
             if (rs.getString("User_Name").equals(userName))
             {
-                //System.out.println("Validation 6 reached");
                 if (rs.getString("Password").equals(password))
                 {
-                    //System.out.println("Validation 7 reached");
                     return rs.getInt("User_ID");
-
                 }
             }
         }
         catch (SQLException d)
         {
             System.out.println("Validation exception reached");
-            d.printStackTrace();
+            //d.printStackTrace();
         }
 
         return -1;
