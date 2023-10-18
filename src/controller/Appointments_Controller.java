@@ -240,31 +240,16 @@ public class Appointments_Controller
         {
             Connection connection = JDBC.openConnection();
 
-            ObservableList<Users_Access> UsersObservableList = Users_Access.getUsersList();                                 // user access not working
             ObservableList<Customers> CustomersObservableList = Customer_Access.getCustomers(connection);
-            ObservableList<Users_Access> getAllUsers = Users_Access.getUsersList();
             ObservableList<Customers> getAllCustomers = Customer_Access.getCustomers(connection);
             ObservableList<Integer> storeCustomerIDs = FXCollections.observableArrayList();
+            ObservableList<Users_Access> getAllUsers = Users_Access.getUsersList();
+            ObservableList<Users_Access> UsersObservableList = Users_Access.getUsersList();
             ObservableList<Integer> storeUserIDs = FXCollections.observableArrayList();
             ObservableList<Appointments> getAllAppointments = Appointments_Access.getAppointments();
 
-            for(Users user : UsersObservableList)                                                                       //basically 3 test loops that do fuck all atm
-            {
-                System.out.println("PRE User ID: " + user.getUserId());
-                System.out.println("PRE Username: " + user.getUserName());
-                System.out.println("PRE Userpassword: " + user.getPassword());
-            }
-            for (Users user : getAllUsers)
-            {
-                storeUserIDs.add(user.getUserId());
-                System.out.println("User:" + user);
-                System.out.println("UserID: " + user.getUserId());
-            }
-            for (Integer temp : storeUserIDs)
-            {
-                System.out.println("Int?: " + temp);
-            }
-
+            getAllCustomers.stream().map(Customers::getCustomer_ID).forEach(storeCustomerIDs::add);
+            getAllUsers.stream().map(Users::getUserId).forEach(storeUserIDs::add);
 
             if(Appt_Name_Input.getText().isEmpty())
             {
@@ -335,16 +320,10 @@ public class Appointments_Controller
 
             for (Customers customer : CustomersObservableList)                                                          // checks that custID is in range
             {
-                //System.out.println("I got here 1, Cust_Valid: " + Cust_Valid);
-                String tempID = String.valueOf(customer.getCustomer_ID());
-                Integer tempIntID = customer.getCustomer_ID();;
-                //System.out.println("I got here 1.1, CustID: " + tempIntID);
-                //System.out.println("I got here 1.2,tempID: " + tempID);
-                if (Appt_Cust_ID_Input.getText().equals(tempID))
+                String Cust_tempID = String.valueOf(customer.getCustomer_ID());
+                if (Appt_Cust_ID_Input.getText().equals(Cust_tempID))
                 {
-                    //System.out.println("I got here 1.3,Cust_Input: " + Appt_UserID_Input);
                     Cust_Valid = true;
-                    //System.out.println("I got here 2, Cust_Valid: " + Cust_Valid);
                 }
             }
 
@@ -359,21 +338,16 @@ public class Appointments_Controller
 
             boolean User_Valid = false;
 
-            for (Users user : UsersObservableList)
+            for (Users_Access user : UsersObservableList)
             {
-                System.out.println("I got here 1, User_Valid: " + User_Valid);
-                String tempID = String.valueOf(user.getUserId());
-                Integer tempIntID = user.getUserId();;
-                System.out.println("I got here 1.1, User_Valid: " + tempIntID);
-                System.out.println("I got here 1.2,tempID: " + tempID);
-                if (Appt_UserID_Input.getText().equals(tempID))
+                System.out.println("I got here 1,UserID: " + user.getUserId());
+                String Usr_tempID = String.valueOf(user.getUserId());
+                if (Appt_UserID_Input.getText().equals(Usr_tempID))
                 {
-                    //System.out.println("I got here 1.3,User_Valid: " + Appt_UserID_Input);
+                    System.out.println("I got here 2,User_Input: " + Appt_UserID_Input);
                     User_Valid = true;
-                    System.out.println("I got here 2, User_Valid: " + User_Valid);
                 }
             }
-
             if((Appt_UserID_Input.getText().isEmpty()) || (!User_Valid))
             {
                 Alert alert_err = new Alert(Alert.AlertType.WARNING);
@@ -390,10 +364,6 @@ public class Appointments_Controller
                 alert_err.showAndWait();
                 return;
             }
-
-                //IDE converted
-                getAllCustomers.stream().map(Customers::getCustomer_ID).forEach(storeCustomerIDs::add);
-                getAllUsers.stream().map(Users::getUserId).forEach(storeUserIDs::add);
 
                 LocalDate localDateEnd = Appt_EndDate_Picker.getValue();
                 LocalDate localDateStart = Appt_StartDate_Picker.getValue();

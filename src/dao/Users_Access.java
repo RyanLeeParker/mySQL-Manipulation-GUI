@@ -12,7 +12,7 @@ public class Users_Access extends Users
 {
     public Users_Access(int userId, String userName, String password)
     {
-        super();
+        super(userId, userName, password);
     }
 
     public static int validation(String userName, String password) throws SQLException        //compare allUsersObsList to user input
@@ -41,22 +41,29 @@ public class Users_Access extends Users
         return -1;
     }
 
-    public static ObservableList<Users_Access> getUsersList() throws Exception
+    public static ObservableList<Users_Access> getUsersList() throws SQLException
     {
+        try
+        {
             ObservableList<Users_Access> allUsersObsList = FXCollections.observableArrayList();
             String sql = "SELECT * FROM users";
             PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
             ResultSet result = ps.executeQuery();
-
             while (result.next())
             {
                 int userId = result.getInt("User_ID");
                 String userName = result.getString("User_Name");
                 String password = result.getString("Password");
-                Users_Access userResult = new Users_Access(userId, userName, password);
-                allUsersObsList.add(userResult);
+                Users_Access user = new Users_Access(userId, userName, password);
+                allUsersObsList.add(user);
             }
-
             return allUsersObsList;
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return null;
     }
+
 }
