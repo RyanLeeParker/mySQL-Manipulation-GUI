@@ -93,9 +93,10 @@ public class Appointments_Controller
     public TextField Appt_Type_Input;
     public TextField Appt_Cust_ID_Input;
     public TextField Appt_UserID_Input;
+    public RadioButton All_Radio;
     public RadioButton Week_Radio;
-    public ToggleGroup Appt_Toggle;
     public RadioButton Month_Radio;
+    public ToggleGroup Appt_Toggle;
     public TableView Appointment_Table;
     public TableColumn Appointment_ID_Column;
     public TableColumn Appointment_Title_Column;
@@ -114,20 +115,20 @@ public class Appointments_Controller
     public Button Cancel_Button;
     public ComboBox Appointment_EndTime;
     public ComboBox Appointment_Contact_CB;
+    public ComboBox Appointment_TimeStart_CB;
     public DatePicker Appt_StartDate_Picker;
     public DatePicker Appt_EndDate_Picker;
-    public ComboBox Appointment_TimeStart_CB;
-    public RadioButton All_Radio;
+
 
     public static int Appt_ID;
 
-    public void initialize() throws Exception                                                                               // apply cust id fix to appts
+    public void initialize() throws Exception
     {
         // time should be stored UTC, but converted to local time for user      3 timezones: UTC, EST, SystemDefault
         Connection connect = JDBC.openConnection();
 
         ObservableList<Contacts> contactsObservableList = Contacts_Access.getContacts();
-        ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();               // should be showing as local time
+        ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();                          // should be showing as local time
         ObservableList<Appointments> temp_allAppointmentsList = FXCollections.observableArrayList();
         ObservableList<String> allContactsNames = FXCollections.observableArrayList();
 
@@ -340,7 +341,6 @@ public class Appointments_Controller
 
             for (Users_Access user : UsersObservableList)
             {
-                System.out.println("I got here 1,UserID: " + user.getUserId());
                 String Usr_tempID = String.valueOf(user.getUserId());
                 if (Appt_UserID_Input.getText().equals(Usr_tempID))
                 {
@@ -533,7 +533,6 @@ public class Appointments_Controller
 
             if (selectedAppointment != null)
             {
-
                 //get all contact info and fill ComboBox.
                 ObservableList<Contacts> contactsObservableList = Contacts_Access.getContacts();
                 ObservableList<String> allContactsNames = FXCollections.observableArrayList();
@@ -563,7 +562,7 @@ public class Appointments_Controller
                 Appt_EndDate_Picker.setValue(selectedAppointment.getEnd().toLocalDate());
                 Appointment_TimeStart_CB.setValue(String.valueOf(selectedAppointment.getStart().toLocalTime()));
                 Appointment_EndTime.setValue(String.valueOf(selectedAppointment.getEnd().toLocalTime()));
-                Appt_UserID_Input.setText(String.valueOf(selectedAppointment.getUser_ID()));                // might need to temp enable show text field here, disable on save
+                Appt_UserID_Input.setText(String.valueOf(selectedAppointment.getUser_ID()));                            // might need to temp enable show text field here, disable on save
                 Appointment_Contact_CB.setValue(displayContactName);
 
                 ObservableList<String> appointmentTimes = FXCollections.observableArrayList();
@@ -601,10 +600,6 @@ public class Appointments_Controller
             String App_to_del_type_1 = tempAppointment_1.getType();
             int Appt_to_del_ApptID = tempAppointment_1.getAppointment_ID();
 
-            //lert alert = new Alert(Alert.AlertType.CONFIRMATION, "Delete the selected appointment with appointment id: " + Appt_to_del_id_1 + " and appointment type " + App_to_del_type_1);
-
-            //Optional<ButtonType> confirmation = alert.showAndWait();
-
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Delete Confirmation");
             alert.setContentText("Do you want to delete Appointment ID: "  + Appt_to_del_ApptID  + " Type: " + App_to_del_type_1 + "?");
@@ -618,18 +613,8 @@ public class Appointments_Controller
 
                 ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();
                 Appointment_Table.setItems(allAppointmentsList);
-
             }
             else if (result.get() == ButtonType.CANCEL) {return;}
-
-//            if (confirmation.isPresent() && confirmation.get() == ButtonType.OK)
-//            {
-//                Appointments_Access.removeAppointment(Appt_to_del_id_1, connect);
-//
-//                ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();
-//                Appointment_Table.setItems(allAppointmentsList);
-//            }
-
         }
         catch (Exception e)
         {
@@ -637,11 +622,13 @@ public class Appointments_Controller
         }
     }
 
-    public void Save_Button(ActionEvent actionEvent) throws Exception         // every save adds 5hrs to appointment      // Make sure Cust ID and maybe user ID are within range
+    public void Save_Button(ActionEvent actionEvent) throws Exception                                                   // every save adds 5hrs to appointment
     {
         try
         {
             Connection connection = JDBC.openConnection();
+            ObservableList<Users_Access> UsersObservableList = Users_Access.getUsersList();
+            ObservableList<Customers> CustomersObservableList = Customer_Access.getCustomers(connection);
 
             if(Appt_Name_Input.getText().isEmpty())
             {
@@ -707,7 +694,18 @@ public class Appointments_Controller
                 alert_err.showAndWait();
                 return;
             }
-            if(Appt_Cust_ID_Input.getText().isEmpty())
+            boolean Cust_Valid = false;
+
+            for (Customers customer : CustomersObservableList)                                                          // checks that custID is in range
+            {
+                String Cust_tempID = String.valueOf(customer.getCustomer_ID());
+                if (Appt_Cust_ID_Input.getText().equals(Cust_tempID))
+                {
+                    Cust_Valid = true;
+                }
+            }
+
+            if((Appt_Cust_ID_Input.getText().isEmpty()) || (!Cust_Valid))
             {
                 Alert alert_err = new Alert(Alert.AlertType.WARNING);
                 alert_err.setTitle("Unable to add Appointment.");
@@ -715,7 +713,19 @@ public class Appointments_Controller
                 alert_err.showAndWait();
                 return;
             }
-            if(Appt_UserID_Input.getText().isEmpty())
+
+            boolean User_Valid = false;
+
+            for (Users_Access user : UsersObservableList)
+            {
+                String Usr_tempID = String.valueOf(user.getUserId());
+                if (Appt_UserID_Input.getText().equals(Usr_tempID))
+                {
+                    System.out.println("I got here 2,User_Input: " + Appt_UserID_Input);
+                    User_Valid = true;
+                }
+            }
+            if((Appt_UserID_Input.getText().isEmpty()) || (!User_Valid))
             {
                 Alert alert_err = new Alert(Alert.AlertType.WARNING);
                 alert_err.setTitle("Unable to add Appointment.");
@@ -923,6 +933,76 @@ public class Appointments_Controller
             alert_err.showAndWait();
         }
     }
+    public void All_Radio_Selected(ActionEvent actionEvent)
+    {
+        try
+        {
+            ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();
+
+            if (allAppointmentsList != null)
+                for (model.Appointments appointment : allAppointmentsList)
+                {
+                    Appointment_Table.setItems(allAppointmentsList);
+                }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void Week_Radio_Selected(ActionEvent actionEvent)
+    {
+        try
+        {
+
+            ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();
+            ObservableList<Appointments> appointmentsWeek = FXCollections.observableArrayList();
+
+            LocalDateTime weekStart = LocalDateTime.now().minusWeeks(1);
+            LocalDateTime weekEnd = LocalDateTime.now().plusWeeks(1);
+
+            if (allAppointmentsList != null)
+                //IDE converted forEach
+                allAppointmentsList.forEach(appointment -> {
+                    if (appointment.getEnd().isAfter(weekStart) && appointment.getEnd().isBefore(weekEnd))
+                    {
+                        appointmentsWeek.add(appointment);
+                    }
+                    Appointment_Table.setItems(appointmentsWeek);
+                });
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void Month_Radio_Selected(ActionEvent actionEvent)
+    {
+        try
+        {
+            ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();
+            ObservableList<Appointments> appointmentsMonth = FXCollections.observableArrayList();
+
+            LocalDateTime currentMonthStart = LocalDateTime.now().minusMonths(1);
+            LocalDateTime currentMonthEnd = LocalDateTime.now().plusMonths(1);
+
+            if (allAppointmentsList != null)
+                //IDE converted to forEach
+                allAppointmentsList.forEach(appointment -> {
+                    if (appointment.getEnd().isAfter(currentMonthStart) && appointment.getEnd().isBefore(currentMonthEnd))
+                    {
+                        appointmentsMonth.add(appointment);
+                    }
+                    Appointment_Table.setItems(appointmentsMonth);
+                });
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
 
     public void EndTime_CB_Select(ActionEvent actionEvent) {
     }
@@ -937,14 +1017,5 @@ public class Appointments_Controller
     }
 
     public void TimeStart_CB_Select(ActionEvent actionEvent) {
-    }
-
-    public void All_Radio_Selected(ActionEvent actionEvent) {
-    }
-
-    public void Week_Radio_Selected(ActionEvent actionEvent) {
-    }
-
-    public void Month_Radio_Selected(ActionEvent actionEvent) {
     }
 }
