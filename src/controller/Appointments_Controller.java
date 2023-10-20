@@ -9,6 +9,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
+import java.time.format.FormatStyle;
 import java.util.ResourceBundle;
 
 import dao.Appointments_Access;
@@ -118,8 +119,7 @@ public class Appointments_Controller
     public ComboBox Appointment_TimeStart_CB;
     public DatePicker Appt_StartDate_Picker;
     public DatePicker Appt_EndDate_Picker;
-
-
+    private final DateTimeFormatter timeDTF = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);                     // not using yet
     public static int Appt_ID;
 
     public void initialize() throws Exception
@@ -131,6 +131,7 @@ public class Appointments_Controller
         ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();                          // should be showing as local time
         ObservableList<Appointments> temp_allAppointmentsList = FXCollections.observableArrayList();
         ObservableList<String> allContactsNames = FXCollections.observableArrayList();
+
 
 
         // lambda #2
@@ -955,7 +956,6 @@ public class Appointments_Controller
     {
         try
         {
-
             ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();
             ObservableList<Appointments> appointmentsWeek = FXCollections.observableArrayList();
 
