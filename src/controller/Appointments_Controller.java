@@ -122,6 +122,9 @@ public class Appointments_Controller
     private final DateTimeFormatter timeDTF = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);                     // not using yet
     public static int Appt_ID;
 
+
+    //Write code that enables the user to adjust appointment times. While the appointment times should be stored in Coordinated Universal Time (UTC), they should be automatically and consistently updated according to the local time zone set on the user’s computer wherever appointments are displayed in the application.
+    //Note: There are up to three time zones in effect. Coordinated Universal Time (UTC) is used for storing the time in the database, the user’s local time is used for display purposes, and Eastern Time (ET) is used for the company’s office hours. Local time will be checked against ET business hours before they are stored in the database as UTC.
     public void initialize() throws Exception
     {
         // time should be stored UTC, but converted to local time for user      3 timezones: UTC, EST, SystemDefault
@@ -129,10 +132,8 @@ public class Appointments_Controller
 
         ObservableList<Contacts> contactsObservableList = Contacts_Access.getContacts();
         ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();                          // should be showing as local time
-        ObservableList<Appointments> temp_allAppointmentsList = FXCollections.observableArrayList();
+        ObservableList<Appointments> LocalAppointmentsList = FXCollections.observableArrayList();
         ObservableList<String> allContactsNames = FXCollections.observableArrayList();
-
-
 
         // lambda #2
         contactsObservableList.forEach(contacts -> allContactsNames.add(contacts.getContact_Name()));
@@ -151,6 +152,8 @@ public class Appointments_Controller
         Appt_UserID_Column.setCellValueFactory(new PropertyValueFactory<>("User_ID"));
 
 
+//        ZonedDateTime zoneDtStart = ZonedDateTime.of(dateTimeStart, ZoneId.systemDefault());
+//        ZonedDateTime zoneDtEnd = ZonedDateTime.of(dateTimeEnd, ZoneId.systemDefault());
          //or for loop here to make local time, since it's already saved as UTC in DB?
         for (Appointments appointment : allAppointmentsList)
         {
@@ -161,10 +164,11 @@ public class Appointments_Controller
             LocalDateTime temp_End = appointment.getEnd();
             //System.out.println(temp_End);
             //temp_allAppointmentsList.add(temp_Start);
-
-
+            LocalDateTime LocalStart = temp_Start.atZone(ZoneId.systemDefault()).toLocalDateTime();
+            LocalDateTime LocalEnd = temp_End.atZone(ZoneId.systemDefault()).toLocalDateTime();
+            LocalAppointmentsList.add();
             // call function to convert UTC obj to local time
-            // add to obslist to be be displayed in table
+            // add to obslist to be displayed in table
         }
 
         LocalTime firstAppointment = LocalTime.MIN.plusHours(8);
@@ -178,43 +182,7 @@ public class Appointments_Controller
                 firstAppointment = firstAppointment.plusMinutes(15);
             }
         }
-
-
         ZoneId systemZone = ZoneId.systemDefault();                                     // suggestions
-
-//        for (Appointments appointment : allAppointmentsList)
-//        {
-//            LocalDateTime temp_Start = appointment.getStart();
-//            LocalDateTime temp_End = appointment.getEnd();
-//
-//            // Convert UTC time to system's local time zone
-//            ZonedDateTime localStart = temp_Start.atZone(ZoneId.of("UTC")).withZoneSameInstant(systemZone);
-//            ZonedDateTime localEnd = temp_End.atZone(ZoneId.of("UTC")).withZoneSameInstant(systemZone);
-//
-//            // Update the appointment's start and end times
-//            appointment.setStart(localStart.toLocalDateTime());
-//            appointment.setEnd(localEnd.toLocalDateTime());
-//        }
-
-        // ...
-
-        // Set the items in your TableView
-        Appointment_Table.setItems(allAppointmentsList);
-
-        // ...
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         Appointment_TimeStart_CB.setItems(appointmentTimes);
         Appointment_EndTime.setItems(appointmentTimes);
@@ -233,7 +201,6 @@ public class Appointments_Controller
                 Appt_ID++;
             }
         }
-
     }
 
     public void Add_Button(ActionEvent actionEvent) throws Exception
@@ -758,15 +725,12 @@ public class Appointments_Controller
                 DateTimeFormatter minHourFormat = DateTimeFormatter.ofPattern("HH:mm");
 
                 LocalTime localTimeStart = LocalTime.parse((CharSequence) Appointment_TimeStart_CB.getValue(), minHourFormat);
-            //System.out.println("1: LocalTimeStart: " + localTimeStart);
                 LocalTime LocalTimeEnd = LocalTime.parse((CharSequence) Appointment_EndTime.getValue(), minHourFormat);
 
                 LocalDateTime dateTimeStart = LocalDateTime.of(localDateStart, localTimeStart);
-            //System.out.println("2: dateTimeStart: " + dateTimeStart);
                 LocalDateTime dateTimeEnd = LocalDateTime.of(localDateEnd, LocalTimeEnd);
 
                 ZonedDateTime zoneDtStart = ZonedDateTime.of(dateTimeStart, ZoneId.systemDefault());
-            //System.out.println("3: zondDTStart: " + zoneDtStart);
                 ZonedDateTime zoneDtEnd = ZonedDateTime.of(dateTimeEnd, ZoneId.systemDefault());
 
                 ZonedDateTime convertStartEST = zoneDtStart.withZoneSameInstant(ZoneId.of("America/New_York"));                 // might be all this bullshit here
