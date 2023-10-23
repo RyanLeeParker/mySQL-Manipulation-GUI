@@ -40,9 +40,6 @@ public class Appointments_Access
 
         return ObservableList_Appointments;
     }
-
-    //CRUD imp
-
     public static int removeAppointment(int Customer, Connection connection) throws SQLException
     {
         String query = "DELETE FROM appointments WHERE Appointment_ID=?";

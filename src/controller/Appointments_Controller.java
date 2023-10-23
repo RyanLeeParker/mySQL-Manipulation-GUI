@@ -151,9 +151,6 @@ public class Appointments_Controller
         Appt_ContactID_Column.setCellValueFactory(new PropertyValueFactory<>("Contact_ID"));
         Appt_UserID_Column.setCellValueFactory(new PropertyValueFactory<>("User_ID"));
 
-
-//        ZonedDateTime zoneDtStart = ZonedDateTime.of(dateTimeStart, ZoneId.systemDefault());
-//        ZonedDateTime zoneDtEnd = ZonedDateTime.of(dateTimeEnd, ZoneId.systemDefault());
          //or for loop here to make local time, since it's already saved as UTC in DB?
         for (Appointments appointment : allAppointmentsList)
         {
@@ -166,7 +163,8 @@ public class Appointments_Controller
             //temp_allAppointmentsList.add(temp_Start);
             LocalDateTime LocalStart = temp_Start.atZone(ZoneId.systemDefault()).toLocalDateTime();
             LocalDateTime LocalEnd = temp_End.atZone(ZoneId.systemDefault()).toLocalDateTime();
-            LocalAppointmentsList.add();
+
+            //LocalAppointmentsList.add();
             // call function to convert UTC obj to local time
             // add to obslist to be displayed in table
         }
@@ -183,6 +181,7 @@ public class Appointments_Controller
             }
         }
         ZoneId systemZone = ZoneId.systemDefault();                                     // suggestions
+        System.out.println(systemZone);
 
         Appointment_TimeStart_CB.setItems(appointmentTimes);
         Appointment_EndTime.setItems(appointmentTimes);
@@ -312,7 +311,6 @@ public class Appointments_Controller
                 String Usr_tempID = String.valueOf(user.getUserId());
                 if (Appt_UserID_Input.getText().equals(Usr_tempID))
                 {
-                    System.out.println("I got here 2,User_Input: " + Appt_UserID_Input);
                     User_Valid = true;
                 }
             }
@@ -344,10 +342,10 @@ public class Appointments_Controller
                 String endTime = (String) Appointment_EndTime.getValue();
 
                 System.out.println("thisDate + thisStart " + appointmentStartDate + " " + appointmentStartTime + ":00");
-//                String startUTC = convertTimeDateUTC(appointmentStartDate + " " + appointmentStartTime + ":00");
-//                String endUTC = convertTimeDateUTC(endDate + " " + endTime + ":00");
-            String startUTC = appointmentStartDate + " " + appointmentStartTime + ":00";
-            String endUTC = endDate + " " + endTime + ":00";
+                String startUTC = convertTimeDateUTC(appointmentStartDate + " " + appointmentStartTime + ":00");
+                String endUTC = convertTimeDateUTC(endDate + " " + endTime + ":00");
+            //String startUTC = appointmentStartDate + " " + appointmentStartTime + ":00";
+            //String endUTC = endDate + " " + endTime + ":00";
 
 
                 LocalTime localTimeStart = LocalTime.parse((CharSequence) Appointment_TimeStart_CB.getValue(), minHourFormat);
@@ -361,6 +359,7 @@ public class Appointments_Controller
 
                 ZonedDateTime convertStartEST = zoneDtStart.withZoneSameInstant(ZoneId.of("America/New_York"));
                 ZonedDateTime convertEndEST = zoneDtEnd.withZoneSameInstant(ZoneId.of("America/New_York"));
+                System.out.println("ConvertStartEST: " + convertStartEST);
 
                 LocalTime startAppointmentTimeToCheck = convertStartEST.toLocalTime();
                 LocalTime endAppointmentTimeToCheck = convertEndEST.toLocalTime();
@@ -825,10 +824,10 @@ public class Appointments_Controller
                 String endDate = Appt_EndDate_Picker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 String endTime = (String) Appointment_EndTime.getValue();
 
-                //String startUTC = convertTimeDateUTC(startDate + " " + startTime + ":00");                                      // likely here, Yup it's converting UTC into UTC, adding 5hrs.
-            String startUTC = startDate + " " + startTime + ":00";
-            //String endUTC = convertTimeDateUTC(endDate + " " + endTime + ":00");                                            // and here
-            String endUTC = endDate + " " + endTime + ":00";
+                String startUTC = convertTimeDateUTC(startDate + " " + startTime + ":00");                                      // likely here, Yup it's converting UTC into UTC, adding 5hrs.
+            //String startUTC = startDate + " " + startTime + ":00";
+            String endUTC = convertTimeDateUTC(endDate + " " + endTime + ":00");                                            // and here
+            //String endUTC = endDate + " " + endTime + ":00";
 
 
 
@@ -860,10 +859,6 @@ public class Appointments_Controller
                 //System.out.println("2: ST: " + startTime + " ET: " + endTime);
                 ps.execute();
                 //System.out.println("3: ST: " + startTime + " ET: " + endTime);
-
-                // loop here to reconvert back to local time, otherwise it displays UTC
-
-
         }
         catch (Exception e)
         {
@@ -876,7 +871,6 @@ public class Appointments_Controller
         stage.setTitle("Add Appointments");
         stage.setScene(scene);
         stage.show();
-
     }
 
     public void Cancel_Button(ActionEvent actionEvent)
