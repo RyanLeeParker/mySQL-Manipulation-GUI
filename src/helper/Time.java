@@ -22,12 +22,6 @@ public class Time
             String utcOUT = localOUT.format(DateTimeFormatter.ofPattern("yyy-MM-dd HH:mm:ss"));
             System.out.println("23: uctOUT: " + utcOUT);
 
-
             return utcOUT;
-
-//            System.out.println("20: zoneDT: " + zoneDT);
-//            System.out.println("21: utcDT: " + utcDT);
-//            System.out.println("22: localOUT: " + localOUT);
-//            System.out.println("23: uctOUT: " + utcOUT);
         }
 }

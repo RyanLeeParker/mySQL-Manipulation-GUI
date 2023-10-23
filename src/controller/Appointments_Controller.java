@@ -80,6 +80,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import helper.Time;
 import java.time.ZoneId;
+import java.sql.Timestamp;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 
 import static helper.Time.convertTimeDateUTC;
 
@@ -119,7 +122,6 @@ public class Appointments_Controller
     public ComboBox Appointment_TimeStart_CB;
     public DatePicker Appt_StartDate_Picker;
     public DatePicker Appt_EndDate_Picker;
-    private final DateTimeFormatter timeDTF = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT);                     // not using yet
     public static int Appt_ID;
 
 
@@ -131,9 +133,12 @@ public class Appointments_Controller
         Connection connect = JDBC.openConnection();
 
         ObservableList<Contacts> contactsObservableList = Contacts_Access.getContacts();
-        ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();                          // should be showing as local time
+        ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();
         ObservableList<Appointments> LocalAppointmentsList = FXCollections.observableArrayList();
         ObservableList<String> allContactsNames = FXCollections.observableArrayList();
+
+        ZoneId systemZone = ZoneId.systemDefault();
+        System.out.println(systemZone);
 
         // lambda #2
         contactsObservableList.forEach(contacts -> allContactsNames.add(contacts.getContact_Name()));
@@ -151,22 +156,31 @@ public class Appointments_Controller
         Appt_ContactID_Column.setCellValueFactory(new PropertyValueFactory<>("Contact_ID"));
         Appt_UserID_Column.setCellValueFactory(new PropertyValueFactory<>("User_ID"));
 
-         //or for loop here to make local time, since it's already saved as UTC in DB?
+         //or for loop here to make local time
         for (Appointments appointment : allAppointmentsList)
         {
-            //(allAppointmentsList.getAppointments(appointment))
-
             LocalDateTime temp_Start = appointment.getStart();
-            //System.out.println(temp_Start);
-            LocalDateTime temp_End = appointment.getEnd();
-            //System.out.println(temp_End);
-            //temp_allAppointmentsList.add(temp_Start);
-            LocalDateTime LocalStart = temp_Start.atZone(ZoneId.systemDefault()).toLocalDateTime();
-            LocalDateTime LocalEnd = temp_End.atZone(ZoneId.systemDefault()).toLocalDateTime();
+            ZonedDateTime ZDT_start = temp_Start.atZone(ZoneId.of("UTC"));
+            ZonedDateTime ZDT_final_start = ZDT_start.withZoneSameInstant(systemZone);
+            LocalDateTime Start = ZDT_final_start.toLocalDateTime();
 
-            //LocalAppointmentsList.add();
-            // call function to convert UTC obj to local time
-            // add to obslist to be displayed in table
+            LocalDateTime temp_End = appointment.getEnd();
+            ZonedDateTime ZDT_end = temp_End.atZone(ZoneId.of("UTC"));
+            ZonedDateTime ZDT_final_end = ZDT_end.withZoneSameInstant(systemZone);
+            LocalDateTime End = ZDT_final_end.toLocalDateTime();
+
+            Integer Appointment_ID = appointment.getAppointment_ID();
+            String Title = appointment.getTitle();
+            String Description = appointment.getDescription();
+            String Location = appointment.getLocation();
+            String Type = appointment.getType();
+            Integer Customer_ID = appointment.getCustomer_ID();
+            Integer User_ID = appointment.getUser_ID();
+            Integer Contact_ID = appointment.getContact_ID();
+
+
+            Appointments Appointment = new Appointments(Appointment_ID,Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID);
+            LocalAppointmentsList.add(Appointment);
         }
 
         LocalTime firstAppointment = LocalTime.MIN.plusHours(8);
@@ -180,14 +194,11 @@ public class Appointments_Controller
                 firstAppointment = firstAppointment.plusMinutes(15);
             }
         }
-        ZoneId systemZone = ZoneId.systemDefault();                                     // suggestions
-        System.out.println(systemZone);
 
         Appointment_TimeStart_CB.setItems(appointmentTimes);
         Appointment_EndTime.setItems(appointmentTimes);
         Appointment_Contact_CB.setItems(allContactsNames);
-        //Appointment_Table.setItems(appointmentTimes);
-        Appointment_Table.setItems(allAppointmentsList);                                     // might just be populating with UTC, never converting back, edit grabs from here, propagates
+        Appointment_Table.setItems(LocalAppointmentsList);
 
         Appt_ID_Input.setText("Auto Gen - Disabled");
         Appt_ID_Input.setDisable(true);
@@ -346,6 +357,8 @@ public class Appointments_Controller
                 String endUTC = convertTimeDateUTC(endDate + " " + endTime + ":00");                                        // Can comment out this for workaround, same in edit func.
             //String startUTC = appointmentStartDate + " " + appointmentStartTime + ":00";
             //String endUTC = endDate + " " + endTime + ":00";
+            System.out.println("startUTC: " + startUTC);
+            System.out.println("endUTC: " + endUTC);
 
 
                 LocalTime localTimeStart = LocalTime.parse((CharSequence) Appointment_TimeStart_CB.getValue(), minHourFormat);
