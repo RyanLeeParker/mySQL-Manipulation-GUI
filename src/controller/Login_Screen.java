@@ -18,6 +18,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -61,12 +62,19 @@ public class Login_Screen implements Initializable
         try
         {
             ObservableList<Appointments> getAllAppointments = Appointments_Access.getAppointments();
+            ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();
+            ObservableList<Appointments> LocalAppointmentsList = Appointments_Access.getAppointments();
+
             LocalDateTime currentTimeMinus15Min = LocalDateTime.now().minusMinutes(15);
             LocalDateTime currentTimePlus15Min = LocalDateTime.now().plusMinutes(15);
             LocalDateTime startTime;
+            ZoneId systemZone = ZoneId.systemDefault();
+            System.out.println(systemZone);
             int getAppointmentID = 0;
             LocalDateTime displayTime = null;
             boolean appointmentWithin15Min = false;
+
+            ResourceBundle rb = ResourceBundle.getBundle("language/login", Locale.getDefault());
 
             FileWriter WriteToFile = new FileWriter("login_activity.txt", true);
             PrintWriter recordFile = new PrintWriter(WriteToFile);
@@ -77,6 +85,7 @@ public class Login_Screen implements Initializable
 
             if (userId > 0)
             {
+                System.out.println("userID: " + userId);
                 try
                 {
                     FXMLLoader fxmlLoader = new FXMLLoader(Controller.class.getResource("/views/Main_Screen.fxml"));
@@ -89,10 +98,39 @@ public class Login_Screen implements Initializable
                     //log login
                     recordFile.print(userName + " Logged in at " + Timestamp.valueOf(LocalDateTime.now()) + "\n");     // reqs need user printed too?
 
-                    //check for upcoming appointments if user is validated
-                    for (Appointments appointment: getAllAppointments)
+
+                    for (Appointments appointment : allAppointmentsList)                                                //for loop here to make local time
                     {
+                        LocalDateTime temp_Start = appointment.getStart();
+                        ZonedDateTime ZDT_start = temp_Start.atZone(ZoneId.of("UTC"));
+                        ZonedDateTime ZDT_final_start = ZDT_start.withZoneSameInstant(systemZone);
+                        LocalDateTime Start = ZDT_final_start.toLocalDateTime();
+
+                        LocalDateTime temp_End = appointment.getEnd();
+                        ZonedDateTime ZDT_end = temp_End.atZone(ZoneId.of("UTC"));
+                        ZonedDateTime ZDT_final_end = ZDT_end.withZoneSameInstant(systemZone);
+                        LocalDateTime End = ZDT_final_end.toLocalDateTime();
+
+                        Integer Appointment_ID = appointment.getAppointment_ID();
+                        String Title = appointment.getTitle();
+                        String Description = appointment.getDescription();
+                        String Location = appointment.getLocation();
+                        String Type = appointment.getType();
+                        Integer Customer_ID = appointment.getCustomer_ID();
+                        Integer User_ID = appointment.getUser_ID();
+                        Integer Contact_ID = appointment.getContact_ID();
+
+                        Appointments Appointment = new Appointments(Appointment_ID,Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID);
+                        LocalAppointmentsList.add(Appointment);
+                    }
+
+                    //check for upcoming appointments if user is validated
+                    for (Appointments appointment: LocalAppointmentsList)
+                    {
+//                        System.out.println("currentTimeMinus15Min: " + currentTimeMinus15Min);
+//                        System.out.println("currentTimePlus15Min: " + currentTimePlus15Min);
                         startTime = appointment.getStart();
+//                        System.out.println("startTime: " + startTime + "\n");
                         if ((startTime.isAfter(currentTimeMinus15Min) || startTime.isEqual(currentTimeMinus15Min)) && (startTime.isBefore(currentTimePlus15Min) || (startTime.isEqual(currentTimePlus15Min))))
                         {
                             getAppointmentID = appointment.getAppointment_ID();
@@ -100,13 +138,13 @@ public class Login_Screen implements Initializable
                             appointmentWithin15Min = true;
                         }
                     }
-                    if (appointmentWithin15Min !=false)
+                    if (appointmentWithin15Min)
                     {
                         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment within 15 minutes: " + getAppointmentID + " and appointment start time of: " + displayTime);
                         Optional<ButtonType> confirmation = alert.showAndWait();
                         System.out.println("There is an appointment within 15 minutes");
                     }
-                    else
+                    else                                                                                                // this fires
                     {
                         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "No upcoming appointments.");
                         Optional<ButtonType> confirmation = alert.showAndWait();

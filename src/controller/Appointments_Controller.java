@@ -156,8 +156,8 @@ public class Appointments_Controller
         Appt_ContactID_Column.setCellValueFactory(new PropertyValueFactory<>("Contact_ID"));
         Appt_UserID_Column.setCellValueFactory(new PropertyValueFactory<>("User_ID"));
 
-         //or for loop here to make local time
-        for (Appointments appointment : allAppointmentsList)
+
+        for (Appointments appointment : allAppointmentsList)                                                            //for loop here to make local time
         {
             LocalDateTime temp_Start = appointment.getStart();
             ZonedDateTime ZDT_start = temp_Start.atZone(ZoneId.of("UTC"));
@@ -177,7 +177,6 @@ public class Appointments_Controller
             Integer Customer_ID = appointment.getCustomer_ID();
             Integer User_ID = appointment.getUser_ID();
             Integer Contact_ID = appointment.getContact_ID();
-
 
             Appointments Appointment = new Appointments(Appointment_ID,Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID);
             LocalAppointmentsList.add(Appointment);
