@@ -5,13 +5,13 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Login_Screen">
     <children>
-        <TextField fx:id="Username_textfield" layoutX="226.0" layoutY="128.0" promptText="Enter User name" />
-        <TextField fx:id="Password_textfield" layoutX="226.0" layoutY="163.0" promptText="Enter Password" />
+        <TextField fx:id="Username_textfield" layoutX="226.0" layoutY="128.0" />
+        <TextField fx:id="Password_textfield" layoutX="226.0" layoutY="163.0" />
         <Label fx:id="Location_label" layoutX="509.0" layoutY="34.0" text="America" />
         <Label fx:id="Error_Message" layoutX="286.0" layoutY="200.0" />
         <Button fx:id="Login_Button" layoutX="438.0" layoutY="337.0" mnemonicParsing="false" onAction="#Login_Button_Press" text="Login" />
-        <Button fx:id="CancelButton" layoutX="492.0" layoutY="337.0" mnemonicParsing="false" onAction="#Cancel_Press" text="Cancel" />
-        <Label fx:id="username_label" layoutX="166.0" layoutY="132.0" text="Username" />
-        <Label fx:id="password_label" layoutX="166.0" layoutY="167.0" text="Password" />
+        <Button fx:id="CancelButton" layoutX="510.0" layoutY="337.0" mnemonicParsing="false" onAction="#Cancel_Press" text="Cancel" />
+        <Label fx:id="username_label" layoutX="132.0" layoutY="132.0" text="Username" />
+        <Label fx:id="password_label" layoutX="134.0" layoutY="167.0" text="Password" />
     </children>
 </AnchorPane>

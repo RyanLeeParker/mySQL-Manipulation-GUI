@@ -40,16 +40,18 @@ public class Login_Screen implements Initializable
         try
         {
             Locale locale = Locale.getDefault();
+            //Locale locale = new Locale("fr");
             Locale.setDefault(locale);
             ZoneId zone_id = ZoneId.systemDefault();
             rb = ResourceBundle.getBundle("language/login", Locale.getDefault());
+            //rb = ResourceBundle.getBundle("language/login", locale);
             Location_label.setText(rb.getString("Locale"));
-            //loginField.setText(rb.getString("Login"));
             username_label.setText(rb.getString("username"));
             password_label.setText(rb.getString("password"));
-            Login_Button.setText(rb.getString("Login"));
-            CancelButton.setText(rb.getString("Exit"));
+            Login_Button.setText(rb.getString("login"));
+            CancelButton.setText(rb.getString("exit"));
             //locationText.setText(rb.getString("Location"));
+
         }
         catch (Exception e)
         {
@@ -74,7 +76,9 @@ public class Login_Screen implements Initializable
             LocalDateTime displayTime = null;
             boolean appointmentWithin15Min = false;
 
+            //Locale locale = new Locale("fr");
             ResourceBundle rb = ResourceBundle.getBundle("language/login", Locale.getDefault());
+            //ResourceBundle rb = ResourceBundle.getBundle("language/login", locale);
 
             FileWriter WriteToFile = new FileWriter("login_activity.txt", true);
             PrintWriter recordFile = new PrintWriter(WriteToFile);
@@ -85,7 +89,6 @@ public class Login_Screen implements Initializable
 
             if (userId > 0)
             {
-                System.out.println("userID: " + userId);
                 try
                 {
                     FXMLLoader fxmlLoader = new FXMLLoader(Controller.class.getResource("/views/Main_Screen.fxml"));
@@ -97,7 +100,6 @@ public class Login_Screen implements Initializable
 
                     //log login
                     recordFile.print(userName + " Logged in at " + Timestamp.valueOf(LocalDateTime.now()) + "\n");     // reqs need user printed too?
-
 
                     for (Appointments appointment : allAppointmentsList)                                                //for loop here to make local time
                     {
@@ -161,10 +163,10 @@ public class Login_Screen implements Initializable
             }
             else if (userId < 0)
             {
-                Alert alert_err = new Alert(Alert.AlertType.WARNING);
-                alert_err.setTitle("Invalid Login");
-                alert_err.setContentText("Please reenter and try again.");
-                alert_err.showAndWait();
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle(rb.getString("errorTitle"));
+                alert.setContentText(rb.getString("errorText"));
+                alert.showAndWait();
 
                 //log failed attempt
                 recordFile.print(userName + " Failed to login." + Timestamp.valueOf(LocalDateTime.now()) + "\n");           //moved to after
