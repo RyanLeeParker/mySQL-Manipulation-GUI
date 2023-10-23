@@ -27,7 +27,9 @@ public class Appointments_Access
             String Description = rs.getString("Description");
             String Location = rs.getString("Location");
             String Type = rs.getString("Type");
+            //System.out.println("Start pre toLocalDateTime: " + rs.getTimestamp("Start"));
             LocalDateTime Start = rs.getTimestamp("Start").toLocalDateTime();           // stored as 12 UTC, shows up as 12 CST?!? Should be showing as 8am, it isn't converting to local
+            //System.out.println("Start post toLocalDateTime: " + Start);
             LocalDateTime End = rs.getTimestamp("End").toLocalDateTime();
             int Customer_ID = rs.getInt("Customer_ID");
             int User_ID = rs.getInt("User_ID");

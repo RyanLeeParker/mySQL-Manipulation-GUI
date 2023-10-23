@@ -342,8 +342,8 @@ public class Appointments_Controller
                 String endTime = (String) Appointment_EndTime.getValue();
 
                 System.out.println("thisDate + thisStart " + appointmentStartDate + " " + appointmentStartTime + ":00");
-                String startUTC = convertTimeDateUTC(appointmentStartDate + " " + appointmentStartTime + ":00");
-                String endUTC = convertTimeDateUTC(endDate + " " + endTime + ":00");
+                String startUTC = convertTimeDateUTC(appointmentStartDate + " " + appointmentStartTime + ":00");            // Can comment out this for workaround, same in edit func.
+                String endUTC = convertTimeDateUTC(endDate + " " + endTime + ":00");                                        // Can comment out this for workaround, same in edit func.
             //String startUTC = appointmentStartDate + " " + appointmentStartTime + ":00";
             //String endUTC = endDate + " " + endTime + ":00";
 
@@ -468,7 +468,8 @@ public class Appointments_Controller
                 ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
                 ps.setString(9, "admin");
                 ps.setTimestamp(10, Timestamp.valueOf(LocalDateTime.now()));
-                ps.setInt(11, 1);
+                //ps.setInt(11, 1);
+            ps.setInt(11, Integer.parseInt(Appt_UserID_Input.getText()));
                 ps.setInt(12, Integer.parseInt(Appt_Cust_ID_Input.getText()));
                 ps.setInt(13, Integer.parseInt(Contacts_Access.findContactID((String) Appointment_Contact_CB.getValue())));
                 ps.setInt(14, Integer.parseInt(Contacts_Access.findContactID(Appt_UserID_Input.getText())));
@@ -479,7 +480,7 @@ public class Appointments_Controller
             }
         catch (SQLException throwables)
         {
-            //throwables.printStackTrace();
+            throwables.printStackTrace();
         }
 
         FXMLLoader fxmlLoader = new FXMLLoader(Controller.class.getResource("/views/Appointments.fxml"));
