@@ -1,6 +1,6 @@
 package model;
 
-public class ReportType
+public class Report_Type
 {
     public String appointmentType;
     public int appointmentTotal;
@@ -9,7 +9,7 @@ public class ReportType
      * @param appointmentTotal
      * @param appointmentType
      */
-    public ReportType(String appointmentType, int appointmentTotal)
+    public Report_Type(String appointmentType, int appointmentTotal)
     {
         this.appointmentType = appointmentType;
         this.appointmentTotal = appointmentTotal;

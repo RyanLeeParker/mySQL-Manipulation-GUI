@@ -86,7 +86,4 @@ public class Controller implements Initializable
     {
         System.exit(0);
     }
-
-    // two main model obj classes, Customer & Appointments
-    // only translate login screen, America doesn't have to be translated
 }

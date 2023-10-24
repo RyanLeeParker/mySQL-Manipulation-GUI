@@ -2,6 +2,7 @@ package controller;
 
 import dao.Appointments_Access;
 import dao.Users_Access;
+import helper.Time;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -99,38 +100,37 @@ public class Login_Screen implements Initializable
                     //log login
                     recordFile.print(userName + " Logged in at " + Timestamp.valueOf(LocalDateTime.now()) + "\n");     // reqs need user printed too?
 
-                    for (Appointments appointment : allAppointmentsList)                                                //for loop here to make local time
-                    {
-                        LocalDateTime temp_Start = appointment.getStart();
-                        ZonedDateTime ZDT_start = temp_Start.atZone(ZoneId.of("UTC"));
-                        ZonedDateTime ZDT_final_start = ZDT_start.withZoneSameInstant(systemZone);
-                        LocalDateTime Start = ZDT_final_start.toLocalDateTime();
+//                    for (Appointments appointment : allAppointmentsList)                                                //for loop here to make local time
+//                    {
+//                        LocalDateTime temp_Start = appointment.getStart();
+//                        ZonedDateTime ZDT_start = temp_Start.atZone(ZoneId.of("UTC"));
+//                        ZonedDateTime ZDT_final_start = ZDT_start.withZoneSameInstant(systemZone);
+//                        LocalDateTime Start = ZDT_final_start.toLocalDateTime();
+//
+//                        LocalDateTime temp_End = appointment.getEnd();
+//                        ZonedDateTime ZDT_end = temp_End.atZone(ZoneId.of("UTC"));
+//                        ZonedDateTime ZDT_final_end = ZDT_end.withZoneSameInstant(systemZone);
+//                        LocalDateTime End = ZDT_final_end.toLocalDateTime();
+//
+//                        Integer Appointment_ID = appointment.getAppointment_ID();
+//                        String Title = appointment.getTitle();
+//                        String Description = appointment.getDescription();
+//                        String Location = appointment.getLocation();
+//                        String Type = appointment.getType();
+//                        Integer Customer_ID = appointment.getCustomer_ID();
+//                        Integer User_ID = appointment.getUser_ID();
+//                        Integer Contact_ID = appointment.getContact_ID();
+//
+//                        Appointments Appointment = new Appointments(Appointment_ID,Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID);
+//                        LocalAppointmentsList.add(Appointment);
+//                    }
 
-                        LocalDateTime temp_End = appointment.getEnd();
-                        ZonedDateTime ZDT_end = temp_End.atZone(ZoneId.of("UTC"));
-                        ZonedDateTime ZDT_final_end = ZDT_end.withZoneSameInstant(systemZone);
-                        LocalDateTime End = ZDT_final_end.toLocalDateTime();
-
-                        Integer Appointment_ID = appointment.getAppointment_ID();
-                        String Title = appointment.getTitle();
-                        String Description = appointment.getDescription();
-                        String Location = appointment.getLocation();
-                        String Type = appointment.getType();
-                        Integer Customer_ID = appointment.getCustomer_ID();
-                        Integer User_ID = appointment.getUser_ID();
-                        Integer Contact_ID = appointment.getContact_ID();
-
-                        Appointments Appointment = new Appointments(Appointment_ID,Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID);
-                        LocalAppointmentsList.add(Appointment);
-                    }
+                    LocalAppointmentsList = Time.convertTimeDateLocal();
 
                     //check for upcoming appointments if user is validated
                     for (Appointments appointment: LocalAppointmentsList)
                     {
-//                        System.out.println("currentTimeMinus15Min: " + currentTimeMinus15Min);
-//                        System.out.println("currentTimePlus15Min: " + currentTimePlus15Min);
                         startTime = appointment.getStart();
-//                        System.out.println("startTime: " + startTime + "\n");
                         if ((startTime.isAfter(currentTimeMinus15Min) || startTime.isEqual(currentTimeMinus15Min)) && (startTime.isBefore(currentTimePlus15Min) || (startTime.isEqual(currentTimePlus15Min))))
                         {
                             getAppointmentID = appointment.getAppointment_ID();

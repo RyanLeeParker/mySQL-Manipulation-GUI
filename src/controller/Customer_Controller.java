@@ -67,7 +67,6 @@ public class Customer_Controller implements Initializable
             if (event.getStateChange() == ItemEvent.SELECTED)
             {
                 Object item = event.getItem();
-                // do something with object
             }
         }
     }

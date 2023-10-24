@@ -19,10 +19,8 @@ public class Country_Access extends Country
     {
         ObservableList<Country_Access> ObservableList_Countries = FXCollections.observableArrayList();
         String sql = "SELECT Country_ID, Country FROM countries";
-        PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);          //might need to use setpreparedStatement()
+        PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
-
-        //System.out.println("Countries access, in getCountries()");
 
         while (rs.next())
         {
@@ -30,9 +28,6 @@ public class Country_Access extends Country
             String Country_Name = rs.getString("Country");
             Country_Access country = new Country_Access(Country_ID, Country_Name);
             ObservableList_Countries.add(country);
-
-
-            //System.out.println(country);
         }
         return ObservableList_Countries;
     }

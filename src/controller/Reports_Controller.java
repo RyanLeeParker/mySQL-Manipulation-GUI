@@ -74,7 +74,12 @@ public class Reports_Controller
 
         ObservableList<Contacts> contactsObservableList = Contacts_Access.getContacts();
         ObservableList<String> allContactsNames = FXCollections.observableArrayList();
-        contactsObservableList.forEach(contacts -> allContactsNames.add(contacts.getContact_Name()));
+
+        for (Contacts contacts : contactsObservableList)
+        {
+            allContactsNames.add(contacts.getContact_Name());
+        }
+
         Contact_CB.setItems(allContactsNames);
     }
 
@@ -110,9 +115,9 @@ public class Reports_Controller
             }
             Appointment_Table.setItems(appointmentInfo);
         }
-        catch (SQLException throwables)
+        catch (SQLException e)
         {
-            throwables.printStackTrace();
+            e.printStackTrace();
         }
     }
 
@@ -127,8 +132,8 @@ public class Reports_Controller
             ObservableList<String> appointmentType = FXCollections.observableArrayList();
             ObservableList<String> uniqueAppointment = FXCollections.observableArrayList();
 
-            ObservableList<ReportType> reportType = FXCollections.observableArrayList();
-            ObservableList<ReportMonth> reportMonths = FXCollections.observableArrayList();
+            ObservableList<Report_Type> reportType = FXCollections.observableArrayList();
+            ObservableList<Report_Month> reportMonths = FXCollections.observableArrayList();
 
             for (Appointments appointments : getAllAppointments)
             {
@@ -161,7 +166,7 @@ public class Reports_Controller
             {
                 int totalMonth = Collections.frequency(appointmentMonths, month);
                 String monthName = month.name();
-                ReportMonth appointmentMonth = new ReportMonth(monthName, totalMonth);
+                Report_Month appointmentMonth = new Report_Month(monthName, totalMonth);
                 reportMonths.add(appointmentMonth);
             }
             TotalApptsByMonth.setItems(reportMonths);
@@ -170,14 +175,14 @@ public class Reports_Controller
             {
                 String typeToSet = type;
                 int typeTotal = Collections.frequency(appointmentType, type);
-                ReportType appointmentTypes = new ReportType(typeToSet, typeTotal);
+                Report_Type appointmentTypes = new Report_Type(typeToSet, typeTotal);
                 reportType.add(appointmentTypes);
             }
             TotalApptsByType.setItems(reportType);
         }
-        catch (Exception e)
+        catch (Exception f)
         {
-            e.printStackTrace();
+            f.printStackTrace();
         }
     }
 
@@ -220,7 +225,7 @@ public class Reports_Controller
         }
     }
 
-    public void SchedByContact_Tab_Selected(Event event) throws SQLException
+    public void SchedByContact_Tab_Selected(Event event) throws SQLException                                            // deletion angers the programming gods
     {
 
     }

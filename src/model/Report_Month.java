@@ -1,6 +1,6 @@
 package model;
 
-public class ReportMonth
+public class Report_Month
 {
     public String appointmentMonth;
     public int appointmentTotal;
@@ -9,7 +9,7 @@ public class ReportMonth
      * @param appointmentMonth
      * @param appointmentTotal
      */
-    public ReportMonth(String appointmentMonth, int appointmentTotal)
+    public Report_Month(String appointmentMonth, int appointmentTotal)
     {
         this.appointmentMonth = appointmentMonth;
         this.appointmentTotal = appointmentTotal;

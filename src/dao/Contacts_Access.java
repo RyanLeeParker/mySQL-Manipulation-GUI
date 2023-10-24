@@ -15,7 +15,7 @@ public class Contacts_Access
     {
         ObservableList<Contacts> ObservableList_Contacts = FXCollections.observableArrayList();
         String sql = "SELECT * FROM contacts";
-        PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);          //might need to use setpreparedStatement()
+        PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
 
         while(rs.next())
@@ -30,11 +30,13 @@ public class Contacts_Access
         return ObservableList_Contacts;
     }
 
-    public static String findContactID(String contactID) throws SQLException {
+    public static String findContactID(String contactID) throws SQLException
+    {
         PreparedStatement ps = JDBC.getConnection().prepareStatement("SELECT * FROM contacts WHERE Contact_Name = ?");
         ps.setString(1, contactID);
         ResultSet rs = ps.executeQuery();
-        while (rs.next()) {
+        while (rs.next())
+        {
             contactID = rs.getString("Contact_ID");
         }
         return contactID;

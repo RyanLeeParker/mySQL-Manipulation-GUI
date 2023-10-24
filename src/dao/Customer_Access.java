@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 
 public class Customer_Access
 {
-    public static ObservableList<Customers> getCustomers(Connection connection) throws SQLException                //dbl chk query text
+    public static ObservableList<Customers> getCustomers(Connection connection) throws SQLException
     {
         ObservableList<Customers> ObservableList_Customers = FXCollections.observableArrayList();
 
@@ -21,7 +21,7 @@ public class Customer_Access
                 "customers.Phone, customers.Division_ID, first_level_divisions.Division from customers INNER JOIN  " +
                 "first_level_divisions ON customers.Division_ID = first_level_divisions.Division_ID";
 
-        PreparedStatement ps = JDBC.getConnection().prepareStatement(query);          //might need to use setpreparedStatement()
+        PreparedStatement ps = JDBC.getConnection().prepareStatement(query);
         ResultSet rs = ps.executeQuery();
 
         while (rs.next())
