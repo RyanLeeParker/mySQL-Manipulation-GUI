@@ -50,8 +50,6 @@ public class Login_Screen implements Initializable
             password_label.setText(rb.getString("password"));
             Login_Button.setText(rb.getString("login"));
             CancelButton.setText(rb.getString("exit"));
-            //locationText.setText(rb.getString("Location"));
-
         }
         catch (Exception e)
         {
@@ -163,7 +161,7 @@ public class Login_Screen implements Initializable
             }
             else if (userId < 0)
             {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
+                Alert alert = new Alert(Alert.AlertType.ERROR, "errorHeader");
                 alert.setTitle(rb.getString("errorTitle"));
                 alert.setContentText(rb.getString("errorText"));
                 alert.showAndWait();
