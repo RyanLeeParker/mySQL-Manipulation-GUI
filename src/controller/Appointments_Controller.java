@@ -482,12 +482,12 @@ public class Appointments_Controller
                 ps.setString(3, Appt_Desc_Input.getText());
                 ps.setString(4, Appt_Loc_Input.getText());
                 ps.setString(5, Appt_Type_Input.getText());
-            ps.setString(6, startUTC);
-            ps.setString(7, endUTC);
+                ps.setString(6, startUTC);
+                ps.setString(7, endUTC);
                 ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
                 ps.setString(9, "admin");
                 ps.setTimestamp(10, Timestamp.valueOf(LocalDateTime.now()));
-            ps.setInt(11, Integer.parseInt(Appt_UserID_Input.getText()));
+                ps.setInt(11, Integer.parseInt(Appt_UserID_Input.getText()));
                 ps.setInt(12, Integer.parseInt(Appt_Cust_ID_Input.getText()));
                 ps.setInt(13, Integer.parseInt(Contacts_Access.findContactID((String) Appointment_Contact_CB.getValue())));
                 ps.setInt(14, Integer.parseInt(Contacts_Access.findContactID(Appt_UserID_Input.getText())));

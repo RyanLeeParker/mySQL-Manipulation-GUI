@@ -52,8 +52,6 @@ public class Customer_Controller implements Initializable
     public Button DeleteButton;
     public Button SaveButton;
     public Button Cancel_Button;
-    public ComboBox CustomerUpdate_Country_CB;                      // weird CB things that don't exist?
-    public ComboBox CustomerUpdate_State;
     public TableColumn Customer_Phone_Column;
     public TableColumn Customer_FLD_Column;
     public ComboBox Customer_State;                                 // actual state CB
@@ -182,7 +180,7 @@ public class Customer_Controller implements Initializable
         }
     }
 
-    public void Save_Button(ActionEvent actionEvent)                            // push everything to actual mySQL DB from updated text fields
+    public void Save_Button(ActionEvent actionEvent)
     {
         try {
             Connection connect = JDBC.openConnection();
