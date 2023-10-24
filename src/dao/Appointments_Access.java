@@ -44,7 +44,6 @@ public class Appointments_Access
     {
         String query = "DELETE FROM appointments WHERE Appointment_ID=?";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(query);
-        //ResultSet rs = ps.executeQuery();
         ps.setInt(1, Customer);
         int outcome = ps.executeUpdate();
         ps.close();

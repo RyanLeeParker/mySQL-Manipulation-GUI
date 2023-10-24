@@ -124,26 +124,22 @@ public class Appointments_Controller
     public DatePicker Appt_EndDate_Picker;
     public static int Appt_ID;
 
-
-    //Write code that enables the user to adjust appointment times. While the appointment times should be stored in Coordinated Universal Time (UTC), they should be automatically and consistently updated according to the local time zone set on the user’s computer wherever appointments are displayed in the application.
-    //Note: There are up to three time zones in effect. Coordinated Universal Time (UTC) is used for storing the time in the database, the user’s local time is used for display purposes, and Eastern Time (ET) is used for the company’s office hours. Local time will be checked against ET business hours before they are stored in the database as UTC.
     public void initialize() throws Exception
     {
-        // time should be stored UTC, but converted to local time for user      3 timezones: UTC, EST, SystemDefault
         Connection connect = JDBC.openConnection();
 
         ObservableList<Contacts> contactsObservableList = Contacts_Access.getContacts();
         ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();
         ObservableList<Appointments> LocalAppointmentsList = FXCollections.observableArrayList();
         ObservableList<String> allContactsNames = FXCollections.observableArrayList();
+        ObservableList<String> appointmentTimes = FXCollections.observableArrayList();
 
         ZoneId systemZone = ZoneId.systemDefault();
-        //System.out.println(systemZone);
 
-        // lambda #2
-        contactsObservableList.forEach(contacts -> allContactsNames.add(contacts.getContact_Name()));
-        // here
-        ObservableList<String> appointmentTimes = FXCollections.observableArrayList();
+        for (Contacts contact : contactsObservableList)
+        {
+            allContactsNames.add(contact.getContact_Name());
+        }
 
         Appointment_ID_Column.setCellValueFactory(new PropertyValueFactory<>("Appointment_ID"));
         Appointment_Title_Column.setCellValueFactory(new PropertyValueFactory<>("Title"));
@@ -155,7 +151,6 @@ public class Appointments_Controller
         Appt_CustID_Column.setCellValueFactory(new PropertyValueFactory<>("Customer_ID"));
         Appt_ContactID_Column.setCellValueFactory(new PropertyValueFactory<>("Contact_ID"));
         Appt_UserID_Column.setCellValueFactory(new PropertyValueFactory<>("User_ID"));
-
 
         for (Appointments appointment : allAppointmentsList)                                                            //for loop here to make local time
         {
@@ -203,7 +198,7 @@ public class Appointments_Controller
         Appt_ID_Input.setDisable(true);
         Appt_ID = allAppointmentsList.size();
 
-        for (Appointments appointment: allAppointmentsList)                                   // fixes corner case of deletion OOO
+        for (Appointments appointment: allAppointmentsList)                                                             // fixes corner case of deletion OOO
         {
             while ((Appt_ID + 1) == appointment.getAppointment_ID())
             {
@@ -228,9 +223,16 @@ public class Appointments_Controller
             ObservableList<Users_Access> UsersObservableList = Users_Access.getUsersList();
             ObservableList<Integer> storeUserIDs = FXCollections.observableArrayList();
             ObservableList<Appointments> getAllAppointments = Appointments_Access.getAppointments();
+            int customerID = Integer.parseInt(Appt_Cust_ID_Input.getText());
 
-            getAllCustomers.stream().map(Customers::getCustomer_ID).forEach(storeCustomerIDs::add);
-            getAllUsers.stream().map(Users::getUserId).forEach(storeUserIDs::add);
+            for (Customers customer : getAllCustomers)
+            {
+                storeCustomerIDs.add(customer.getCustomer_ID());
+            }
+            for (Users user : getAllUsers)
+            {
+                storeUserIDs.add(user.getUserId());
+            }
 
             if(Appt_Name_Input.getText().isEmpty())
             {
@@ -297,16 +299,20 @@ public class Appointments_Controller
                 return;
             }
 
-            boolean Cust_Valid = false;
+//            boolean Cust_Valid = false;
+//
+//            for (Customers customer : CustomersObservableList)                                                          // checks that custID is in range
+//            {
+//                String Cust_tempID = String.valueOf(customer.getCustomer_ID());
+//                if (Appt_Cust_ID_Input.getText().equals(Cust_tempID))
+//                {
+//                    Cust_Valid = true;
+//                }
+//            }
 
-            for (Customers customer : CustomersObservableList)                                                          // checks that custID is in range
-            {
-                String Cust_tempID = String.valueOf(customer.getCustomer_ID());
-                if (Appt_Cust_ID_Input.getText().equals(Cust_tempID))
-                {
-                    Cust_Valid = true;
-                }
-            }
+            boolean Cust_Valid = CustomersObservableList.stream()                                       // lambda # 1
+                    .map(customer -> String.valueOf(customer.getCustomer_ID()))
+                    .anyMatch(Cust_tempID -> Appt_Cust_ID_Input.getText().equals(Cust_tempID));
 
             if((Appt_Cust_ID_Input.getText().isEmpty()) || (!Cust_Valid))
             {
@@ -346,7 +352,7 @@ public class Appointments_Controller
 
             Appt_ID++;
 
-                LocalDate localDateEnd = Appt_EndDate_Picker.getValue();
+                LocalDate localDateEnd = Appt_EndDate_Picker.getValue();                                                // change time names
                 LocalDate localDateStart = Appt_StartDate_Picker.getValue();
 
                 DateTimeFormatter minHourFormat = DateTimeFormatter.ofPattern("HH:mm");
@@ -386,7 +392,8 @@ public class Appointments_Controller
                 LocalTime estBusinessStart = LocalTime.of(8, 0, 0);
                 LocalTime estBusinessEnd = LocalTime.of(22, 0, 0);
 
-                if (startAppointmentDayToCheckInt < workWeekStart || startAppointmentDayToCheckInt > workWeekEnd || endAppointmentDayToCheckInt < workWeekStart || endAppointmentDayToCheckInt > workWeekEnd) {
+                if (startAppointmentDayToCheckInt < workWeekStart || startAppointmentDayToCheckInt > workWeekEnd || endAppointmentDayToCheckInt < workWeekStart || endAppointmentDayToCheckInt > workWeekEnd)
+                {
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Day is outside of business operations (Monday-Friday)");
                     Optional<ButtonType> confirmation = alert.showAndWait();
                     System.out.println("day is outside of business hours");
@@ -401,48 +408,23 @@ public class Appointments_Controller
                     return;
                 }
 
-                int newAppointmentID = Integer.parseInt(String.valueOf((int) (Math.random() * 100)));
-                int customerID = Integer.parseInt(Appt_Cust_ID_Input.getText());
-
-                if (dateTimeStart.isAfter(dateTimeEnd)) {
+                if (dateTimeStart.isAfter(dateTimeEnd))
+                {
                     System.out.println("Appointment has start time after end time");
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment has start time after end time");
                     Optional<ButtonType> confirmation = alert.showAndWait();
                     return;
                 }
 
-                if (dateTimeStart.isEqual(dateTimeEnd)) {
+                if (dateTimeStart.isEqual(dateTimeEnd))
+                {
                     System.out.println("Appointment has same start and end time");
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment has same start and end time");
                     Optional<ButtonType> confirmation = alert.showAndWait();
                     return;
                 }
 
-
-            for (Appointments appointment : allAppointmentsList)                                                            //for loop here to make local time
-            {
-                LocalDateTime temp_Start = appointment.getStart();
-                ZonedDateTime ZDT_start = temp_Start.atZone(ZoneId.of("UTC"));
-                ZonedDateTime ZDT_final_start = ZDT_start.withZoneSameInstant(systemZone);
-                LocalDateTime Start = ZDT_final_start.toLocalDateTime();
-
-                LocalDateTime temp_End = appointment.getEnd();
-                ZonedDateTime ZDT_end = temp_End.atZone(ZoneId.of("UTC"));
-                ZonedDateTime ZDT_final_end = ZDT_end.withZoneSameInstant(systemZone);
-                LocalDateTime End = ZDT_final_end.toLocalDateTime();
-
-                Integer Appointment_ID = appointment.getAppointment_ID();
-                String Title = appointment.getTitle();
-                String Description = appointment.getDescription();
-                String Location = appointment.getLocation();
-                String Type = appointment.getType();
-                Integer Customer_ID = appointment.getCustomer_ID();
-                Integer User_ID = appointment.getUser_ID();
-                Integer Contact_ID = appointment.getContact_ID();
-
-                Appointments Appointment = new Appointments(Appointment_ID,Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID);
-                LocalAppointmentsList.add(Appointment);
-            }
+            LocalAppointmentsList = Time.convertTimeDateLocal();
 
                 for (Appointments appointment: LocalAppointmentsList)
                 {
@@ -461,7 +443,7 @@ public class Appointments_Controller
                     }
                     if ((customerID == appointment.getCustomer_ID()) && (Appt_ID != appointment.getAppointment_ID()))
                     {
-                        if ((dateTimeStart.isAfter(checkStart)) && (dateTimeStart.isBefore(checkEnd)))
+                        if ((dateTimeStart.isAfter(checkStart)) && (dateTimeStart.isBefore(checkEnd)))                  // this line causing corner case bug, maybe no corner case after all
                         {
                             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Start time overlaps with existing appointment.");
                             Optional<ButtonType> confirmation = alert.showAndWait();
@@ -510,13 +492,11 @@ public class Appointments_Controller
                 ps.setInt(13, Integer.parseInt(Contacts_Access.findContactID((String) Appointment_Contact_CB.getValue())));
                 ps.setInt(14, Integer.parseInt(Contacts_Access.findContactID(Appt_UserID_Input.getText())));
 
-                //System.out.println("ps " + ps);
                 ps.execute();
-
             }
-        catch (SQLException throwables)
+        catch (SQLException e)
         {
-            throwables.printStackTrace();
+            e.printStackTrace();
         }
 
         FXMLLoader fxmlLoader = new FXMLLoader(Controller.class.getResource("/views/Appointments.fxml"));
@@ -632,7 +612,7 @@ public class Appointments_Controller
         }
     }
 
-    public void Save_Button(ActionEvent actionEvent) throws Exception                                                   // every save adds 5hrs to appointment
+    public void Save_Button(ActionEvent actionEvent) throws Exception
     {
         try
         {
@@ -709,16 +689,20 @@ public class Appointments_Controller
                 alert_err.showAndWait();
                 return;
             }
-            boolean Cust_Valid = false;
+//            boolean Cust_Valid = false;
+//
+//            for (Customers customer : CustomersObservableList)                                                          // checks that custID is in range
+//            {
+//                String Cust_tempID = String.valueOf(customer.getCustomer_ID());
+//                if (Appt_Cust_ID_Input.getText().equals(Cust_tempID))
+//                {
+//                    Cust_Valid = true;
+//                }
+//            }
 
-            for (Customers customer : CustomersObservableList)                                                          // checks that custID is in range
-            {
-                String Cust_tempID = String.valueOf(customer.getCustomer_ID());
-                if (Appt_Cust_ID_Input.getText().equals(Cust_tempID))
-                {
-                    Cust_Valid = true;
-                }
-            }
+            boolean Cust_Valid = CustomersObservableList.stream()                                       // lambda # 1
+                    .map(customer -> String.valueOf(customer.getCustomer_ID()))
+                    .anyMatch(Cust_tempID -> Appt_Cust_ID_Input.getText().equals(Cust_tempID));
 
             if((Appt_Cust_ID_Input.getText().isEmpty()) || (!Cust_Valid))
             {
@@ -749,12 +733,10 @@ public class Appointments_Controller
                 return;
             }
 
-
                 ObservableList<Customers> getAllCustomers = Customer_Access.getCustomers(connection);
                 ObservableList<Integer> storeCustomerIDs = FXCollections.observableArrayList();
                 ObservableList<Users_Access> getAllUsers = Users_Access.getUsersList();
                 ObservableList<Integer> storeUserIDs = FXCollections.observableArrayList();
-                ObservableList<Appointments> getAllAppointments = Appointments_Access.getAppointments();
 
                 for (Customers customer : getAllCustomers)
                 {
@@ -777,28 +759,7 @@ public class Appointments_Controller
             LocalDateTime dateTimeStart = LocalDateTime.of(localDateStart, localTimeStart);
             LocalDateTime dateTimeEnd = LocalDateTime.of(localDateEnd, LocalTimeEnd);
 
-            for (Appointments appointment : allAppointmentsList)                                                            //for loop here to make local time
-            {
-                LocalDateTime temp_Start = appointment.getStart();
-                ZonedDateTime ZDT_start = temp_Start.atZone(ZoneId.of("UTC"));
-                ZonedDateTime ZDT_final_start = ZDT_start.withZoneSameInstant(systemZone);
-                LocalDateTime Start = ZDT_final_start.toLocalDateTime();
-                LocalDateTime temp_End = appointment.getEnd();
-                ZonedDateTime ZDT_end = temp_End.atZone(ZoneId.of("UTC"));
-                ZonedDateTime ZDT_final_end = ZDT_end.withZoneSameInstant(systemZone);
-                LocalDateTime End = ZDT_final_end.toLocalDateTime();
-                Integer Appointment_ID = appointment.getAppointment_ID();
-                String Title = appointment.getTitle();
-                String Description = appointment.getDescription();
-                String Location = appointment.getLocation();
-                String Type = appointment.getType();
-                Integer Customer_ID = appointment.getCustomer_ID();
-                Integer User_ID = appointment.getUser_ID();
-                Integer Contact_ID = appointment.getContact_ID();
-
-                Appointments Appointment = new Appointments(Appointment_ID,Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID);
-                LocalAppointmentsList.add(Appointment);
-            }
+            LocalAppointmentsList = Time.convertTimeDateLocal();
 
             for (Appointments appointment: LocalAppointmentsList)
             {
@@ -875,9 +836,7 @@ public class Appointments_Controller
                 String endTime = (String) Appointment_EndTime.getValue();
 
                 String startUTC = convertTimeDateUTC(startDate + " " + startTime + ":00");
-            String endUTC = convertTimeDateUTC(endDate + " " + endTime + ":00");
-
-            System.out.println("1: SUTC: " + startUTC + " EUTC: " + endUTC);
+                String endUTC = convertTimeDateUTC(endDate + " " + endTime + ":00");
 
                 String insertStatement = "UPDATE appointments SET Appointment_ID = ?, Title = ?, Description = ?, Location = ?, Type = ?, Start = ?, End = ?, Last_Update = ?, Last_Updated_By = ?, Customer_ID = ?, User_ID = ?, Contact_ID = ? WHERE Appointment_ID = ?";
 
@@ -897,12 +856,11 @@ public class Appointments_Controller
                 ps.setInt(12, Integer.parseInt(Contacts_Access.findContactID((String) Appointment_Contact_CB.getValue())));
                 ps.setInt(13, Integer.parseInt(Appt_ID_Input.getText()));
 
-                System.out.println("ps " + ps);
                 ps.execute();
         }
-        catch (Exception e)
+        catch (Exception f)
         {
-            e.printStackTrace();
+            f.printStackTrace();
         }
 
         FXMLLoader fxmlLoader = new FXMLLoader(Controller.class.getResource("/views/Appointments.fxml"));
@@ -936,12 +894,13 @@ public class Appointments_Controller
     {
         try
         {
-            ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();
+            ObservableList<Appointments> LocalAppointmentsList;
+            LocalAppointmentsList = Time.convertTimeDateLocal();
 
-            if (allAppointmentsList != null)
-                for (model.Appointments appointment : allAppointmentsList)
+            if (LocalAppointmentsList != null)
+                for (Appointments appointment : LocalAppointmentsList)
                 {
-                    Appointment_Table.setItems(allAppointmentsList);
+                    Appointment_Table.setItems(LocalAppointmentsList);
                 }
         }
         catch (Exception e)
@@ -956,19 +915,21 @@ public class Appointments_Controller
         {
             ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();
             ObservableList<Appointments> appointmentsWeek = FXCollections.observableArrayList();
+            ObservableList<Appointments> LocalAppointmentsList;
+            LocalAppointmentsList = Time.convertTimeDateLocal();
 
             LocalDateTime weekStart = LocalDateTime.now().minusWeeks(1);
             LocalDateTime weekEnd = LocalDateTime.now().plusWeeks(1);
 
             if (allAppointmentsList != null)
-                //IDE converted forEach
-                allAppointmentsList.forEach(appointment -> {
+                for (Appointments appointment : LocalAppointmentsList)
+                {
                     if (appointment.getEnd().isAfter(weekStart) && appointment.getEnd().isBefore(weekEnd))
                     {
                         appointmentsWeek.add(appointment);
                     }
-                    Appointment_Table.setItems(appointmentsWeek);
-                });
+                }
+            Appointment_Table.setItems(appointmentsWeek);
         }
         catch (Exception e)
         {
@@ -982,19 +943,23 @@ public class Appointments_Controller
         {
             ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();
             ObservableList<Appointments> appointmentsMonth = FXCollections.observableArrayList();
+            ObservableList<Appointments> LocalAppointmentsList;
+            LocalAppointmentsList = Time.convertTimeDateLocal();
 
             LocalDateTime currentMonthStart = LocalDateTime.now().minusMonths(1);
             LocalDateTime currentMonthEnd = LocalDateTime.now().plusMonths(1);
 
             if (allAppointmentsList != null)
-                //IDE converted to forEach
-                allAppointmentsList.forEach(appointment -> {
+            {
+                for (Appointments appointment : LocalAppointmentsList)
+                {
                     if (appointment.getEnd().isAfter(currentMonthStart) && appointment.getEnd().isBefore(currentMonthEnd))
                     {
                         appointmentsMonth.add(appointment);
                     }
-                    Appointment_Table.setItems(appointmentsMonth);
-                });
+                }
+            }
+                Appointment_Table.setItems(appointmentsMonth);
         }
         catch (Exception e)
         {
