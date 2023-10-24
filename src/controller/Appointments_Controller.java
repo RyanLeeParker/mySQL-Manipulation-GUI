@@ -356,14 +356,8 @@ public class Appointments_Controller
                 String endDate = Appt_EndDate_Picker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 String endTime = (String) Appointment_EndTime.getValue();
 
-                //System.out.println("thisDate + thisStart " + appointmentStartDate + " " + appointmentStartTime + ":00");
-                String startUTC = convertTimeDateUTC(appointmentStartDate + " " + appointmentStartTime + ":00");            // Can comment out this for workaround, same in edit func.
-                String endUTC = convertTimeDateUTC(endDate + " " + endTime + ":00");                                        // Can comment out this for workaround, same in edit func.
-            //String startUTC = appointmentStartDate + " " + appointmentStartTime + ":00";
-            //String endUTC = endDate + " " + endTime + ":00";
-            //System.out.println("startUTC: " + startUTC);
-            //System.out.println("endUTC: " + endUTC);
-
+                String startUTC = convertTimeDateUTC(appointmentStartDate + " " + appointmentStartTime + ":00");
+                String endUTC = convertTimeDateUTC(endDate + " " + endTime + ":00");
 
                 LocalTime localTimeStart = LocalTime.parse((CharSequence) Appointment_TimeStart_CB.getValue(), minHourFormat);
                 LocalTime LocalTimeEnd = LocalTime.parse((CharSequence) Appointment_EndTime.getValue(), minHourFormat);
@@ -376,7 +370,6 @@ public class Appointments_Controller
 
                 ZonedDateTime convertStartEST = zoneDtStart.withZoneSameInstant(ZoneId.of("America/New_York"));
                 ZonedDateTime convertEndEST = zoneDtEnd.withZoneSameInstant(ZoneId.of("America/New_York"));
-                //System.out.println("ConvertStartEST: " + convertStartEST);
 
                 LocalTime startAppointmentTimeToCheck = convertStartEST.toLocalTime();
                 LocalTime endAppointmentTimeToCheck = convertEndEST.toLocalTime();
@@ -500,8 +493,6 @@ public class Appointments_Controller
 
                 String insertStatement = "INSERT INTO appointments (Appointment_ID, Title, Description, Location, Type, Start, End, Create_Date, Created_By, Last_Update, Last_Updated_By, Customer_ID, User_ID, Contact_ID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-
-
                 JDBC.setPreparedStatement(JDBC.getConnection(), insertStatement);
                 PreparedStatement ps = JDBC.getPreparedStatement();
                 ps.setInt(1, Appt_ID);
@@ -509,15 +500,11 @@ public class Appointments_Controller
                 ps.setString(3, Appt_Desc_Input.getText());
                 ps.setString(4, Appt_Loc_Input.getText());
                 ps.setString(5, Appt_Type_Input.getText());
-                //ps.setTimestamp(6, Timestamp.valueOf(startLocalDateTimeToAdd));
-                //ps.setTimestamp(6, Timestamp.valueOf(startUTC));
-                //ps.setTimestamp(7, Timestamp.valueOf(endUTC));
             ps.setString(6, startUTC);
             ps.setString(7, endUTC);
                 ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
                 ps.setString(9, "admin");
                 ps.setTimestamp(10, Timestamp.valueOf(LocalDateTime.now()));
-                //ps.setInt(11, 1);
             ps.setInt(11, Integer.parseInt(Appt_UserID_Input.getText()));
                 ps.setInt(12, Integer.parseInt(Appt_Cust_ID_Input.getText()));
                 ps.setInt(13, Integer.parseInt(Contacts_Access.findContactID((String) Appointment_Contact_CB.getValue())));
@@ -652,6 +639,11 @@ public class Appointments_Controller
             Connection connection = JDBC.openConnection();
             ObservableList<Users_Access> UsersObservableList = Users_Access.getUsersList();
             ObservableList<Customers> CustomersObservableList = Customer_Access.getCustomers(connection);
+            ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();
+            ObservableList<Appointments> LocalAppointmentsList = FXCollections.observableArrayList();
+            ZoneId systemZone = ZoneId.systemDefault();
+            int customerID = Integer.parseInt(Appt_Cust_ID_Input.getText());
+
 
             if(Appt_Name_Input.getText().isEmpty())
             {
@@ -774,24 +766,91 @@ public class Appointments_Controller
                     storeUserIDs.add(user.getUserId());
                 }
 
-                LocalDate localDateEnd = Appt_EndDate_Picker.getValue();
-                LocalDate localDateStart = Appt_StartDate_Picker.getValue();
+            LocalDate localDateEnd = Appt_EndDate_Picker.getValue();
+            LocalDate localDateStart = Appt_StartDate_Picker.getValue();
 
-                DateTimeFormatter minHourFormat = DateTimeFormatter.ofPattern("HH:mm");
+            DateTimeFormatter minHourFormat = DateTimeFormatter.ofPattern("HH:mm");
 
-                LocalTime localTimeStart = LocalTime.parse((CharSequence) Appointment_TimeStart_CB.getValue(), minHourFormat);
-                LocalTime LocalTimeEnd = LocalTime.parse((CharSequence) Appointment_EndTime.getValue(), minHourFormat);
+            LocalTime localTimeStart = LocalTime.parse((CharSequence) Appointment_TimeStart_CB.getValue(), minHourFormat);
+            LocalTime LocalTimeEnd = LocalTime.parse((CharSequence) Appointment_EndTime.getValue(), minHourFormat);
 
-                LocalDateTime dateTimeStart = LocalDateTime.of(localDateStart, localTimeStart);
-                LocalDateTime dateTimeEnd = LocalDateTime.of(localDateEnd, LocalTimeEnd);
+            LocalDateTime dateTimeStart = LocalDateTime.of(localDateStart, localTimeStart);
+            LocalDateTime dateTimeEnd = LocalDateTime.of(localDateEnd, LocalTimeEnd);
+
+            for (Appointments appointment : allAppointmentsList)                                                            //for loop here to make local time
+            {
+                LocalDateTime temp_Start = appointment.getStart();
+                ZonedDateTime ZDT_start = temp_Start.atZone(ZoneId.of("UTC"));
+                ZonedDateTime ZDT_final_start = ZDT_start.withZoneSameInstant(systemZone);
+                LocalDateTime Start = ZDT_final_start.toLocalDateTime();
+                LocalDateTime temp_End = appointment.getEnd();
+                ZonedDateTime ZDT_end = temp_End.atZone(ZoneId.of("UTC"));
+                ZonedDateTime ZDT_final_end = ZDT_end.withZoneSameInstant(systemZone);
+                LocalDateTime End = ZDT_final_end.toLocalDateTime();
+                Integer Appointment_ID = appointment.getAppointment_ID();
+                String Title = appointment.getTitle();
+                String Description = appointment.getDescription();
+                String Location = appointment.getLocation();
+                String Type = appointment.getType();
+                Integer Customer_ID = appointment.getCustomer_ID();
+                Integer User_ID = appointment.getUser_ID();
+                Integer Contact_ID = appointment.getContact_ID();
+
+                Appointments Appointment = new Appointments(Appointment_ID,Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID);
+                LocalAppointmentsList.add(Appointment);
+            }
+
+            for (Appointments appointment: LocalAppointmentsList)
+            {
+                LocalDateTime checkStart = appointment.getStart();
+                LocalDateTime checkEnd = appointment.getEnd();
+
+                if ((customerID == appointment.getCustomer_ID()) && (Appt_ID != appointment.getAppointment_ID()))
+                {
+                    if ((dateTimeStart.isBefore(checkStart)) && (dateTimeEnd.isAfter(checkEnd)))                    //dateTimeStart & dateTimeEnd are correct
+                    {
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment overlaps with existing appointment.");
+                        Optional<ButtonType> confirmation = alert.showAndWait();
+                        System.out.println("Appointment overlaps with existing appointment.");
+                        return;
+                    }
+                }
+                if ((customerID == appointment.getCustomer_ID()) && (Appt_ID != appointment.getAppointment_ID()))
+                {
+                    if ((dateTimeStart.isAfter(checkStart)) && (dateTimeStart.isBefore(checkEnd)))
+                    {
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Start time overlaps with existing appointment.");
+                        Optional<ButtonType> confirmation = alert.showAndWait();
+                        System.out.println("Start time overlaps with existing appointment.");
+                        return;
+                    }
+                }
+                if ((customerID == appointment.getCustomer_ID()) && (Appt_ID != appointment.getAppointment_ID()))
+                {
+                    if   ((dateTimeEnd.isAfter(checkStart)) && (dateTimeEnd.isBefore(checkEnd)))
+                    {
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "End time overlaps with existing appointment.");
+                        Optional<ButtonType> confirmation = alert.showAndWait();
+                        System.out.println("End time overlaps with existing appointment.");
+                        return;
+                    }
+                }
+                if ((customerID == appointment.getCustomer_ID()) && (Appt_ID != appointment.getAppointment_ID()))
+                {
+                    if   ((dateTimeStart.isEqual(checkStart)) && (dateTimeEnd.isEqual(checkEnd)))
+                    {
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment overlaps with existing appointment.");
+                        Optional<ButtonType> confirmation = alert.showAndWait();
+                        System.out.println("Appointment overlaps with existing appointment.");
+                        return;
+                    }
+                }
+            }
 
                 ZonedDateTime zoneDtStart = ZonedDateTime.of(dateTimeStart, ZoneId.systemDefault());
                 ZonedDateTime zoneDtEnd = ZonedDateTime.of(dateTimeEnd, ZoneId.systemDefault());
-
-                ZonedDateTime convertStartEST = zoneDtStart.withZoneSameInstant(ZoneId.of("America/New_York"));                 // might be all this bullshit here
-            System.out.println("4: convertStartEST: " + convertStartEST);
+                ZonedDateTime convertStartEST = zoneDtStart.withZoneSameInstant(ZoneId.of("America/New_York"));
                 ZonedDateTime convertEndEST = zoneDtEnd.withZoneSameInstant(ZoneId.of("America/New_York"));
-            System.out.println("4: convertEndEST: " + convertEndEST);
 
                 if (convertStartEST.toLocalDate().getDayOfWeek().getValue() == (DayOfWeek.SATURDAY.getValue()) || convertStartEST.toLocalDate().getDayOfWeek().getValue() == (DayOfWeek.SUNDAY.getValue()) || convertEndEST.toLocalDate().getDayOfWeek().getValue() == (DayOfWeek.SATURDAY.getValue())  || convertEndEST.toLocalDate().getDayOfWeek().getValue() == (DayOfWeek.SUNDAY.getValue()) )
                 {
@@ -809,85 +868,16 @@ public class Appointments_Controller
                     return;
                 }
 
-                int newCustomerID = Integer.parseInt(Appt_Cust_ID_Input.getText());
-                int appointmentID = Integer.parseInt(Appt_ID_Input.getText());
-
-//            System.out.println("5: LocalTimeStart: " + localTimeStart);
-//            System.out.println("6: dateTimeStart: " + dateTimeStart);
-//            System.out.println("7: zondDTStart: " + zoneDtStart);
-//            System.out.println("8: convertStartEST: " + convertStartEST);
-
-
-                if (dateTimeStart.isAfter(dateTimeEnd))
-                {
-                    System.out.println("Please schedule within business hours.");
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Please schedule within business hours.");
-                    Optional<ButtonType> confirmation = alert.showAndWait();
-                    return;
-                }
-
-                if (dateTimeStart.isEqual(dateTimeEnd))
-                {
-                    System.out.println("Appointment has the same start and end time");
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment has the same start and end time");
-                    Optional<ButtonType> confirmation = alert.showAndWait();
-                    return;
-                }
-
-                for (Appointments appointment: getAllAppointments)
-                {
-                    LocalDateTime checkStart = appointment.getStart();
-                    LocalDateTime checkEnd = appointment.getEnd();
-
-                    //"outer verify" meaning check to see if an appointment exists between start and end.
-                    if ((newCustomerID == appointment.getCustomer_ID()) && (appointmentID != appointment.getAppointment_ID()) &&
-                            (dateTimeStart.isBefore(checkStart)) && (dateTimeEnd.isAfter(checkEnd)))
-                    {
-                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment already exists at that time.");
-                        Optional<ButtonType> confirmation = alert.showAndWait();
-                        System.out.println("Appointment already exists at that time.");
-                        return;
-                    }
-
-                    if ((newCustomerID == appointment.getCustomer_ID()) && (appointmentID != appointment.getAppointment_ID()) &&
-//                            Clarification on isEqual is that this does not count as an overlapping appointment
-//                            (dateTimeStart.isEqual(checkStart) || dateTimeStart.isAfter(checkStart)) &&
-//                            (dateTimeStart.isEqual(checkEnd) || dateTimeStart.isBefore(checkEnd))) {
-                            (dateTimeStart.isAfter(checkStart)) && (dateTimeStart.isBefore(checkEnd)))
-                    {
-                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment already exists at that time.");
-                        Optional<ButtonType> confirmation = alert.showAndWait();
-                        System.out.println("Appointment already exists at that time.");
-                        return;
-                    }
-
-                    if (newCustomerID == appointment.getCustomer_ID() && (appointmentID != appointment.getAppointment_ID()) &&
-//                            Clarification on isEqual is that this does not count as an overlapping appointment
-//                            (dateTimeEnd.isEqual(checkStart) || dateTimeEnd.isAfter(checkStart)) &&
-//                            (dateTimeEnd.isEqual(checkEnd) || dateTimeEnd.isBefore(checkEnd)))
-                            (dateTimeEnd.isAfter(checkStart)) && (dateTimeEnd.isBefore(checkEnd)))
-                    {
-                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment already exists at that time.");
-                        Optional<ButtonType> confirmation = alert.showAndWait();
-                        System.out.println("Appointment already exists at that time.");
-                        return;
-                    }
-                }
-
                 String startDate = Appt_StartDate_Picker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 String startTime = (String) Appointment_TimeStart_CB.getValue();
 
                 String endDate = Appt_EndDate_Picker.getValue().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 String endTime = (String) Appointment_EndTime.getValue();
 
-                String startUTC = convertTimeDateUTC(startDate + " " + startTime + ":00");                                      // likely here, Yup it's converting UTC into UTC, adding 5hrs.
-            //String startUTC = startDate + " " + startTime + ":00";
-            String endUTC = convertTimeDateUTC(endDate + " " + endTime + ":00");                                            // and here
-            //String endUTC = endDate + " " + endTime + ":00";
+                String startUTC = convertTimeDateUTC(startDate + " " + startTime + ":00");
+            String endUTC = convertTimeDateUTC(endDate + " " + endTime + ":00");
 
-
-
-            System.out.println("1: SUTC: " + startUTC + " EUTC: " + endUTC);                                                            // time change happens before here
+            System.out.println("1: SUTC: " + startUTC + " EUTC: " + endUTC);
 
                 String insertStatement = "UPDATE appointments SET Appointment_ID = ?, Title = ?, Description = ?, Location = ?, Type = ?, Start = ?, End = ?, Last_Update = ?, Last_Updated_By = ?, Customer_ID = ?, User_ID = ?, Contact_ID = ? WHERE Appointment_ID = ?";
 
@@ -898,10 +888,6 @@ public class Appointments_Controller
                 ps.setString(3, Appt_Desc_Input.getText());
                 ps.setString(4, Appt_Loc_Input.getText());
                 ps.setString(5, Appt_Type_Input.getText());
-
-            //ps.setTimestamp(6, Timestamp.valueOf(startUTC));
-            //ps.setTimestamp(7, Timestamp.valueOf(endUTC));
-
                 ps.setString(6, startUTC);
                 ps.setString(7, endUTC);
                 ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
@@ -912,9 +898,7 @@ public class Appointments_Controller
                 ps.setInt(13, Integer.parseInt(Appt_ID_Input.getText()));
 
                 System.out.println("ps " + ps);
-                //System.out.println("2: ST: " + startTime + " ET: " + endTime);
                 ps.execute();
-                //System.out.println("3: ST: " + startTime + " ET: " + endTime);
         }
         catch (Exception e)
         {
