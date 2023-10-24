@@ -78,12 +78,6 @@ public class Reports_Controller
         Contact_CB.setItems(allContactsNames);
     }
 
-
-    public void SchedByContact_Tab_Selected(Event event) throws SQLException
-    {
-
-    }
-
     public void Contact_CB_Selected(ActionEvent actionEvent) throws SQLException
     {
         try
@@ -124,7 +118,8 @@ public class Reports_Controller
 
     public void AppointmentTotals_Tab_Selected(Event event) throws SQLException
     {
-        try {
+        try
+        {
             ObservableList<Appointments> getAllAppointments = Appointments_Access.getAppointments();
             ObservableList<Month> appointmentMonths = FXCollections.observableArrayList();
             ObservableList<Month> monthOfAppointments = FXCollections.observableArrayList();
@@ -135,27 +130,29 @@ public class Reports_Controller
             ObservableList<ReportType> reportType = FXCollections.observableArrayList();
             ObservableList<ReportMonth> reportMonths = FXCollections.observableArrayList();
 
-
-            //IDE converted to Lambda
-            getAllAppointments.forEach(appointments -> {
-                appointmentType.add(appointments.getType());
-            });
-
-            //IDE converted to Lambda
-            getAllAppointments.stream().map(appointment -> {
-                return appointment.getStart().getMonth();
-            }).forEach(appointmentMonths::add);
-
-            //IDE converted to Lambda
-            appointmentMonths.stream().filter(month ->
+            for (Appointments appointments : getAllAppointments)
             {
-                return !monthOfAppointments.contains(month);
-            }).forEach(monthOfAppointments::add);
+                appointmentType.add(appointments.getType());
+            }
+
+            for (Appointments appointment : getAllAppointments)
+            {
+                appointmentMonths.add(appointment.getStart().getMonth());
+            }
+
+            for (Month month : appointmentMonths)
+            {
+                if (!monthOfAppointments.contains(month))
+                {
+                    monthOfAppointments.add(month);
+                }
+            }
 
             for (Appointments appointments: getAllAppointments)
             {
                 String appointmentsAppointmentType = appointments.getType();
-                if (!uniqueAppointment.contains(appointmentsAppointmentType)) {
+                if (!uniqueAppointment.contains(appointmentsAppointmentType))
+                {
                     uniqueAppointment.add(appointmentsAppointmentType);
                 }
             }
@@ -177,7 +174,6 @@ public class Reports_Controller
                 reportType.add(appointmentTypes);
             }
             TotalApptsByType.setItems(reportType);
-
         }
         catch (Exception e)
         {
@@ -191,8 +187,10 @@ public class Reports_Controller
         {
             ObservableList<Reports> aggregatedStates = Report_Access.getFirst_Level_Division();
             ObservableList<Reports> statesToAdd = FXCollections.observableArrayList();
-            //IDE converted
-            aggregatedStates.forEach(statesToAdd::add);
+            for (Reports Firstleveldivision : aggregatedStates)
+            {
+                statesToAdd.add(Firstleveldivision);
+            }
 
             customerByState.setItems(statesToAdd);                   // exception in apply to table?
         }
@@ -221,4 +219,10 @@ public class Reports_Controller
             alert_err.showAndWait();
         }
     }
+
+    public void SchedByContact_Tab_Selected(Event event) throws SQLException
+    {
+
+    }
+
 }
