@@ -299,18 +299,7 @@ public class Appointments_Controller
                 return;
             }
 
-//            boolean Cust_Valid = false;
-//
-//            for (Customers customer : CustomersObservableList)                                                          // checks that custID is in range
-//            {
-//                String Cust_tempID = String.valueOf(customer.getCustomer_ID());
-//                if (Appt_Cust_ID_Input.getText().equals(Cust_tempID))
-//                {
-//                    Cust_Valid = true;
-//                }
-//            }
-
-            boolean Cust_Valid = CustomersObservableList.stream()                                       // lambda # 1
+            boolean Cust_Valid = CustomersObservableList.stream()                                                       // lambda # 1
                     .map(customer -> String.valueOf(customer.getCustomer_ID()))
                     .anyMatch(Cust_tempID -> Appt_Cust_ID_Input.getText().equals(Cust_tempID));
 
@@ -323,16 +312,10 @@ public class Appointments_Controller
                 return;
             }
 
-            boolean User_Valid = false;
+            boolean User_Valid = UsersObservableList.stream()                                                           // lambda # 2
+                    .anyMatch(user -> Appt_UserID_Input.getText().equals(String.valueOf(user.getUserId())));
 
-            for (Users_Access user : UsersObservableList)
-            {
-                String Usr_tempID = String.valueOf(user.getUserId());
-                if (Appt_UserID_Input.getText().equals(Usr_tempID))
-                {
-                    User_Valid = true;
-                }
-            }
+
             if((Appt_UserID_Input.getText().isEmpty()) || (!User_Valid))
             {
                 Alert alert_err = new Alert(Alert.AlertType.WARNING);
@@ -433,7 +416,7 @@ public class Appointments_Controller
 
                     if ((customerID == appointment.getCustomer_ID()) && (Appt_ID != appointment.getAppointment_ID()))
                     {
-                        if ((dateTimeStart.isBefore(checkStart)) && (dateTimeEnd.isAfter(checkEnd)))                    //dateTimeStart & dateTimeEnd are correct
+                        if ((dateTimeStart.isBefore(checkStart)) && (dateTimeEnd.isAfter(checkEnd)))
                         {
                             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment overlaps with existing appointment.");
                             Optional<ButtonType> confirmation = alert.showAndWait();
@@ -689,16 +672,6 @@ public class Appointments_Controller
                 alert_err.showAndWait();
                 return;
             }
-//            boolean Cust_Valid = false;
-//
-//            for (Customers customer : CustomersObservableList)                                                          // checks that custID is in range
-//            {
-//                String Cust_tempID = String.valueOf(customer.getCustomer_ID());
-//                if (Appt_Cust_ID_Input.getText().equals(Cust_tempID))
-//                {
-//                    Cust_Valid = true;
-//                }
-//            }
 
             boolean Cust_Valid = CustomersObservableList.stream()                                       // lambda # 1
                     .map(customer -> String.valueOf(customer.getCustomer_ID()))
@@ -713,17 +686,9 @@ public class Appointments_Controller
                 return;
             }
 
-            boolean User_Valid = false;
+            boolean User_Valid = UsersObservableList.stream()                                                           // lambda # 2
+                    .anyMatch(user -> Appt_UserID_Input.getText().equals(String.valueOf(user.getUserId())));
 
-            for (Users_Access user : UsersObservableList)
-            {
-                String Usr_tempID = String.valueOf(user.getUserId());
-                if (Appt_UserID_Input.getText().equals(Usr_tempID))
-                {
-                    System.out.println("I got here 2,User_Input: " + Appt_UserID_Input);
-                    User_Valid = true;
-                }
-            }
             if((Appt_UserID_Input.getText().isEmpty()) || (!User_Valid))
             {
                 Alert alert_err = new Alert(Alert.AlertType.WARNING);

@@ -54,6 +54,33 @@ public class Time
                 Appointments Appointment = new Appointments(Appointment_ID,Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID);
                 LocalAppointmentsList.add(Appointment);
             }
+
+//            LocalAppointmentsList = allAppointmentsList.stream()                                                      lamda # 3 for later
+//                    .map(appointment -> {
+//                        LocalDateTime temp_Start = appointment.getStart();
+//                        ZonedDateTime ZDT_start = temp_Start.atZone(ZoneId.of("UTC"));
+//                        ZonedDateTime ZDT_final_start = ZDT_start.withZoneSameInstant(systemZone);
+//                        LocalDateTime Start = ZDT_final_start.toLocalDateTime();
+//
+//                        LocalDateTime temp_End = appointment.getEnd();
+//                        ZonedDateTime ZDT_end = temp_End.atZone(ZoneId.of("UTC"));
+//                        ZonedDateTime ZDT_final_end = ZDT_end.withZoneSameInstant(systemZone);
+//                        LocalDateTime End = ZDT_final_end.toLocalDateTime();
+//
+//                        Integer Appointment_ID = appointment.getAppointment_ID();
+//                        String Title = appointment.getTitle();
+//                        String Description = appointment.getDescription();
+//                        String Location = appointment.getLocation();
+//                        String Type = appointment.getType();
+//                        Integer Customer_ID = appointment.getCustomer_ID();
+//                        Integer User_ID = appointment.getUser_ID();
+//                        Integer Contact_ID = appointment.getContact_ID();
+//
+//                        return new Appointments(Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID);
+//                    })
+//                    .collect(Collectors.toList());
+//
+
             return LocalAppointmentsList;
         }
 }
