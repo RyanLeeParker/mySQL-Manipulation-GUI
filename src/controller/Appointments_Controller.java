@@ -123,7 +123,7 @@ public class Appointments_Controller
 
         ObservableList<Contacts> contactsObservableList = Contacts_Access.getContacts();
         ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();
-        ObservableList<Appointments> LocalAppointmentsList = FXCollections.observableArrayList();
+        ObservableList<Appointments> LocalAppointmentsList;
         ObservableList<String> allContactsNames = FXCollections.observableArrayList();
         ObservableList<String> appointmentTimes = FXCollections.observableArrayList();
 
@@ -145,30 +145,7 @@ public class Appointments_Controller
         Appt_ContactID_Column.setCellValueFactory(new PropertyValueFactory<>("Contact_ID"));
         Appt_UserID_Column.setCellValueFactory(new PropertyValueFactory<>("User_ID"));
 
-        for (Appointments appointment : allAppointmentsList)                                                            //for loop here to make local time
-        {
-            LocalDateTime temp_Start = appointment.getStart();
-            ZonedDateTime ZDT_start = temp_Start.atZone(ZoneId.of("UTC"));
-            ZonedDateTime ZDT_final_start = ZDT_start.withZoneSameInstant(systemZone);
-            LocalDateTime Start = ZDT_final_start.toLocalDateTime();
-
-            LocalDateTime temp_End = appointment.getEnd();
-            ZonedDateTime ZDT_end = temp_End.atZone(ZoneId.of("UTC"));
-            ZonedDateTime ZDT_final_end = ZDT_end.withZoneSameInstant(systemZone);
-            LocalDateTime End = ZDT_final_end.toLocalDateTime();
-
-            Integer Appointment_ID = appointment.getAppointment_ID();
-            String Title = appointment.getTitle();
-            String Description = appointment.getDescription();
-            String Location = appointment.getLocation();
-            String Type = appointment.getType();
-            Integer Customer_ID = appointment.getCustomer_ID();
-            Integer User_ID = appointment.getUser_ID();
-            Integer Contact_ID = appointment.getContact_ID();
-
-            Appointments Appointment = new Appointments(Appointment_ID,Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID);
-            LocalAppointmentsList.add(Appointment);
-        }
+        LocalAppointmentsList = Time.convertTimeDateLocal();
 
         LocalTime firstAppointment = LocalTime.MIN.plusHours(8);
         LocalTime lastAppointment = LocalTime.MAX.minusHours(1).minusMinutes(45);
@@ -461,9 +438,9 @@ public class Appointments_Controller
                 ps.setString(6, startUTC);
                 ps.setString(7, endUTC);
                 ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
-                ps.setString(9, "admin");
+                ps.setString(9, Users_Access.getCurrentUser());
                 ps.setTimestamp(10, Timestamp.valueOf(LocalDateTime.now()));
-                ps.setInt(11, Integer.parseInt(Appt_UserID_Input.getText()));
+                ps.setString(11, Users_Access.getCurrentUser());                               // user id or Users_Access.getCurrentUser()?
                 ps.setInt(12, Integer.parseInt(Appt_Cust_ID_Input.getText()));
                 ps.setInt(13, Integer.parseInt(Contacts_Access.findContactID((String) Appointment_Contact_CB.getValue())));
                 ps.setInt(14, Integer.parseInt(Contacts_Access.findContactID(Appt_UserID_Input.getText())));
@@ -584,7 +561,12 @@ public class Appointments_Controller
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            //System.out.println("Please select a valid appointment to delete.");
+            System.out.println("Please select a valid appointment to delete.");
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Please select a valid appointment to delete.");
+            Optional<ButtonType> confirmation = alert.showAndWait();
+            return;
+            //e.printStackTrace();
         }
     }
 
@@ -808,9 +790,9 @@ public class Appointments_Controller
                 ps.setString(6, startUTC);
                 ps.setString(7, endUTC);
                 ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
-                ps.setString(9, "admin");
+                ps.setString(9, Users_Access.getCurrentUser());
                 ps.setInt(10, Integer.parseInt(Appt_Cust_ID_Input.getText()));
-                ps.setInt(11, Integer.parseInt(Appt_UserID_Input.getText()));
+                ps.setString(11, Users_Access.getCurrentUser());
                 ps.setInt(12, Integer.parseInt(Contacts_Access.findContactID((String) Appointment_Contact_CB.getValue())));
                 ps.setInt(13, Integer.parseInt(Appt_ID_Input.getText()));
 

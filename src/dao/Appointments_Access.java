@@ -9,6 +9,7 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 
 public class Appointments_Access
@@ -19,6 +20,7 @@ public class Appointments_Access
         String sql = "SELECT * FROM appointments";
         PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         while (rs.next())
         {
@@ -29,11 +31,16 @@ public class Appointments_Access
             String Type = rs.getString("Type");
             LocalDateTime Start = rs.getTimestamp("Start").toLocalDateTime();
             LocalDateTime End = rs.getTimestamp("End").toLocalDateTime();
+            LocalDateTime Create_Date = LocalDateTime.parse(rs.getString("Create_Date"), formatter);
+            String Created_By = rs.getString("Created_By");
+            Timestamp Last_Update = rs.getTimestamp("Last_Update");
+            String Last_Updated_By = rs.getString("Last_Updated_By");
             int Customer_ID = rs.getInt("Customer_ID");
             int User_ID = rs.getInt("User_ID");
             int Contact_ID = rs.getInt("Contact_ID");
 
-            Appointments Appointment = new Appointments(Appointment_ID,Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID);
+            Appointments Appointment = new Appointments(Appointment_ID,  Title,  Description,  Location,  Type,  Start,
+                 End, Create_Date, Created_By, Last_Update, Last_Updated_By,  Customer_ID,  User_ID,  Contact_ID);
 
             ObservableList_Appointments.add(Appointment);
         }

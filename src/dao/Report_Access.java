@@ -9,13 +9,16 @@ import model.Reports;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 public class Report_Access extends Appointments
 {
-    public Report_Access(int Appointment_ID, String Title, String Description, String Location, String Type, LocalDateTime Start, LocalDateTime End, int Customer_ID, int User_ID, int Contact_ID)
+    public Report_Access(int Appointment_ID, String Title, String Description, String Location, String Type, LocalDateTime Start,
+                         LocalDateTime End, LocalDateTime Create_Date, String Created_By, Timestamp Last_Update, String Last_Updated_By, int Customer_ID, int User_ID, int Contact_ID)
     {
-        super(Appointment_ID, Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID);
+        super(Appointment_ID,  Title,  Description,  Location,  Type,  Start,
+                End, Create_Date, Created_By, Last_Update, Last_Updated_By,  Customer_ID,  User_ID,  Contact_ID);
     }
 
     public static ObservableList<Reports> getFirst_Level_Division() throws SQLException

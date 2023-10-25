@@ -47,12 +47,16 @@ public class Time
                 String Description = appointment.getDescription();
                 String Location = appointment.getLocation();
                 String Type = appointment.getType();
+                LocalDateTime Create_Date = appointment.getCreateDate();
+                String Created_By = appointment.getCreatedBy();
+                Timestamp Last_Update = appointment.getLastUpdate();
+                String Last_Updated_By = appointment.getLastUpdatedBy();
                 Integer Customer_ID = appointment.getCustomer_ID();
                 Integer User_ID = appointment.getUser_ID();
                 Integer Contact_ID = appointment.getContact_ID();
 
-                Appointments Appointment = new Appointments(Appointment_ID,Title, Description, Location, Type, Start, End, Customer_ID, User_ID, Contact_ID);
-                LocalAppointmentsList.add(Appointment);
+                Appointments appointments = new Appointments(Appointment_ID, Title, Description, Location, Type, Start, End, Create_Date, Created_By, Last_Update, Last_Updated_By, Customer_ID, User_ID, Contact_ID);
+                LocalAppointmentsList.add(appointments);
             }
 
 //            LocalAppointmentsList = allAppointmentsList.stream()                                                      lamda # 3 for later

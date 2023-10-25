@@ -15,6 +15,7 @@ public class Appointments
     public LocalDateTime Start;
     public LocalDateTime End;
     public LocalDateTime Create_Date;
+    public String Created_By;
     public Timestamp Last_Update;
     public String Last_Updated_By;
     public int Customer_ID;
@@ -22,7 +23,7 @@ public class Appointments
     public int Contact_ID;
 
     public Appointments(int Appointment_ID, String Title, String Description, String Location, String Type, LocalDateTime Start,
-                        LocalDateTime End, int Customer_ID, int User_ID, int Contact_ID)   // String Created_By, LocalDateTime Create_Date, Timestamp Last_Update, String Last_Updated_By,
+                        LocalDateTime End, LocalDateTime Create_Date, String Created_By, Timestamp Last_Update, String Last_Updated_By, int Customer_ID, int User_ID, int Contact_ID)
     {
         this.Appointment_ID = Appointment_ID;
         this.Title = Title;
@@ -31,10 +32,10 @@ public class Appointments
         this.Type = Type;
         this.Start = Start;
         this.End = End;
-        //this.Create_Date = Create_Date;
-        //this.Created_By = Created_By;
-        //this.Last_Update = Last_Update;
-        //this.Last_Updated_By = Last_Updated_By;
+        this.Create_Date = Create_Date;
+        this.Created_By = Created_By;
+        this.Last_Update = Last_Update;
+        this.Last_Updated_By = Last_Updated_By;
         this.Customer_ID = Customer_ID;
         this.User_ID = User_ID;
         this.Contact_ID = Contact_ID;
@@ -73,6 +74,24 @@ public class Appointments
     public LocalDateTime getEnd()
     {
         return End;
+    }
+    public LocalDateTime getCreateDate()
+    {
+        return Create_Date;
+    }
+    public String getCreatedBy()
+    {
+        return Created_By;
+    }
+
+    public Timestamp getLastUpdate()
+    {
+        return Last_Update;
+    }
+
+    public String getLastUpdatedBy()
+    {
+        return Last_Updated_By;
     }
 
     public int getCustomer_ID()
