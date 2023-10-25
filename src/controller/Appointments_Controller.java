@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.format.FormatStyle;
 import java.util.ResourceBundle;
-
 import dao.Appointments_Access;
 import dao.Contacts_Access;
 import dao.Customer_Access;
@@ -164,7 +163,7 @@ public class Appointments_Controller
         Appointment_Contact_CB.setItems(allContactsNames);
         Appointment_Table.setItems(LocalAppointmentsList);
 
-        Appt_ID_Input.setText("Auto Gen - Disabled");
+        //Appt_ID_Input.setText("Auto Gen - Disabled");                                                                 // it's trying to write this to appt ID
         Appt_ID_Input.setDisable(true);
         Appt_ID = allAppointmentsList.size();
 
@@ -376,8 +375,9 @@ public class Appointments_Controller
                     Optional<ButtonType> confirmation = alert.showAndWait();
                     return;
                 }
-
+            System.out.println("Mic check 1");
             LocalAppointmentsList = Time.convertTimeDateLocal();
+            System.out.println("Mic check 2");
 
                 for (Appointments appointment: LocalAppointmentsList)
                 {
@@ -425,9 +425,9 @@ public class Appointments_Controller
                         }
                     }
                 }
-
+            System.out.println("Mic check 3");
                 String insertStatement = "INSERT INTO appointments (Appointment_ID, Title, Description, Location, Type, Start, End, Create_Date, Created_By, Last_Update, Last_Updated_By, Customer_ID, User_ID, Contact_ID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-
+            System.out.println("Mic check 4");
                 JDBC.setPreparedStatement(JDBC.getConnection(), insertStatement);
                 PreparedStatement ps = JDBC.getPreparedStatement();
                 ps.setInt(1, Appt_ID);
@@ -440,15 +440,17 @@ public class Appointments_Controller
                 ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
                 ps.setString(9, Users_Access.getCurrentUser());
                 ps.setTimestamp(10, Timestamp.valueOf(LocalDateTime.now()));
-                ps.setString(11, Users_Access.getCurrentUser());                               // user id or Users_Access.getCurrentUser()?
+                ps.setString(11, Users_Access.getCurrentUser());
                 ps.setInt(12, Integer.parseInt(Appt_Cust_ID_Input.getText()));
-                ps.setInt(13, Integer.parseInt(Contacts_Access.findContactID((String) Appointment_Contact_CB.getValue())));
-                ps.setInt(14, Integer.parseInt(Contacts_Access.findContactID(Appt_UserID_Input.getText())));
-
-                ps.execute();
+                ps.setInt(13, Integer.parseInt(Appt_UserID_Input.getText()));
+                ps.setInt(14, Integer.parseInt(Contacts_Access.findContactID((String) Appointment_Contact_CB.getValue())));
+            System.out.println("Mic check 5");
+                ps.execute();                                                                                           //breaks here...sometimes           caused by difference in user id and contact!
+            System.out.println("Mic check 6");
             }
         catch (SQLException e)
         {
+            System.out.println("Mic check Excep");
             e.printStackTrace();
         }
 
@@ -577,9 +579,7 @@ public class Appointments_Controller
             Connection connection = JDBC.openConnection();
             ObservableList<Users_Access> UsersObservableList = Users_Access.getUsersList();
             ObservableList<Customers> CustomersObservableList = Customer_Access.getCustomers(connection);
-            ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();
-            ObservableList<Appointments> LocalAppointmentsList = FXCollections.observableArrayList();
-            ZoneId systemZone = ZoneId.systemDefault();
+            ObservableList<Appointments> LocalAppointmentsList;
             int customerID = Integer.parseInt(Appt_Cust_ID_Input.getText());
 
 
@@ -778,7 +778,7 @@ public class Appointments_Controller
                 String startUTC = convertTimeDateUTC(startDate + " " + startTime + ":00");
                 String endUTC = convertTimeDateUTC(endDate + " " + endTime + ":00");
 
-                String insertStatement = "UPDATE appointments SET Appointment_ID = ?, Title = ?, Description = ?, Location = ?, Type = ?, Start = ?, End = ?, Last_Update = ?, Last_Updated_By = ?, Customer_ID = ?, User_ID = ?, Contact_ID = ? WHERE Appointment_ID = ?";
+                String insertStatement = "UPDATE appointments SET Appointment_ID = ?, Title = ?, Description = ?, Location = ?, Type = ?, Start = ?, End = ?, Create_Date = ?, Created_By = ?, Last_Update = ?, Last_Updated_By = ?, Customer_ID = ?, User_ID = ?, Contact_ID = ? WHERE Appointment_ID = ?";
 
                 JDBC.setPreparedStatement(JDBC.getConnection(), insertStatement);
                 PreparedStatement ps = JDBC.getPreparedStatement();
@@ -789,14 +789,15 @@ public class Appointments_Controller
                 ps.setString(5, Appt_Type_Input.getText());
                 ps.setString(6, startUTC);
                 ps.setString(7, endUTC);
-                ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
-                ps.setString(9, Users_Access.getCurrentUser());
-                ps.setInt(10, Integer.parseInt(Appt_Cust_ID_Input.getText()));
-                ps.setString(11, Users_Access.getCurrentUser());
-                ps.setInt(12, Integer.parseInt(Contacts_Access.findContactID((String) Appointment_Contact_CB.getValue())));
-                ps.setInt(13, Integer.parseInt(Appt_ID_Input.getText()));
-
-                ps.execute();
+            ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
+            ps.setString(9, Users_Access.getCurrentUser());
+            ps.setTimestamp(10, Timestamp.valueOf(LocalDateTime.now()));
+            ps.setString(11, Users_Access.getCurrentUser());
+            ps.setInt(12, Integer.parseInt(Appt_Cust_ID_Input.getText()));
+            ps.setInt(13, Integer.parseInt(Appt_UserID_Input.getText()));
+            ps.setInt(14, Integer.parseInt(Contacts_Access.findContactID((String) Appointment_Contact_CB.getValue())));
+            ps.setInt(15, Integer.parseInt(Appt_ID_Input.getText()));
+            ps.execute();
         }
         catch (Exception f)
         {
