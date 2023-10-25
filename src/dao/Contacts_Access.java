@@ -1,43 +1,42 @@
 package dao;
 
 import helper.JDBC;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import model.Contacts;
-
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class Contacts_Access
 {
     public static ObservableList<Contacts> getContacts() throws SQLException
     {
-        ObservableList<Contacts> ObservableList_Contacts = FXCollections.observableArrayList();
+        ObservableList<Contacts> ContactsList = FXCollections.observableArrayList();
         String sql = "SELECT * FROM contacts";
-        PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
-        ResultSet rs = ps.executeQuery();
+        PreparedStatement preparedStatement = JDBC.getConnection().prepareStatement(sql);
+        ResultSet resultSet = preparedStatement.executeQuery();
 
-        while(rs.next())
+        while(resultSet.next())
         {
-             int Contact_ID = rs.getInt("Contact_ID");
-             String Contact_Name = rs.getString("Contact_Name");
-             String Email = rs.getString("Email");
+             int Contact_ID = resultSet.getInt("Contact_ID");
+             String Contact_Name = resultSet.getString("Contact_Name");
+             String Email = resultSet.getString("Email");
              Contacts Contact = new Contacts(Contact_ID, Contact_Name, Email);
-             ObservableList_Contacts.add(Contact);
+            ContactsList.add(Contact);
         }
 
-        return ObservableList_Contacts;
+        return ContactsList;
     }
 
-    public static String findContactID(String contactID) throws SQLException
+    public static String getContactID(String contactID) throws SQLException
     {
-        PreparedStatement ps = JDBC.getConnection().prepareStatement("SELECT * FROM contacts WHERE Contact_Name = ?");
-        ps.setString(1, contactID);
-        ResultSet rs = ps.executeQuery();
-        while (rs.next())
+        PreparedStatement preparedStatement = JDBC.getConnection().prepareStatement("SELECT * FROM contacts WHERE Contact_Name = ?");
+        preparedStatement.setString(1, contactID);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next())
         {
-            contactID = rs.getString("Contact_ID");
+            contactID = resultSet.getString("Contact_ID");
         }
         return contactID;
     }

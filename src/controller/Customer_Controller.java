@@ -1,6 +1,5 @@
 package controller;
 
-
 import dao.*;
 import helper.JDBC;
 import javafx.collections.FXCollections;
@@ -10,23 +9,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.chart.ScatterChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import helper.JDBC;
 import model.Customers;
 import model.*;
 import java.sql.Connection;
@@ -51,24 +43,9 @@ public class Customer_Controller implements Initializable
     public Button Cancel_Button;
     public TableColumn Customer_Phone_Column;
     public TableColumn Customer_FLD_Column;
-    public ComboBox Customer_State;                                 // actual state CB
-    public ComboBox Customer_Country_CB;                            // actual country CB
-
+    public ComboBox Customer_State;
+    public ComboBox Customer_Country_CB;
     public static int Cust_ID;
-
-    class ItemChangeListener implements ItemListener
-    {
-        @Override
-        public void itemStateChanged(ItemEvent event)
-        {
-            if (event.getStateChange() == ItemEvent.SELECTED)
-            {
-                Object item = event.getItem();
-            }
-        }
-    }
-
-
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
         try
@@ -259,14 +236,11 @@ public class Customer_Controller implements Initializable
 
             ObservableList<Customers> refreshCustomersList = Customer_Access.getCustomers(connect);
             Customer_Table.setItems(refreshCustomersList);
-
-
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
-
     }
 
     public void Delete_Button(ActionEvent actionEvent) throws Exception
@@ -282,7 +256,6 @@ public class Customer_Controller implements Initializable
         Optional<ButtonType> result = alert.showAndWait();
         if(result.get() == ButtonType.OK)
         {
-
             Customers Selected_Customer = (Customers) Customer_Table.getSelectionModel().getSelectedItem();
             int Cust_to_del = Selected_Customer.getCustomer_ID();
 
@@ -437,7 +410,6 @@ public class Customer_Controller implements Initializable
                 ObservableList<Country_Access> getCountries = Country_Access.getCountries();
                 ObservableList<FirstLevelDivision_Access> getFirstleveldivision_Names = FirstLevelDivision_Access.getFirst_Level_Division();
                 ObservableList<String> allFirstleveldivisionivision = FXCollections.observableArrayList();
-
                 ObservableList<String> US_FSD = FXCollections.observableArrayList();
                 ObservableList<String> UK_FSD = FXCollections.observableArrayList();
                 ObservableList<String> CAN_FSD = FXCollections.observableArrayList();

@@ -181,17 +181,14 @@ public class Appointments_Controller
         try
         {
             Connection connection = JDBC.openConnection();
-
-            ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();
-            ObservableList<Appointments> LocalAppointmentsList = FXCollections.observableArrayList();
-            ZoneId systemZone = ZoneId.systemDefault();
+            ObservableList<Appointments> LocalAppointmentsList;
             ObservableList<Customers> CustomersObservableList = Customer_Access.getCustomers(connection);
             ObservableList<Customers> getAllCustomers = Customer_Access.getCustomers(connection);
             ObservableList<Integer> storeCustomerIDs = FXCollections.observableArrayList();
             ObservableList<Users_Access> getAllUsers = Users_Access.getUsersList();
             ObservableList<Users_Access> UsersObservableList = Users_Access.getUsersList();
             ObservableList<Integer> storeUserIDs = FXCollections.observableArrayList();
-            ObservableList<Appointments> getAllAppointments = Appointments_Access.getAppointments();
+
             int customerID = Integer.parseInt(Appt_Cust_ID_Input.getText());
 
             for (Customers customer : getAllCustomers)
@@ -375,9 +372,9 @@ public class Appointments_Controller
                     Optional<ButtonType> confirmation = alert.showAndWait();
                     return;
                 }
-            System.out.println("Mic check 1");
+
             LocalAppointmentsList = Time.convertTimeDateLocal();
-            System.out.println("Mic check 2");
+
 
                 for (Appointments appointment: LocalAppointmentsList)
                 {
@@ -425,9 +422,9 @@ public class Appointments_Controller
                         }
                     }
                 }
-            System.out.println("Mic check 3");
+
                 String insertStatement = "INSERT INTO appointments (Appointment_ID, Title, Description, Location, Type, Start, End, Create_Date, Created_By, Last_Update, Last_Updated_By, Customer_ID, User_ID, Contact_ID) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-            System.out.println("Mic check 4");
+
                 JDBC.setPreparedStatement(JDBC.getConnection(), insertStatement);
                 PreparedStatement ps = JDBC.getPreparedStatement();
                 ps.setInt(1, Appt_ID);
@@ -443,14 +440,11 @@ public class Appointments_Controller
                 ps.setString(11, Users_Access.getCurrentUser());
                 ps.setInt(12, Integer.parseInt(Appt_Cust_ID_Input.getText()));
                 ps.setInt(13, Integer.parseInt(Appt_UserID_Input.getText()));
-                ps.setInt(14, Integer.parseInt(Contacts_Access.findContactID((String) Appointment_Contact_CB.getValue())));
-            System.out.println("Mic check 5");
-                ps.execute();                                                                                           //breaks here...sometimes           caused by difference in user id and contact!
-            System.out.println("Mic check 6");
+                ps.setInt(14, Integer.parseInt(Contacts_Access.getContactID((String) Appointment_Contact_CB.getValue())));
+                ps.execute();
             }
         catch (SQLException e)
         {
-            System.out.println("Mic check Excep");
             e.printStackTrace();
         }
 
@@ -795,7 +789,7 @@ public class Appointments_Controller
             ps.setString(11, Users_Access.getCurrentUser());
             ps.setInt(12, Integer.parseInt(Appt_Cust_ID_Input.getText()));
             ps.setInt(13, Integer.parseInt(Appt_UserID_Input.getText()));
-            ps.setInt(14, Integer.parseInt(Contacts_Access.findContactID((String) Appointment_Contact_CB.getValue())));
+            ps.setInt(14, Integer.parseInt(Contacts_Access.getContactID((String) Appointment_Contact_CB.getValue())));
             ps.setInt(15, Integer.parseInt(Appt_ID_Input.getText()));
             ps.execute();
         }

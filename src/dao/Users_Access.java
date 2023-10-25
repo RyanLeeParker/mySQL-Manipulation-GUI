@@ -1,21 +1,22 @@
 package dao;
 
 import helper.JDBC;
+import model.Users;
+import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.sql.PreparedStatement;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import model.Users;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Users_Access extends Users
 {
     public static String CurrentUser;
 
-    public Users_Access(int userId, String userName, String password, LocalDateTime createDate, String createdBy, Timestamp lastUpdate, String lastUpdatedBy)
+    public Users_Access(int userId, String userName, String password, LocalDateTime createDate, String createdBy,
+                        Timestamp lastUpdate, String lastUpdatedBy)
     {
         super(userId, userName, password,  createDate, createdBy, lastUpdate, lastUpdatedBy);
     }
@@ -25,23 +26,22 @@ public class Users_Access extends Users
         try
         {
             String query = "SELECT * FROM users WHERE user_name = '" + userName + "' AND password = '" + password + "'";
-            PreparedStatement ps = JDBC.getConnection().prepareStatement(query);
-            ResultSet rs = ps.executeQuery();
-            rs.next();
+            PreparedStatement preparedStatement = JDBC.getConnection().prepareStatement(query);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
 
-            if (rs.getString("User_Name").equals(userName))
+            if (resultSet.getString("User_Name").equals(userName))
             {
-                if (rs.getString("Password").equals(password))
+                if (resultSet.getString("Password").equals(password))
                 {
                     CurrentUser = userName;
-                    return rs.getInt("User_ID");
+                    return resultSet.getInt("User_ID");
                 }
             }
         }
         catch (SQLException d)
         {
             System.out.println("Validation exception reached");
-            //d.printStackTrace();
         }
 
         return -1;
@@ -51,29 +51,29 @@ public class Users_Access extends Users
     {
         try
         {
-            ObservableList<Users_Access> allUsersObsList = FXCollections.observableArrayList();
+            ObservableList<Users_Access> UsersList = FXCollections.observableArrayList();
             String sql = "SELECT * FROM users";
-            PreparedStatement ps = JDBC.getConnection().prepareStatement(sql);
-            ResultSet result = ps.executeQuery();
+            PreparedStatement preparedStatement = JDBC.getConnection().prepareStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-            while (result.next())
+            while (resultSet.next())
             {
-                int userId = result.getInt("User_ID");
-                String userName = result.getString("User_Name");
-                String password = result.getString("Password");
-                LocalDateTime createDate = LocalDateTime.parse(result.getString("Create_Date"), formatter);
-                String createdBy = result.getString("Created_By");
-                Timestamp lastUpdate = result.getTimestamp("Last_Update");
-                String lastUpdatedBy = result.getString("Last_Updated_By");
+                int userId = resultSet.getInt("User_ID");
+                String userName = resultSet.getString("User_Name");
+                String password = resultSet.getString("Password");
+                LocalDateTime createDate = LocalDateTime.parse(resultSet.getString("Create_Date"), formatter);
+                String createdBy = resultSet.getString("Created_By");
+                Timestamp lastUpdate = resultSet.getTimestamp("Last_Update");
+                String lastUpdatedBy = resultSet.getString("Last_Updated_By");
                 Users_Access user = new Users_Access(userId, userName, password,  createDate, createdBy, lastUpdate, lastUpdatedBy);
-                allUsersObsList.add(user);
+                UsersList.add(user);
             }
-            return allUsersObsList;
+            return UsersList;
         }
         catch (SQLException e)
         {
-            e.printStackTrace();
+            System.out.println("getUsersList exception reached");
         }
         return null;
     }
