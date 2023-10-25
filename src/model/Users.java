@@ -3,16 +3,17 @@ package model;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
-public class Users {
+public class Users
+{
     public int userId;
-    public String userName;
+    public static String userName;
     public String password;
-    private LocalDateTime createDate;
-    private String createdBy;
-    private Timestamp lastUpdate;
-    private String lastUpdatedBy;
+    public LocalDateTime createDate;
+    public String createdBy;
+    public Timestamp lastUpdate;
+    public String lastUpdatedBy;
 
-    public Users(int userId, String userName, String password, LocalDateTime  createDate, String createdBy, Timestamp lastUpdate, String lastUpdatedBy)
+    public Users(int userId, String userName, String password, LocalDateTime createDate, String createdBy, Timestamp lastUpdate, String lastUpdatedBy)
     {
         this.userId = userId;
         this.userName = userName;
@@ -27,7 +28,9 @@ public class Users {
         return userId;
     }
 
-    public String getUserName() {
+    public String getUserName()
+    {
+        System.out.println("Current Username in Users: " + userName);
         return userName;
     }
 

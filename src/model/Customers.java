@@ -5,6 +5,7 @@ import javafx.geometry.Pos;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 public class Customers
@@ -15,24 +16,24 @@ public class Customers
     public String Address;
     public String Postal_Code;
     public String Phone;
-    public LocalDateTime Create_Date;
-    public String Created_By;
-    public LocalDateTime Last_Update;
-    public String Last_Updated_By;
+    private LocalDateTime createDate;
+    private String createdBy;
+    private Timestamp lastUpdate;
+    private String lastUpdatedBy;
     public int Division_ID;             // FK
 
-    public Customers(int Customer_ID, String Customer_Name, String Address, String Postal_Code, String Phone, int Division_ID) // LocalDateTime Create_Date, String Created_By, LocalDateTime Last_Update,
-    // String Last_Updated_By,
+    public Customers(int Customer_ID, String Customer_Name, String Address, String Postal_Code, String Phone, LocalDateTime createDate, String createdBy, Timestamp lastUpdate, String lastUpdatedBy, int Division_ID)
+
     {
         this.Customer_ID = Customer_ID;
         this.Customer_Name = Customer_Name;
         this.Address = Address;
         this.Postal_Code = Postal_Code;
         this.Phone = Phone;
-//        this.Create_Date = Create_Date;
-//        this.Created_By = Created_By;
-//        this.Last_Update = Last_Update;
-//        this.Last_Updated_By = Last_Updated_By;
+        this.createDate = createDate;
+        this.createdBy = createdBy;
+        this.lastUpdate = lastUpdate;
+        this.lastUpdatedBy = lastUpdatedBy;
         this.Division_ID = Division_ID;
     }
 
@@ -56,7 +57,24 @@ public class Customers
     public String getPhone() {
         return Phone;
     }
+    public LocalDateTime getCreateDate()
+    {
+        return createDate;
+    }
+    public String getCreatedBy()
+    {
+        return createdBy;
+    }
 
+    public Timestamp getLastUpdate()
+    {
+        return lastUpdate;
+    }
+
+    public String getLastUpdatedBy()
+    {
+        return lastUpdatedBy;
+    }
     public int getDivision_ID() {
         return Division_ID;
     }

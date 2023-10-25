@@ -13,6 +13,7 @@ import java.time.format.DateTimeFormatter;
 
 public class Users_Access extends Users
 {
+    public static String CurrentUser;
     public Users_Access(int userId, String userName, String password, LocalDateTime createDate, String createdBy, Timestamp lastUpdate, String lastUpdatedBy)
     {
         super(userId, userName, password,  createDate, createdBy, lastUpdate, lastUpdatedBy);
@@ -31,6 +32,7 @@ public class Users_Access extends Users
             {
                 if (rs.getString("Password").equals(password))
                 {
+                    CurrentUser = userName;
                     return rs.getInt("User_ID");
                 }
             }
@@ -73,6 +75,11 @@ public class Users_Access extends Users
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static String getCurrentUser()
+    {
+        return CurrentUser;
     }
 
 }

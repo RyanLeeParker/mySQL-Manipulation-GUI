@@ -5,11 +5,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.Customers;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Customer_Access
 {
@@ -17,12 +15,15 @@ public class Customer_Access
     {
         ObservableList<Customers> ObservableList_Customers = FXCollections.observableArrayList();
 
-        String query = "SELECT customers.Customer_ID, customers.Customer_Name, customers.Address, customers.Postal_Code, " +
-                "customers.Phone, customers.Division_ID, first_level_divisions.Division from customers INNER JOIN  " +
-                "first_level_divisions ON customers.Division_ID = first_level_divisions.Division_ID";
+//        String query = "SELECT customers.Customer_ID, customers.Customer_Name, customers.Address, customers.Postal_Code, " +
+//                "customers.Phone, customers.Division_ID, first_level_divisions.Division from customers INNER JOIN  " +
+//                "first_level_divisions ON customers.Division_ID = first_level_divisions.Division_ID";
+
+        String query = "SELECT * from customers INNER JOIN first_level_divisions ON customers.Division_ID = first_level_divisions.Division_ID";
 
         PreparedStatement ps = JDBC.getConnection().prepareStatement(query);
         ResultSet rs = ps.executeQuery();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         while (rs.next())
         {
@@ -31,9 +32,12 @@ public class Customer_Access
             String Address = rs.getString("Address");
             String Postal_Code = rs.getString("Postal_Code");
             String Phone = rs.getString("Phone");
+            LocalDateTime createDate = LocalDateTime.parse(rs.getString("Create_Date"), formatter);
+            String createdBy = rs.getString("Created_By");
+            Timestamp lastUpdate = rs.getTimestamp("Last_Update");
+            String lastUpdatedBy = rs.getString("Last_Updated_By");
             int Division_ID = rs.getInt("Division_ID");
-            String division_name = rs.getString("Division");
-            Customers Customer = new Customers(Customer_ID, Customer_Name, Address, Postal_Code, Phone, Division_ID);
+            Customers Customer = new Customers(Customer_ID, Customer_Name, Address, Postal_Code, Phone, createDate, createdBy, lastUpdate, lastUpdatedBy, Division_ID);
             ObservableList_Customers.add(Customer);
         }
 

@@ -1,10 +1,7 @@
 package controller;
 
 
-import dao.Appointments_Access;
-import dao.Country_Access;
-import dao.Customer_Access;
-import dao.FirstLevelDivision_Access;
+import dao.*;
 import helper.JDBC;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -86,7 +83,6 @@ public class Customer_Controller implements Initializable
             ObservableList<String> UK_FSD = FXCollections.observableArrayList();
             ObservableList<String> CAN_FSD = FXCollections.observableArrayList();
 
-
             Customer_ID_Input.setText("Auto Gen - Disabled");
             Customer_ID_Input.setDisable(true);
             Cust_ID = Customers_All.size();
@@ -101,14 +97,12 @@ public class Customer_Controller implements Initializable
 
             Customer_Table.setItems(Customers_All);
 
-
             Customer_ID_Column.setCellValueFactory(new PropertyValueFactory<>("Customer_ID"));
             Customer_Name_Column.setCellValueFactory(new PropertyValueFactory<>("Customer_Name"));
             Customer_Address_Column.setCellValueFactory(new PropertyValueFactory<>("Address"));
             Customer_PostalCode_Column.setCellValueFactory(new PropertyValueFactory<>("Postal_Code"));
             Customer_Phone_Column.setCellValueFactory(new PropertyValueFactory<>("Phone"));
             Customer_FLD_Column.setCellValueFactory(new PropertyValueFactory<>("Division_ID"));
-
 
             for (Country country : Countries_All)                                           // have three lists, per country
             {
@@ -250,9 +244,9 @@ public class Customer_Controller implements Initializable
             ps.setString(4, Customer_PostalCode_Input.getText());
             ps.setString(5, Customer_PhoneNumber_Input.getText());
             ps.setTimestamp(6, Timestamp.valueOf(LocalDateTime.now()));
-            ps.setString(7, "test");
+            ps.setString(7, Users_Access.getCurrentUser());
             ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
-            ps.setString(9, "test");
+            ps.setString(9, Users_Access.getCurrentUser());
             ps.setInt(10, temp_FLD_ID);
             ps.setInt(11, Integer.parseInt(Customer_ID_Input.getText()));
             ps.execute();
@@ -405,9 +399,9 @@ public class Customer_Controller implements Initializable
         ps.setString(4, Customer_PostalCode_Input.getText());
         ps.setString(5, Customer_PhoneNumber_Input.getText());
         ps.setTimestamp(6, Timestamp.valueOf(LocalDateTime.now()));
-        ps.setString(7, "test");
+        ps.setString(7, Users_Access.getCurrentUser());
         ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
-        ps.setString(9, "test");
+        ps.setString(9, Users_Access.getCurrentUser());
         ps.setInt(10, firstLevelDivisionName);
         ps.execute();
 
