@@ -37,21 +37,24 @@ public class Login_Screen implements Initializable
     public Label username_label;
     public Label password_label;
 
-    public void initialize(URL url, ResourceBundle rb)
+    public void initialize(URL url, ResourceBundle resourceBundle)
     {
         try
         {
-            Locale locale = Locale.getDefault();
             //Locale locale = new Locale("fr");
+            //ZoneId zone_id = ZoneId.systemDefault();
+            //resourceBundle = ResourceBundle.getBundle("language/login", locale);
+
+            Locale locale = Locale.getDefault();
             Locale.setDefault(locale);
-            ZoneId zone_id = ZoneId.systemDefault();
-            rb = ResourceBundle.getBundle("language/login", Locale.getDefault());
-            //rb = ResourceBundle.getBundle("language/login", locale);
-            Location_label.setText(rb.getString("Locale"));
-            username_label.setText(rb.getString("username"));
-            password_label.setText(rb.getString("password"));
-            Login_Button.setText(rb.getString("login"));
-            CancelButton.setText(rb.getString("exit"));
+
+            resourceBundle = ResourceBundle.getBundle("language/login", Locale.getDefault());
+
+            Location_label.setText(resourceBundle.getString("Locale"));
+            username_label.setText(resourceBundle.getString("username"));
+            password_label.setText(resourceBundle.getString("password"));
+            Login_Button.setText(resourceBundle.getString("login"));
+            CancelButton.setText(resourceBundle.getString("exit"));
         }
         catch (Exception e)
         {
@@ -63,92 +66,95 @@ public class Login_Screen implements Initializable
     {
         try
         {
-            ObservableList<Appointments> LocalAppointmentsList;
+            ResourceBundle resourceBundle = ResourceBundle.getBundle("language/login", Locale.getDefault());
+            FileWriter writeToFile = new FileWriter("login_activity.txt", true);
+            PrintWriter recordFile = new PrintWriter(writeToFile);
 
-            LocalDateTime currentTimeMinus15Min = LocalDateTime.now().minusMinutes(15);
-            LocalDateTime currentTimePlus15Min = LocalDateTime.now().plusMinutes(15);
-            LocalDateTime startTime;
-            ZoneId systemZone = ZoneId.systemDefault();
-            System.out.println(systemZone);
-            int getAppointmentID = 0;
-            LocalDateTime displayTime = null;
-            boolean appointmentWithin15Min = false;
-
-            //Locale locale = new Locale("fr");
-            ResourceBundle rb = ResourceBundle.getBundle("language/login", Locale.getDefault());
-            //ResourceBundle rb = ResourceBundle.getBundle("language/login", locale);
-
-            FileWriter WriteToFile = new FileWriter("login_activity.txt", true);
-            PrintWriter recordFile = new PrintWriter(WriteToFile);
-
-            String userName = Username_textfield.getText();
-            String password = Password_textfield.getText();
-            int userId = Users_Access.validation(userName, password);
+            String userNameAttempt = Username_textfield.getText();
+            String passwordAttempt = Password_textfield.getText();
+            int userId = Users_Access.validation(userNameAttempt, passwordAttempt);
 
             if (userId > 0)
             {
-                try
-                {
-                    FXMLLoader fxmlLoader = new FXMLLoader(Controller.class.getResource("/views/Main_Screen.fxml"));
-                    Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-                    Scene scene = new Scene(fxmlLoader.load(), 1000, 600);
-                    stage.setTitle("Main Screen");
-                    stage.setScene(scene);
-                    stage.show();
-
-                    //log login
-                    recordFile.print(userName + " Logged in at " + Timestamp.valueOf(LocalDateTime.now()) + "\n");     // reqs need user printed too?
-
-                    LocalAppointmentsList = Time.convertTimeDateLocal();
-
-                    //check for upcoming appointments if user is validated
-                    for (Appointments appointment: LocalAppointmentsList)
-                    {
-                        startTime = appointment.getStart();
-                        if ((startTime.isAfter(currentTimeMinus15Min) || startTime.isEqual(currentTimeMinus15Min)) && (startTime.isBefore(currentTimePlus15Min) || (startTime.isEqual(currentTimePlus15Min))))
-                        {
-                            getAppointmentID = appointment.getAppointment_ID();
-                            displayTime = startTime;
-                            appointmentWithin15Min = true;
-                        }
-                    }
-                    if (appointmentWithin15Min)
-                    {
-                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment within 15 minutes: " + getAppointmentID + " and appointment start time of: " + displayTime);
-                        Optional<ButtonType> confirmation = alert.showAndWait();
-                        System.out.println("There is an appointment within 15 minutes");
-                    }
-                    else
-                    {
-                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "No upcoming appointments.");
-                        Optional<ButtonType> confirmation = alert.showAndWait();
-                        System.out.println("no upcoming appointments");
-                    }
-                }
-                catch (Exception e)
-                {
-                    Alert alert_err = new Alert(Alert.AlertType.WARNING);
-                    alert_err.setTitle("Invalid Login");
-                    alert_err.setContentText("Please reenter and try again.");
-                    alert_err.showAndWait();
-                }
+                recordFile.print(userNameAttempt + " Logged in at " + Timestamp.valueOf(LocalDateTime.now()) + "\n");
+                navigateToMainScreen(actionEvent);
+                checkForUpcomingAppointments();
             }
             else if (userId < 0)
             {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "errorHeader");
-                alert.setTitle(rb.getString("errorTitle"));
-                alert.setContentText(rb.getString("errorText"));
-                alert.showAndWait();
-
-                //log failed attempt
-                recordFile.print(userName + " Failed to login." + Timestamp.valueOf(LocalDateTime.now()) + "\n");           //moved to after
+                showLoginErrorAlert(resourceBundle);
+                recordFile.print(userNameAttempt + " Failed to login." + Timestamp.valueOf(LocalDateTime.now()) + "\n");
             }
             recordFile.close();
         }
-        catch (SQLException | IOException f)
+        catch (SQLException | IOException e)
         {
-            f.printStackTrace();
+            e.printStackTrace();
         }
+    }
+
+    private void navigateToMainScreen(ActionEvent actionEvent) throws IOException
+    {
+        FXMLLoader fxmlLoader = new FXMLLoader(Controller.class.getResource("/views/Main_Screen.fxml"));
+        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        Scene scene = new Scene(fxmlLoader.load(), 1000, 600);
+        stage.setTitle("Main Screen");
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    private void checkForUpcomingAppointments() throws SQLException
+    {
+        ObservableList<Appointments> localAppointmentsList = Time.convertTimeDateLocal();
+        LocalDateTime FifteenMinUntilNow = LocalDateTime.now().minusMinutes(15);
+        LocalDateTime FifteenMinFromNow = LocalDateTime.now().plusMinutes(15);
+        int appointmentID = 0;
+        LocalDateTime apptTime = null;
+        boolean appointmentWithin15Min = false;
+
+        for (Appointments appointment : localAppointmentsList)
+        {
+            LocalDateTime start = appointment.getStart();
+            if ((start.isAfter(FifteenMinUntilNow) || start.isEqual(FifteenMinUntilNow)) &&
+                    (start.isBefore(FifteenMinFromNow) || start.isEqual(FifteenMinFromNow)))
+            {
+                appointmentID = appointment.getAppointment_ID();
+                apptTime = start;
+                appointmentWithin15Min = true;
+            }
+        }
+
+        if (appointmentWithin15Min)
+        {
+            showAppointmentAlert(appointmentID, apptTime);
+        }
+        else
+        {
+            showNoAppointmentsAlert();
+        }
+    }
+
+    private void showAppointmentAlert(int appointmentID, LocalDateTime apptTime)
+    {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment within 15 minutes: " + appointmentID +
+                " and appointment start time of: " + apptTime);
+        Optional<ButtonType> confirmation = alert.showAndWait();
+        System.out.println("There is an appointment within 15 minutes");
+    }
+
+    private void showNoAppointmentsAlert()
+    {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "No upcoming appointments.");
+        Optional<ButtonType> confirmation = alert.showAndWait();
+        System.out.println("No upcoming appointments");
+    }
+
+    private void showLoginErrorAlert(ResourceBundle resourceBundle)
+    {
+        Alert alert = new Alert(Alert.AlertType.ERROR, "errorHeader");
+        alert.setTitle(resourceBundle.getString("errorTitle"));
+        alert.setContentText(resourceBundle.getString("errorText"));
+        alert.showAndWait();
     }
 
     public void Cancel_Press(ActionEvent actionEvent)
