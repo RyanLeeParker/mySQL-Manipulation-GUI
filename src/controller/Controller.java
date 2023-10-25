@@ -1,24 +1,22 @@
 package controller;
 
-import javafx.event.ActionEvent;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.stage.Stage;
 
 import java.net.URL;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.fxml.FXMLLoader;
+import javafx.event.ActionEvent;
 import java.util.ResourceBundle;
-
+import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 
 public class Controller implements Initializable
 {
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
-        System.out.println("Main Controller");
+
     }
 
     public void Customer_Press(ActionEvent actionEvent) throws Exception
@@ -32,7 +30,8 @@ public class Controller implements Initializable
             stage.setScene(scene);
             stage.show();
         }
-        catch (Exception e) {
+        catch (Exception e)
+        {
             Alert alert_err = new Alert(Alert.AlertType.WARNING);
             alert_err.setTitle("Something went wrong.");
             alert_err.setContentText("Please restart the program and try again.");
@@ -48,12 +47,12 @@ public class Controller implements Initializable
         {
             FXMLLoader fxmlLoader = new FXMLLoader(Controller.class.getResource("/views/Appointments.fxml"));
             Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-            Scene scene = new Scene(fxmlLoader.load(), 1000, 600);
-            stage.setTitle("Add Appointments");
+            Scene scene = new Scene(fxmlLoader.load(), 1100, 600);
+            stage.setTitle("Appointments");
             stage.setScene(scene);
             stage.show();
         }
-        catch (Exception e)
+        catch (Exception k)
         {
             Alert alert_err = new Alert(Alert.AlertType.WARNING);
             alert_err.setTitle("Something went wrong.");
@@ -62,7 +61,7 @@ public class Controller implements Initializable
         }
     }
 
-    public void Reports_Press(ActionEvent actionEvent)
+    public void Reports_Press(ActionEvent actionEvent) throws Exception
     {
         try
         {
@@ -73,7 +72,7 @@ public class Controller implements Initializable
             stage.setScene(scene);
             stage.show();
         }
-        catch (Exception e)
+        catch (Exception j)
         {
             Alert alert_err = new Alert(Alert.AlertType.WARNING);
             alert_err.setTitle("Something went wrong.");

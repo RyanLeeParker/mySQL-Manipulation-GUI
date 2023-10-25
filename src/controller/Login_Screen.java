@@ -1,29 +1,30 @@
 package controller;
 
-import dao.Appointments_Access;
-import dao.Users_Access;
+
 import helper.Time;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
+import java.net.URL;
+import java.time.ZoneId;
+import java.util.Locale;
+import dao.Users_Access;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.Appointments;
 import java.io.FileWriter;
+import java.sql.Timestamp;
+import java.util.Optional;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.URL;
 import java.sql.SQLException;
-import java.sql.Timestamp;
+import javafx.scene.control.*;
+import javafx.fxml.FXMLLoader;
+import dao.Appointments_Access;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.util.Locale;
-import java.util.Optional;
 import java.util.ResourceBundle;
-import java.time.ZoneId;
+import javafx.event.ActionEvent;
+import javafx.fxml.Initializable;
+import javafx.collections.ObservableList;
+
 
 public class Login_Screen implements Initializable
 {
@@ -54,7 +55,7 @@ public class Login_Screen implements Initializable
         }
         catch (Exception e)
         {
-            System.out.println("resourcebundle not found");
+            System.out.println("Resourcebundle not found");
         }
     }
 
@@ -62,9 +63,7 @@ public class Login_Screen implements Initializable
     {
         try
         {
-            ObservableList<Appointments> getAllAppointments = Appointments_Access.getAppointments();
-            ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();
-            ObservableList<Appointments> LocalAppointmentsList = Appointments_Access.getAppointments();
+            ObservableList<Appointments> LocalAppointmentsList;
 
             LocalDateTime currentTimeMinus15Min = LocalDateTime.now().minusMinutes(15);
             LocalDateTime currentTimePlus15Min = LocalDateTime.now().plusMinutes(15);
@@ -119,7 +118,7 @@ public class Login_Screen implements Initializable
                         Optional<ButtonType> confirmation = alert.showAndWait();
                         System.out.println("There is an appointment within 15 minutes");
                     }
-                    else                                                                                                // this fires
+                    else
                     {
                         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "No upcoming appointments.");
                         Optional<ButtonType> confirmation = alert.showAndWait();

@@ -445,7 +445,8 @@ public class Appointments_Controller
             }
         catch (SQLException e)
         {
-            e.printStackTrace();
+            //e.printStackTrace();
+            System.out.println("Please ensure all fields are appropriately filled.");
         }
 
         FXMLLoader fxmlLoader = new FXMLLoader(Controller.class.getResource("/views/Appointments.fxml"));

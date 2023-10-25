@@ -1,12 +1,12 @@
 package controller;
 
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
+
+import helper.JDBC;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import helper.JDBC;
-
 import java.sql.SQLException;
+import javafx.fxml.FXMLLoader;
+import javafx.application.Application;
 
 public class Main extends Application
 {
