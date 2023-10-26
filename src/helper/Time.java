@@ -9,9 +9,13 @@ import java.sql.Timestamp;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 
-
+/** This is the main time conversion class, it hosts 2 functions to convert appointments to and from UTC and Local times.*/
 public class Time
 {
+    /**
+     * This is one of the main time conversion methods used throughout the program, to convert UTC time objects to local time.
+     * @throws SQLException
+     * @return an observablelist which is converted UTC time appointments into local time appointments*/
     public static ObservableList<Appointments> convertTimeDateLocal() throws SQLException                               //Convert UTC SQL into local time
     {
         ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();
@@ -48,7 +52,12 @@ public class Time
         }
         return LocalAppointmentsList;
     }
-    public static String convertTimeDateUTC(String dateTime) {                                                          // lambda 3, Converts Local time into UTC.
+    /**
+     * This is one of the main time conversion methods used throughout the program, to convert local time objects to UTC time.
+     * @throws SQLException
+     * @return an observablelist which is converted local time appointments into UTC time appointments
+     * A lambda expression was used due to the sheer size difference of the first expression, which performs a similar task at 5x the lines.*/
+    public static String convertTimeDateUTC(String dateTime) {
         return Timestamp.valueOf(dateTime)
                 .toLocalDateTime()
                 .atZone(ZoneId.systemDefault())
