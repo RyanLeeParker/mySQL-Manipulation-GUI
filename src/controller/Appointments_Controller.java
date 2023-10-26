@@ -30,6 +30,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import static helper.Time.convertTimeDateUTC;
 
+/** */
 public class Appointments_Controller
 {
     public TextField Appt_ID_Input;
@@ -66,6 +67,7 @@ public class Appointments_Controller
     public DatePicker Appt_EndDate_Picker;
     public static int Appt_ID;
 
+    /** */
     public void initialize() throws Exception
     {
         Connection connect = JDBC.openConnection();
@@ -125,6 +127,7 @@ public class Appointments_Controller
         }
     }
 
+    /** */
     public void Add_Button(ActionEvent actionEvent) throws Exception
     {
         try
@@ -214,6 +217,7 @@ public class Appointments_Controller
                 return;
             }
 
+            /** */
             boolean Cust_Valid = CustomersList.stream()                                                       // lambda # 1
                     .map(customer -> String.valueOf(customer.getCustomer_ID()))
                     .anyMatch(Cust_tempID -> Appt_Cust_ID_Input.getText().equals(Cust_tempID));
@@ -227,6 +231,7 @@ public class Appointments_Controller
                 return;
             }
 
+            /** */
             boolean User_Valid = UsersList.stream()                                                           // lambda # 2
                     .anyMatch(user -> Appt_UserID_Input.getText().equals(String.valueOf(user.getUserId())));
 
@@ -422,6 +427,7 @@ public class Appointments_Controller
         stage.show();
     }
 
+    /** */
     public void Edit_Button(ActionEvent actionEvent)
     {
         try
@@ -487,6 +493,7 @@ public class Appointments_Controller
         }
     }
 
+    /** */
     public void Delete_Button(ActionEvent actionEvent) throws Exception
     {
         try
@@ -528,6 +535,7 @@ public class Appointments_Controller
         }
     }
 
+    /** */
     public void Save_Button(ActionEvent actionEvent) throws Exception
     {
         try
@@ -782,6 +790,7 @@ public class Appointments_Controller
         stage.show();
     }
 
+    /** */
     public void Cancel_Button(ActionEvent actionEvent)
     {
         try
@@ -801,6 +810,8 @@ public class Appointments_Controller
             alert_err.showAndWait();
         }
     }
+
+    /** */
     public void All_Radio_Selected(ActionEvent actionEvent)
     {
         try
@@ -820,6 +831,7 @@ public class Appointments_Controller
         }
     }
 
+    /** */
     public void Week_Radio_Selected(ActionEvent actionEvent)
     {
         try
@@ -848,6 +860,7 @@ public class Appointments_Controller
         }
     }
 
+    /** */
     public void Month_Radio_Selected(ActionEvent actionEvent)
     {
         try

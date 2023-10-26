@@ -8,8 +8,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.time.format.DateTimeFormatter;
 
+/** This class controls access and manipulation to the Appointments class.*/
 public class Appointments_Access
 {
+    /** This method creates and Observable list for the appointments in the MySQL database.
+     * @throws SQLException
+     * @return AppointmentsList of appointments*/
     public static ObservableList<Appointments> getAppointments() throws SQLException
     {
         ObservableList<Appointments> AppointmentsList = FXCollections.observableArrayList();
@@ -42,6 +46,11 @@ public class Appointments_Access
 
         return AppointmentsList;
     }
+    /** This method removes appointments from the database.
+     * @param Customer removing appt from
+     * @param connection MySQL connection
+     * @throws SQLException
+     * @return outcome of deletion*/
     public static int removeAppointment(int Customer, Connection connection) throws SQLException
     {
         String query = "DELETE FROM appointments WHERE Appointment_ID=?";

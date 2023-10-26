@@ -9,8 +9,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.time.format.DateTimeFormatter;
 
+/** This class controls access and manipulation to the Customer class.*/
 public class Customer_Access
 {
+    /** This method creates and Observable list for the Customers in the MySQL database.
+     * @return CustomerList*/
     public static ObservableList<Customers> getCustomers(Connection connection) throws SQLException
     {
         ObservableList<Customers> CustomersList = FXCollections.observableArrayList();

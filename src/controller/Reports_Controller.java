@@ -23,7 +23,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-
+/** */
 public class Reports_Controller
 {
     @FXML
@@ -52,7 +52,7 @@ public class Reports_Controller
     public TableView<Reports> customerByState;
     public TableView TotalApptsByMonth;
     public TableView TotalApptsByType;
-
+    /** */
     public void initialize() throws SQLException
     {
         CustomersByState_Column.setCellValueFactory(new PropertyValueFactory<Reports, String>("division_name"));
@@ -82,7 +82,7 @@ public class Reports_Controller
 
         Contact_CB.setItems(ContactsNames);
     }
-
+    /** */
     public void Contact_CB_Selected(ActionEvent actionEvent) throws SQLException
     {
         try
@@ -94,7 +94,7 @@ public class Reports_Controller
             e.printStackTrace();
         }
     }
-
+    /** */
     private ObservableList<Appointments> getAppointmentsForSelectedContact() throws SQLException
     {
         int contactID = getSelectedContactID();
@@ -111,7 +111,7 @@ public class Reports_Controller
         }
         return appointmentsList;
     }
-
+    /** */
     private int getSelectedContactID() throws SQLException
     {
         String contactName = (String) Contact_CB.getSelectionModel().getSelectedItem();
@@ -126,7 +126,7 @@ public class Reports_Controller
         }
         return 0;
     }
-
+    /** */
     public void AppointmentTotals_Tab_Selected(Event event) throws SQLException
     {
         try
@@ -143,7 +143,7 @@ public class Reports_Controller
             f.printStackTrace();
         }
     }
-
+    /** */
     private ObservableList<Report_Type> generateAppointmentTypeReport(ObservableList<Appointments> getAppointments)
     {
         ObservableList<Report_Type> reportType = FXCollections.observableArrayList();
@@ -173,7 +173,7 @@ public class Reports_Controller
         }
         return reportType;
     }
-
+    /** */
     private ObservableList<Report_Month> generateAppointmentMonthReport(ObservableList<Appointments> getAppointments)
     {
         ObservableList<Report_Month> reportMonths = FXCollections.observableArrayList();
@@ -202,7 +202,7 @@ public class Reports_Controller
         }
         return reportMonths;
     }
-
+    /** */
     public void CustomersByState_Tab_Selected(Event event) throws SQLException
     {
         try
@@ -215,7 +215,7 @@ public class Reports_Controller
             exception.printStackTrace();
         }
     }
-
+    /** */
     public void Cancel_Button(ActionEvent actionEvent)
     {
         try
@@ -235,5 +235,6 @@ public class Reports_Controller
             alert_err.showAndWait();
         }
     }
+    /** */
     public void SchedByContact_Tab_Selected(Event event) throws SQLException {}
 }

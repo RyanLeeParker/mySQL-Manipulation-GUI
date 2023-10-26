@@ -12,8 +12,10 @@ import java.sql.PreparedStatement;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+/** This class controls access and manipulation to the Report class.*/
 public class Report_Access extends Appointments
 {
+    /** This method uses the Report class as a parent to manipulate said class and objects. */
     public Report_Access(int Appointment_ID, String Title, String Description, String Location, String Type,
                          LocalDateTime Start, LocalDateTime End, LocalDateTime Create_Date, String Created_By,
                          Timestamp Last_Update, String Last_Updated_By, int Customer_ID, int User_ID, int Contact_ID)
@@ -22,6 +24,8 @@ public class Report_Access extends Appointments
                 Last_Updated_By,  Customer_ID,  User_ID,  Contact_ID);
     }
 
+    /** This method creates and Observable list for the First level divisions in the MySQL database.
+     * @return FirstLevelDivisionList*/
     public static ObservableList<Reports> getFirst_Level_Division() throws SQLException
     {
         ObservableList<Reports> FirstLevelDivisionList = FXCollections.observableArrayList();

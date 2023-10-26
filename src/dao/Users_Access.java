@@ -11,17 +11,27 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.time.format.DateTimeFormatter;
 
+/** This class controls access and manipulation to the Users class.*/
 public class Users_Access extends Users
 {
     public static String CurrentUser;
 
+    /** This method uses the Report class as a parent to manipulate said class and objects. */
     public Users_Access(int userId, String userName, String password, LocalDateTime createDate, String createdBy,
                         Timestamp lastUpdate, String lastUpdatedBy)
     {
         super(userId, userName, password,  createDate, createdBy, lastUpdate, lastUpdatedBy);
     }
 
-    public static int validation(String userName, String password) throws SQLException        //compare allUsersObsList to user input
+    /** This method is used by the login screen to validate the username and password entered against the MySQL database.
+     * Also sets CurrentUser to keep track of current User.
+     *
+     * @param userName
+     * @param password
+     * @throws SQLException
+     * @return User_ID
+     * @return -1 if user is invalid.*/
+    public static int validation(String userName, String password) throws SQLException
     {
         try
         {
@@ -47,6 +57,9 @@ public class Users_Access extends Users
         return -1;
     }
 
+    /**This method creates and Observable list for the Users in the MySQL database.
+     * @throws SQLException
+     * @return UsersList*/
     public static ObservableList<Users_Access> getUsersList() throws SQLException
     {
         try
@@ -78,6 +91,8 @@ public class Users_Access extends Users
         return null;
     }
 
+    /** This method is to keep track of who is currently logged in, updating objects.
+     * @return CurrentUser */
     public static String getCurrentUser()
     {
         return CurrentUser;

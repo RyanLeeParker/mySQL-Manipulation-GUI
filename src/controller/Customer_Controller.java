@@ -24,6 +24,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+/** */
 public class Customer_Controller implements Initializable
 {
     public TextField Customer_ID_Input;
@@ -46,6 +47,7 @@ public class Customer_Controller implements Initializable
     public ComboBox Customer_State;
     public ComboBox Customer_Country_CB;
     public static int Cust_ID;
+    /** */
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
         try
@@ -130,6 +132,7 @@ public class Customer_Controller implements Initializable
         }
     }
 
+    /** */
     public void Cancel_Button(ActionEvent actionEvent) throws IOException
     {
         try
@@ -150,6 +153,7 @@ public class Customer_Controller implements Initializable
         }
     }
 
+    /** */
     public void Save_Button(ActionEvent actionEvent)
     {
         try
@@ -245,6 +249,7 @@ public class Customer_Controller implements Initializable
         }
     }
 
+    /** */
     public void Delete_Button(ActionEvent actionEvent) throws Exception
     {
         try
@@ -304,7 +309,7 @@ public class Customer_Controller implements Initializable
         }
     }
 
-
+    /** */
     public void Add_Button(ActionEvent actionEvent) throws Exception
     {
         Connection connect = JDBC.openConnection();
@@ -393,6 +398,7 @@ public class Customer_Controller implements Initializable
         stage.show();
     }
 
+    /** */
     public void Edit_Button(ActionEvent actionEvent)
     {
         try
@@ -411,6 +417,7 @@ public class Customer_Controller implements Initializable
         }
     }
 
+    /** */
     private void populateCustomerData(Customers selectedCustomer)
     {
         try

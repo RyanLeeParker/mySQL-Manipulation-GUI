@@ -8,8 +8,12 @@ import java.sql.PreparedStatement;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+/** This class controls access and manipulation to the Contacts class.*/
 public class Contacts_Access
 {
+    /** This method creates and Observable list for the Contacts in the MySQL database.
+     * @throws SQLException
+     * @return ContactsList of all contacts in database*/
     public static ObservableList<Contacts> getContacts() throws SQLException
     {
         ObservableList<Contacts> ContactsList = FXCollections.observableArrayList();
@@ -29,6 +33,10 @@ public class Contacts_Access
         return ContactsList;
     }
 
+    /** Gets a specific ContactID
+     * @param contactID
+     * @throws SQLException
+     * @return contactID*/
     public static String getContactID(String contactID) throws SQLException
     {
         PreparedStatement preparedStatement = JDBC.getConnection().prepareStatement("SELECT * FROM contacts WHERE Contact_Name = ?");

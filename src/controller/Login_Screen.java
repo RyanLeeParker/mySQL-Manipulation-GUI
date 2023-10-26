@@ -23,7 +23,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.collections.ObservableList;
 
-
+/** */
 public class Login_Screen implements Initializable
 {
     public TextField Username_textfield;
@@ -35,6 +35,7 @@ public class Login_Screen implements Initializable
     public Label username_label;
     public Label password_label;
 
+    /** */
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
         try
@@ -60,6 +61,7 @@ public class Login_Screen implements Initializable
         }
     }
 
+    /** */
     public void Login_Button_Press(ActionEvent actionEvent) throws SQLException
     {
         try
@@ -90,7 +92,7 @@ public class Login_Screen implements Initializable
             e.printStackTrace();
         }
     }
-
+    /** */
     private void navigateToMainScreen(ActionEvent actionEvent) throws IOException
     {
         FXMLLoader fxmlLoader = new FXMLLoader(Controller.class.getResource("/views/Main_Screen.fxml"));
@@ -100,7 +102,7 @@ public class Login_Screen implements Initializable
         stage.setScene(scene);
         stage.show();
     }
-
+    /** */
     private void checkForUpcomingAppointments() throws SQLException
     {
         ObservableList<Appointments> localAppointmentsList = Time.convertTimeDateLocal();
@@ -131,7 +133,7 @@ public class Login_Screen implements Initializable
             showNoAppointmentsAlert();
         }
     }
-
+    /** */
     private void showAppointmentAlert(int appointmentID, LocalDateTime apptTime)
     {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment within 15 minutes: " + appointmentID +
@@ -139,14 +141,14 @@ public class Login_Screen implements Initializable
         Optional<ButtonType> confirmation = alert.showAndWait();
         System.out.println("There is an appointment within 15 minutes");
     }
-
+    /** */
     private void showNoAppointmentsAlert()
     {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "No upcoming appointments.");
         Optional<ButtonType> confirmation = alert.showAndWait();
         System.out.println("No upcoming appointments");
     }
-
+    /** */
     private void showLoginErrorAlert(ResourceBundle resourceBundle)
     {
         Alert alert = new Alert(Alert.AlertType.ERROR, "errorHeader");
@@ -154,7 +156,7 @@ public class Login_Screen implements Initializable
         alert.setContentText(resourceBundle.getString("errorText"));
         alert.showAndWait();
     }
-
+    /** */
     public void Cancel_Press(ActionEvent actionEvent)
     {
         System.exit(0);

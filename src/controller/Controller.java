@@ -11,14 +11,16 @@ import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 
+/** */
 public class Controller implements Initializable
 {
+    /** */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
 
     }
-
+    /** */
     public void Customer_Press(ActionEvent actionEvent) throws Exception
     {
         try
@@ -40,7 +42,7 @@ public class Controller implements Initializable
         }
 
     }
-
+    /** */
     public void Appointment_Press(ActionEvent actionEvent) throws Exception
     {
         try
@@ -60,7 +62,7 @@ public class Controller implements Initializable
             alert_err.showAndWait();
         }
     }
-
+    /** */
     public void Reports_Press(ActionEvent actionEvent) throws Exception
     {
         try
@@ -80,7 +82,7 @@ public class Controller implements Initializable
             alert_err.showAndWait();
         }
     }
-
+    /** */
     public void Exit_Press(ActionEvent actionEvent)
     {
         System.exit(0);

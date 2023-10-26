@@ -12,13 +12,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.time.format.DateTimeFormatter;
 
+/** This class controls access and manipulation to the FirstLevelDivision class.*/
 public class FirstLevelDivision_Access extends First_Level_Division
 {
+    /** This method uses the FirstLevelDivision class as a parent to manipulate said class and objects. */
     public FirstLevelDivision_Access(int division_ID, String division_name, LocalDateTime createDate, String createdBy, Timestamp lastUpdate, String lastUpdatedBy, int country_ID)
     {
         super( division_ID, division_name,  createDate, createdBy, lastUpdate, lastUpdatedBy, country_ID);
     }
 
+    /** This method creates and Observable list for the First Level Divisions in the MySQL database.
+     * @return First_Level_DivisionList*/
     public static ObservableList<FirstLevelDivision_Access> getFirst_Level_Division() throws SQLException
     {
         ObservableList<FirstLevelDivision_Access> First_Level_DivisionsList = FXCollections.observableArrayList();
