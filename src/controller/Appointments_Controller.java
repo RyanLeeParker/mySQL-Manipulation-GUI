@@ -903,18 +903,13 @@ public class Appointments_Controller
         }
     }
 
-    public void EndTime_CB_Select(ActionEvent actionEvent) {
-    }
+    public void EndTime_CB_Select(ActionEvent actionEvent) {}
 
-    public void Appt_Cont_CB_Select(ActionEvent actionEvent) {
-    }
+    public void Appt_Cont_CB_Select(ActionEvent actionEvent) {}
 
-    public void Appt_StartDate_Picked(ActionEvent actionEvent) {
-    }
+    public void Appt_StartDate_Picked(ActionEvent actionEvent) {}
 
-    public void Appt_EndDate_Picked(ActionEvent actionEvent) {
-    }
+    public void Appt_EndDate_Picked(ActionEvent actionEvent) {}
 
-    public void TimeStart_CB_Select(ActionEvent actionEvent) {
-    }
+    public void TimeStart_CB_Select(ActionEvent actionEvent) {}
 }

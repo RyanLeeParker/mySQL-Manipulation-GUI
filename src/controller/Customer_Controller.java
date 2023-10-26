@@ -1,28 +1,28 @@
 package controller;
 
 import dao.*;
+import model.*;
 import helper.JDBC;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
+import java.net.URL;
+import model.Country;
+import model.Customers;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import java.io.IOException;
-import java.net.URL;
-import java.sql.PreparedStatement;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.ResourceBundle;
-import model.Customers;
-import model.*;
+import java.io.IOException;
 import java.sql.Connection;
-import model.Country;
+import javafx.scene.control.*;
+import javafx.fxml.FXMLLoader;
+import java.time.LocalDateTime;
+import javafx.event.ActionEvent;
+import java.util.ResourceBundle;
+import javafx.fxml.Initializable;
+import java.sql.PreparedStatement;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 public class Customer_Controller implements Initializable
 {
@@ -107,7 +107,7 @@ public class Customer_Controller implements Initializable
                 First_Level_Divisions_Names.add(firstLevelDivision.getDivision_name());
             }
 
-            Customer_Country_CB.valueProperty().addListener((observable, oldValue, newValue) ->
+            Customer_Country_CB.valueProperty().addListener((observable, oldValue, newValue) ->                         // listener to detect changes
             {
                 if ("U.S".equals(newValue))
                 {
@@ -152,7 +152,8 @@ public class Customer_Controller implements Initializable
 
     public void Save_Button(ActionEvent actionEvent)
     {
-        try {
+        try
+        {
             Connection connect = JDBC.openConnection();
 
             if(Customer_Name_Input.getText().isEmpty())
@@ -206,8 +207,10 @@ public class Customer_Controller implements Initializable
 
             int temp_FLD_ID = 0;
 
-            for (FirstLevelDivision_Access firstLevelDivision : FirstLevelDivision_Access.getFirst_Level_Division()) {
-                if (Customer_State.getSelectionModel().getSelectedItem().equals(firstLevelDivision.getDivision_name())) {
+            for (FirstLevelDivision_Access firstLevelDivision : FirstLevelDivision_Access.getFirst_Level_Division())
+            {
+                if (Customer_State.getSelectionModel().getSelectedItem().equals(firstLevelDivision.getDivision_name()))
+                {
                     temp_FLD_ID = firstLevelDivision.getDivision_ID();
                 }
             }
@@ -228,81 +231,84 @@ public class Customer_Controller implements Initializable
             ps.setInt(11, Integer.parseInt(Customer_ID_Input.getText()));
             ps.execute();
 
-            Customer_ID_Input.clear();
-            Customer_Name_Input.clear();
-            Customer_Address_Input.clear();
-            Customer_PostalCode_Input.clear();
-            Customer_PhoneNumber_Input.clear();
-
-            ObservableList<Customers> refreshCustomersList = Customer_Access.getCustomers(connect);
-            Customer_Table.setItems(refreshCustomersList);
+            FXMLLoader fxmlLoader = new FXMLLoader(Controller.class.getResource("/views/Customer.fxml"));
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            Scene scene = new Scene(fxmlLoader.load(), 1000, 600);
+            stage.setTitle("Customer Records");
+            stage.setScene(scene);
+            stage.show();
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            System.out.println("Customer Save exception encountered.");
+            //e.printStackTrace();
         }
     }
 
     public void Delete_Button(ActionEvent actionEvent) throws Exception
     {
-        Connection connect = JDBC.openConnection();
-        ObservableList<Appointments> All_Appointments = Appointments_Access.getAppointments();
-
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Delete Confirmation");
-        alert.setContentText("Are you sure you want to delete this item?");
-        alert.setHeaderText("Confirm Deletion");
-
-        Optional<ButtonType> result = alert.showAndWait();
-        if(result.get() == ButtonType.OK)
+        try
         {
-            Customers Selected_Customer = (Customers) Customer_Table.getSelectionModel().getSelectedItem();
-            int Cust_to_del = Selected_Customer.getCustomer_ID();
+            Customers selectedCustomer = (Customers) Customer_Table.getSelectionModel().getSelectedItem();
 
-            if (Selected_Customer == null) {return;}
-
-            Appointments_Access.removeAppointment(Cust_to_del, connect);
-            String sqlDelete = "DELETE FROM customers WHERE Customer_ID = ?";
-            JDBC.setPreparedStatement(JDBC.getConnection(), sqlDelete);
-            PreparedStatement psDelete = JDBC.getPreparedStatement();
-
-            Customers Selected_Customer2 = (Customers) Customer_Table.getSelectionModel().getSelectedItem();
-            int Cust_to_del2 = Selected_Customer.getCustomer_ID();
-
-            //Delete all customer appointments from database.
-            for (Appointments appointment : All_Appointments)
-            {
-                int customer_Appointments = appointment.getCustomer_ID();
-
-                if (Cust_to_del2 == customer_Appointments)
-                {
-                    String remove_Appointments = "DELETE FROM appointments WHERE Appointment_ID = ?";
-                    JDBC.setPreparedStatement(JDBC.getConnection(), remove_Appointments);
-                }
+            if (selectedCustomer == null) {
+                Alert alertErr = new Alert(Alert.AlertType.WARNING);
+                alertErr.setTitle("No Customer Selected");
+                alertErr.setContentText("Please select a customer to delete.");
+                alertErr.showAndWait();
+                return;
             }
 
-            psDelete.setInt(1, Cust_to_del2);
-            psDelete.execute();
-            ObservableList<Customers> refreshCustomersList = Customer_Access.getCustomers(connect);
-            Customer_Table.setItems(refreshCustomersList);
+            int customerId = selectedCustomer.getCustomer_ID();
 
-            Alert alert_err = new Alert(Alert.AlertType.WARNING);
-            alert_err.setTitle("Customer deleted successfully!");
-            alert_err.setContentText("Customer deleted successfully!");
-            alert_err.showAndWait();
+            Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmationAlert.setTitle("Delete Confirmation");
+            confirmationAlert.setHeaderText("Confirm Deletion");
+            confirmationAlert.setContentText("Are you sure you want to delete this customer and their associated appointments?");
 
+            Optional<ButtonType> result = confirmationAlert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK)
+            {
+                Connection connection = JDBC.openConnection();
+
+                Appointments_Access.removeAppointment(customerId, connection);
+
+                String deleteCustomerQuery = "DELETE FROM customers WHERE Customer_ID = ?";
+                JDBC.setPreparedStatement(JDBC.getConnection(), deleteCustomerQuery);
+                PreparedStatement preparedStatementDeleteCustomer = JDBC.getPreparedStatement();
+                preparedStatementDeleteCustomer.setInt(1, customerId);
+                preparedStatementDeleteCustomer.execute();
+
+                JDBC.closeConnection();
+
+                Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                successAlert.setTitle("Customer Deleted");
+                successAlert.setContentText("Customer and associated appointments have been deleted successfully!");
+                successAlert.showAndWait();
+
+                FXMLLoader fxmlLoader = new FXMLLoader(Controller.class.getResource("/views/Customer.fxml"));
+                Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+                Scene scene = new Scene(fxmlLoader.load(), 1000, 600);
+                stage.setTitle("Customer Records");
+                stage.setScene(scene);
+                stage.show();
+            }
         }
-        else if (result.get() == ButtonType.CANCEL)
+        catch (Exception e)
         {
-            return;
+            Alert alertErr = new Alert(Alert.AlertType.ERROR);
+            alertErr.setTitle("Deletion Error");
+            alertErr.setContentText("An error occurred during customer deletion. Please try again.");
+            alertErr.showAndWait();
+            e.printStackTrace();
         }
     }
 
-    public void Add_Button(ActionEvent actionEvent) throws Exception            // adds new entry from text fields
+
+    public void Add_Button(ActionEvent actionEvent) throws Exception
     {
         Connection connect = JDBC.openConnection();
 
-        // check all data is entered correctly
         if(Customer_Name_Input.getText().isEmpty())
         {
             Alert alert_err = new Alert(Alert.AlertType.WARNING);
@@ -352,16 +358,17 @@ public class Customer_Controller implements Initializable
             return;
         }
 
-        int firstLevelDivisionName = 0;
+        int firstLevelDivisionID = 0;
+
         for (FirstLevelDivision_Access firstLevelDivision : FirstLevelDivision_Access.getFirst_Level_Division())
         {
             if (Customer_State.getSelectionModel().getSelectedItem().equals(firstLevelDivision.getDivision_name()))
             {
-                firstLevelDivisionName = firstLevelDivision.getDivision_ID();
+                firstLevelDivisionID = firstLevelDivision.getDivision_ID();
             }
         }
 
-        Cust_ID++;      // leads to corner case of using program multiple times, and making deletions that mess up the ID
+        Cust_ID++;
 
         String insertStatement = "INSERT INTO customers (Customer_ID, Customer_Name, Address, Postal_Code, Phone, Create_Date, Created_By, Last_Update, Last_Updated_By, Division_ID) VALUES (?,?,?,?,?,?,?,?,?,?)";
         JDBC.setPreparedStatement(JDBC.getConnection(), insertStatement);
@@ -375,17 +382,8 @@ public class Customer_Controller implements Initializable
         ps.setString(7, Users_Access.getCurrentUser());
         ps.setTimestamp(8, Timestamp.valueOf(LocalDateTime.now()));
         ps.setString(9, Users_Access.getCurrentUser());
-        ps.setInt(10, firstLevelDivisionName);
+        ps.setInt(10, firstLevelDivisionID);
         ps.execute();
-
-        Customer_ID_Input.clear();                                                                                  // can probably drop this chunk if refreshing
-        Customer_Name_Input.clear();
-        Customer_Address_Input.clear();
-        Customer_PostalCode_Input.clear();
-        Customer_PhoneNumber_Input.clear();
-
-        ObservableList<Customers> refreshCustomersList = Customer_Access.getCustomers(connect);
-        Customer_Table.setItems(refreshCustomersList);
 
         FXMLLoader fxmlLoader = new FXMLLoader(Controller.class.getResource("/views/Customer.fxml"));
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
@@ -395,87 +393,98 @@ public class Customer_Controller implements Initializable
         stage.show();
     }
 
-    public void Edit_Button(ActionEvent actionEvent)                                        // populates text fields
+    public void Edit_Button(ActionEvent actionEvent)
     {
         try
         {
-            JDBC.openConnection();
             Customers selectedCustomer = (Customers) Customer_Table.getSelectionModel().getSelectedItem();
+
+            if (selectedCustomer != null)
+            {
+                populateCustomerData(selectedCustomer);
+            }
+        }
+        catch
+        (Exception e)
+        {
+            //e.printStackTrace();
+        }
+    }
+
+    private void populateCustomerData(Customers selectedCustomer)
+    {
+        try
+        {
+            ObservableList<Country_Access> getCountries = Country_Access.getCountries();
+            ObservableList<FirstLevelDivision_Access> getFirstleveldivision_Names = FirstLevelDivision_Access.getFirst_Level_Division();
+            ObservableList<String> allFirstleveldivisionivision = FXCollections.observableArrayList();
+            ObservableList<String> US_FSD = FXCollections.observableArrayList();
+            ObservableList<String> UK_FSD = FXCollections.observableArrayList();
+            ObservableList<String> CAN_FSD = FXCollections.observableArrayList();
+            ObservableList<String> First_Level_Divisions_Names = FXCollections.observableArrayList();
+
+            Customer_ID_Input.setText(String.valueOf(selectedCustomer.getCustomer_ID()));
+            Customer_Name_Input.setText(selectedCustomer.getCustomer_Name());
+            Customer_Address_Input.setText(selectedCustomer.getAddress());
+            Customer_PostalCode_Input.setText(selectedCustomer.getPostal_Code());
+            Customer_PhoneNumber_Input.setText(selectedCustomer.getPhone());
 
             String divisionName = "";
             String countryName = "";
 
-            if (selectedCustomer != null)
+            for (First_Level_Division flDivision : getFirstleveldivision_Names)
             {
-                ObservableList<Country_Access> getCountries = Country_Access.getCountries();
-                ObservableList<FirstLevelDivision_Access> getFirstleveldivision_Names = FirstLevelDivision_Access.getFirst_Level_Division();
-                ObservableList<String> allFirstleveldivisionivision = FXCollections.observableArrayList();
-                ObservableList<String> US_FSD = FXCollections.observableArrayList();
-                ObservableList<String> UK_FSD = FXCollections.observableArrayList();
-                ObservableList<String> CAN_FSD = FXCollections.observableArrayList();
-                ObservableList<String> First_Level_Divisions_Names = FXCollections.observableArrayList();
+                allFirstleveldivisionivision.add(flDivision.getDivision_name());
+                int countryIDToSet = flDivision.getCountry_ID();
 
-                Customer_ID_Input.setText(String.valueOf((selectedCustomer.getCustomer_ID())));
-                Customer_Name_Input.setText(selectedCustomer.getCustomer_Name());
-                Customer_Address_Input.setText(selectedCustomer.getAddress());
-                Customer_PostalCode_Input.setText(selectedCustomer.getPostal_Code());
-                Customer_PhoneNumber_Input.setText(selectedCustomer.getPhone());
-
-                for (First_Level_Division flDivision: getFirstleveldivision_Names)
+                if (flDivision.getDivision_ID() == selectedCustomer.getDivision_ID())
                 {
-                    allFirstleveldivisionivision.add(flDivision.getDivision_name());
-                    int countryIDToSet = flDivision.getCountry_ID();
+                    divisionName = flDivision.getDivision_name();
 
-                    if (flDivision.getDivision_ID() == selectedCustomer.getDivision_ID())
+                    for (Country country : getCountries)
                     {
-                        divisionName = flDivision.getDivision_name();
-
-                        for (Country country: getCountries)
+                        if (country.getCountry_ID() == countryIDToSet)
                         {
-                            if (country.getCountry_ID() == countryIDToSet)
-                            {
-                                countryName = country.getCountry_Name();
-                            }
+                            countryName = country.getCountry_Name();
                         }
                     }
                 }
+            }
 
-                Customer_Country_CB.setValue(countryName);
+            Customer_Country_CB.setValue(countryName);
 
-                for (First_Level_Division firstLevelDivision : getFirstleveldivision_Names)
+            for (First_Level_Division firstLevelDivision : getFirstleveldivision_Names)
+            {
+                if (firstLevelDivision.getCountry_ID() == 1)
                 {
-
-                    if (firstLevelDivision.getCountry_ID() == 1)
-                    {
-                        US_FSD.add(firstLevelDivision.getDivision_name());
-                    }
-                    else if (firstLevelDivision.getCountry_ID() == 2)
-                    {
-                        UK_FSD.add(firstLevelDivision.getDivision_name());
-                    }
-                    else if (firstLevelDivision.getCountry_ID() == 3)
-                    {
-                        CAN_FSD.add(firstLevelDivision.getDivision_name());
-                    }
-
-                    First_Level_Divisions_Names.add(firstLevelDivision.getDivision_name());
+                    US_FSD.add(firstLevelDivision.getDivision_name());
+                }
+                else if (firstLevelDivision.getCountry_ID() == 2)
+                {
+                    UK_FSD.add(firstLevelDivision.getDivision_name());
+                }
+                else if (firstLevelDivision.getCountry_ID() == 3)
+                {
+                    CAN_FSD.add(firstLevelDivision.getDivision_name());
                 }
 
-                if (countryName.equals("U.S"))
-                {
-                    Customer_State.setItems(US_FSD);
-                    Customer_State.setValue(divisionName);
-                }
-                if (countryName.equals("UK"))
-                {
-                    Customer_State.setItems(UK_FSD);
-                    Customer_State.setValue(divisionName);
-                }
-                if (countryName.equals("Canada"))
-                {
-                    Customer_State.setItems(CAN_FSD);
-                    Customer_State.setValue(divisionName);
-                }
+                First_Level_Divisions_Names.add(firstLevelDivision.getDivision_name());
+            }
+
+            if (countryName.equals("U.S"))
+            {
+                Customer_State.setItems(US_FSD);
+                Customer_State.setValue(divisionName);
+            }
+            else if (countryName.equals("UK"))
+            {
+                Customer_State.setItems(UK_FSD);
+                Customer_State.setValue(divisionName);
+            }
+            else if (countryName.equals("Canada"))
+            {
+                Customer_State.setItems(CAN_FSD);
+                Customer_State.setValue(divisionName);
             }
         }
         catch (Exception e)
