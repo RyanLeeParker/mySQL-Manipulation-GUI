@@ -16,7 +16,7 @@ public class Time
      * This is one of the main time conversion methods used throughout the program, to convert UTC time objects to local time.
      * @throws SQLException
      * @return an observablelist which is converted UTC time appointments into local time appointments*/
-    public static ObservableList<Appointments> convertTimeDateLocal() throws SQLException                               //Convert UTC SQL into local time
+    public static ObservableList<Appointments> convertTimeDateLocal() throws SQLException
     {
         ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();
         ObservableList<Appointments> LocalAppointmentsList = FXCollections.observableArrayList();
@@ -56,7 +56,7 @@ public class Time
      * This is one of the main time conversion methods used throughout the program, to convert local time objects to UTC time.
      * @throws SQLException
      * @return an observablelist which is converted local time appointments into UTC time appointments
-     * A lambda expression was used due to the sheer size difference of the first expression, which performs a similar task at 5x the lines.*/
+     * A lambda expression #3 was used due to the sheer size difference of the first expression, which performs a similar task at 5x the lines.*/
     public static String convertTimeDateUTC(String dateTime) {
         return Timestamp.valueOf(dateTime)
                 .toLocalDateTime()

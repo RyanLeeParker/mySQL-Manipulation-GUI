@@ -30,7 +30,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import static helper.Time.convertTimeDateUTC;
 
-/** */
+/** This is the class that manages Appointments in the program. All appointment operations are done here.*/
 public class Appointments_Controller
 {
     public TextField Appt_ID_Input;
@@ -67,7 +67,9 @@ public class Appointments_Controller
     public DatePicker Appt_EndDate_Picker;
     public static int Appt_ID;
 
-    /** */
+    /** This method initializes appointments page by retieving all appointment data, and populating the tableview display them.
+     * It disables AppointmentID and instead generates a new one not in use, it then keeps track of the numbering scheme for the add and save functions.
+     * @throws Exception*/
     public void initialize() throws Exception
     {
         Connection connect = JDBC.openConnection();
@@ -118,7 +120,7 @@ public class Appointments_Controller
         Appt_ID_Input.setDisable(true);
         Appt_ID = AppointmentsList.size();
 
-        for (Appointments appointment: AppointmentsList)                                                                // fixes corner case of deletion OOO
+        for (Appointments appointment: AppointmentsList)
         {
             while ((Appt_ID + 1) == appointment.getAppointment_ID())
             {
@@ -127,7 +129,15 @@ public class Appointments_Controller
         }
     }
 
-    /** */
+    /** This method adds new Appointments from data taken from the text fields.
+     * It retrieves all data necessary to create and associate a new appointment.
+     * It extensively error checks that all input is valid.
+     * Compares local time zone entered to EST time zone of business and ensure that appointments only take place on business days and hours.
+     * Appointments are kept from overlapping with others for individual customers.
+     * Object is saved to MySQL database.
+     * Page is reloaded to ensure tableview shows up to date data.
+     * @param actionEvent
+     * @throws Exception*/
     public void Add_Button(ActionEvent actionEvent) throws Exception
     {
         try
@@ -217,8 +227,9 @@ public class Appointments_Controller
                 return;
             }
 
-            /** */
-            boolean Cust_Valid = CustomersList.stream()                                                       // lambda # 1
+            /** This lambda is used to ensure that the CustomerID is valid,in that a customer with that ID exists.
+             * A lambda #1 was used as it streamlines what was a bulky nested for loop.*/
+            boolean Cust_Valid = CustomersList.stream()
                     .map(customer -> String.valueOf(customer.getCustomer_ID()))
                     .anyMatch(Cust_tempID -> Appt_Cust_ID_Input.getText().equals(Cust_tempID));
 
@@ -231,7 +242,8 @@ public class Appointments_Controller
                 return;
             }
 
-            /** */
+            /** This lambda is used to ensure that the UserID is valid,in that a User with that ID exists.
+             * A lambda #2 was used as it streamlines what was a bulky nested for loop.*/
             boolean User_Valid = UsersList.stream()                                                           // lambda # 2
                     .anyMatch(user -> Appt_UserID_Input.getText().equals(String.valueOf(user.getUserId())));
 
@@ -255,7 +267,7 @@ public class Appointments_Controller
 
             Appt_ID++;
 
-            LocalDate localEndDate = Appt_EndDate_Picker.getValue();                                                    // change time names
+            LocalDate localEndDate = Appt_EndDate_Picker.getValue();
             LocalDate localStartDate = Appt_StartDate_Picker.getValue();
 
             DateTimeFormatter minHourFormat = DateTimeFormatter.ofPattern("HH:mm");
@@ -427,7 +439,8 @@ public class Appointments_Controller
         stage.show();
     }
 
-    /** */
+    /** This method populate the text fields and comboboxes of a saved Appointment to be edited by the user.
+     * @param actionEvent */
     public void Edit_Button(ActionEvent actionEvent)
     {
         try
@@ -493,7 +506,10 @@ public class Appointments_Controller
         }
     }
 
-    /** */
+    /** This method serves to delete a selected appointment after ensuring that a valid selection is made.
+     * A confirmation box is prompted to ensure no accidental deletions.
+     * @param actionEvent
+     * @throws Exception*/
     public void Delete_Button(ActionEvent actionEvent) throws Exception
     {
         try
@@ -535,7 +551,14 @@ public class Appointments_Controller
         }
     }
 
-    /** */
+    /** This method saves Appointments from data taken from the text fields after editing a previous appointment.
+     * It extensively error checks that all input is valid.
+     * Compares local time zone entered to EST time zone of business and ensure that appointments only take place on business days and hours.
+     * Appointments are kept from overlapping with others for individual customers.
+     * Object is saved to MySQL database.
+     * Page is reloaded to ensure tableview shows up to date data.
+     * @param actionEvent
+     * @throws Exception*/
     public void Save_Button(ActionEvent actionEvent) throws Exception
     {
         try
@@ -611,8 +634,9 @@ public class Appointments_Controller
                 alert_err.showAndWait();
                 return;
             }
-
-            boolean Cust_Valid = CustomersObservableList.stream()                                                       // lambda # 1
+            /** This lambda is used to ensure that the CustomerID is valid,in that a customer with that ID exists.
+             * A lambda #1 was used as it streamlines what was a bulky nested for loop.*/
+            boolean Cust_Valid = CustomersObservableList.stream()
                     .map(customer -> String.valueOf(customer.getCustomer_ID()))
                     .anyMatch(Cust_tempID -> Appt_Cust_ID_Input.getText().equals(Cust_tempID));
 
@@ -624,7 +648,8 @@ public class Appointments_Controller
                 alert_err.showAndWait();
                 return;
             }
-
+            /** This lambda is used to ensure that the UserID is valid,in that a User with that ID exists.
+             * A lambda #2 was used as it streamlines what was a bulky nested for loop.*/
             boolean User_Valid = UsersObservableList.stream()                                                           // lambda # 2
                     .anyMatch(user -> Appt_UserID_Input.getText().equals(String.valueOf(user.getUserId())));
 
@@ -790,7 +815,8 @@ public class Appointments_Controller
         stage.show();
     }
 
-    /** */
+    /** This method returns to the main page.
+     * @param actionEvent */
     public void Cancel_Button(ActionEvent actionEvent)
     {
         try
@@ -811,7 +837,8 @@ public class Appointments_Controller
         }
     }
 
-    /** */
+    /** This method displays all appointments in the tableview, regardless of time.
+     * @param actionEvent */
     public void All_Radio_Selected(ActionEvent actionEvent)
     {
         try
@@ -831,7 +858,8 @@ public class Appointments_Controller
         }
     }
 
-    /** */
+    /** This method displays only the appointments occuring within the week in the tableview.
+     * @param actionEvent */
     public void Week_Radio_Selected(ActionEvent actionEvent)
     {
         try
@@ -860,7 +888,8 @@ public class Appointments_Controller
         }
     }
 
-    /** */
+    /** This method shows all of the appointments occuring within the month in the tableview.
+     * @param actionEvent */
     public void Month_Radio_Selected(ActionEvent actionEvent)
     {
         try
@@ -890,14 +919,19 @@ public class Appointments_Controller
             e.printStackTrace();
         }
     }
-
+    /**This method is used by other methods to determine combobox selections.
+     * @param actionEvent */
     public void EndTime_CB_Select(ActionEvent actionEvent) {}
-
+    /**This method is used by other methods to determine combobox selections.
+     * @param actionEvent */
     public void Appt_Cont_CB_Select(ActionEvent actionEvent) {}
-
+    /**This method is used by other methods to determine combobox selections.
+     * @param actionEvent */
     public void Appt_StartDate_Picked(ActionEvent actionEvent) {}
-
+    /**This method is used by other methods to determine combobox selections.
+     * @param actionEvent */
     public void Appt_EndDate_Picked(ActionEvent actionEvent) {}
-
+    /**This method is used by other methods to determine combobox selections.
+     * @param actionEvent */
     public void TimeStart_CB_Select(ActionEvent actionEvent) {}
 }

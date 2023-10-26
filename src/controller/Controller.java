@@ -11,16 +11,20 @@ import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 
-/** */
+/** This is the class for the main controller, or the main page of the program.*/
 public class Controller implements Initializable
 {
-    /** */
+    /** This method doesn't initialize anything.
+     * @param resourceBundle
+     * @param url */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
 
     }
-    /** */
+    /** This method initializes the Customer page.
+     * @param actionEvent
+     * @throws Exception*/
     public void Customer_Press(ActionEvent actionEvent) throws Exception
     {
         try
@@ -42,7 +46,9 @@ public class Controller implements Initializable
         }
 
     }
-    /** */
+    /** This method initializes the Appointments page.
+     * @param actionEvent
+     * @throws Exception*/
     public void Appointment_Press(ActionEvent actionEvent) throws Exception
     {
         try
@@ -62,7 +68,9 @@ public class Controller implements Initializable
             alert_err.showAndWait();
         }
     }
-    /** */
+    /** This method initializes the Reports page.
+     * @param actionEvent
+     * @throws Exception*/
     public void Reports_Press(ActionEvent actionEvent) throws Exception
     {
         try
@@ -82,7 +90,8 @@ public class Controller implements Initializable
             alert_err.showAndWait();
         }
     }
-    /** */
+    /** This method exits the program.
+     * @param actionEvent */
     public void Exit_Press(ActionEvent actionEvent)
     {
         System.exit(0);

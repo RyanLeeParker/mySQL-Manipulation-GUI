@@ -23,7 +23,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-/** */
+/** This class is for the reports page, it shows 3 various reports depending on selection.*/
 public class Reports_Controller
 {
     @FXML
@@ -52,7 +52,8 @@ public class Reports_Controller
     public TableView<Reports> customerByState;
     public TableView TotalApptsByMonth;
     public TableView TotalApptsByType;
-    /** */
+
+    /** This method initializes the reports page, initially populating the tableview after retrieving applicable data.*/
     public void initialize() throws SQLException
     {
         CustomersByState_Column.setCellValueFactory(new PropertyValueFactory<Reports, String>("division_name"));
@@ -82,7 +83,9 @@ public class Reports_Controller
 
         Contact_CB.setItems(ContactsNames);
     }
-    /** */
+    /** This method changes the tableview upon selection to a specific report.
+     * @param actionEvent
+     * @throws SQLException*/
     public void Contact_CB_Selected(ActionEvent actionEvent) throws SQLException
     {
         try
@@ -94,7 +97,9 @@ public class Reports_Controller
             e.printStackTrace();
         }
     }
-    /** */
+    /** This method pulls all appointments for whichever contact the user has selected and displays them in the table view.
+     * @throws SQLException
+     * @return appointmentList*/
     private ObservableList<Appointments> getAppointmentsForSelectedContact() throws SQLException
     {
         int contactID = getSelectedContactID();
@@ -111,7 +116,9 @@ public class Reports_Controller
         }
         return appointmentsList;
     }
-    /** */
+    /** This method gets the contact that was selected's ID.
+     * @throws SQLException
+     * @return the selected Contacts ID*/
     private int getSelectedContactID() throws SQLException
     {
         String contactName = (String) Contact_CB.getSelectionModel().getSelectedItem();
@@ -126,7 +133,10 @@ public class Reports_Controller
         }
         return 0;
     }
-    /** */
+    /** This method switches tables  to display a tableview report.
+     * The report tallys appointments by Type and Month in two separate tables.
+     * @param event
+     * @throws SQLException*/
     public void AppointmentTotals_Tab_Selected(Event event) throws SQLException
     {
         try
@@ -143,7 +153,9 @@ public class Reports_Controller
             f.printStackTrace();
         }
     }
-    /** */
+    /** This method generates the Type tally report to be displayed when the user switches tabs to view.
+     * @param getAppointments
+     * @return reportType*/
     private ObservableList<Report_Type> generateAppointmentTypeReport(ObservableList<Appointments> getAppointments)
     {
         ObservableList<Report_Type> reportType = FXCollections.observableArrayList();
@@ -173,7 +185,9 @@ public class Reports_Controller
         }
         return reportType;
     }
-    /** */
+    /** This method generates the Appointment by month tally report.
+     * @param getAppointments
+     * @return reportMonths*/
     private ObservableList<Report_Month> generateAppointmentMonthReport(ObservableList<Appointments> getAppointments)
     {
         ObservableList<Report_Month> reportMonths = FXCollections.observableArrayList();
@@ -202,7 +216,9 @@ public class Reports_Controller
         }
         return reportMonths;
     }
-    /** */
+    /** This custom report sums all the customers by State/Provine and displays them in descending order.
+     * @param event
+     * @throws SQLException*/
     public void CustomersByState_Tab_Selected(Event event) throws SQLException
     {
         try
@@ -215,7 +231,8 @@ public class Reports_Controller
             exception.printStackTrace();
         }
     }
-    /** */
+    /** This method exits the reports page and returns to the main page.
+     * @param actionEvent */
     public void Cancel_Button(ActionEvent actionEvent)
     {
         try
@@ -235,6 +252,8 @@ public class Reports_Controller
             alert_err.showAndWait();
         }
     }
-    /** */
+    /** This function displays nothing while a contact is not selected, but it must be selcted for the contact selection to work.
+     * @param event
+     * @throws SQLException*/
     public void SchedByContact_Tab_Selected(Event event) throws SQLException {}
 }

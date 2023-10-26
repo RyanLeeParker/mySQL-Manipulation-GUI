@@ -25,7 +25,8 @@ public class Main extends Application
         stage.show();
     }
 
-    /** Main method of the program, loads the database connector and then launches the fxml module.*/
+    /** Main method of the program, loads the database connector and then launches the fxml module.
+     * @param args */
     public static void main(String[] args) throws SQLException
     {
         JDBC.openConnection();

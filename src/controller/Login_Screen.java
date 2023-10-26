@@ -23,7 +23,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.collections.ObservableList;
 
-/** */
+/** This class is for all login related functions.*/
 public class Login_Screen implements Initializable
 {
     public TextField Username_textfield;
@@ -35,7 +35,9 @@ public class Login_Screen implements Initializable
     public Label username_label;
     public Label password_label;
 
-    /** */
+    /** This initializes the login page by setting all labels and buttons to either English or French depending on the users location
+     * @param url
+     * @param resourceBundle */
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
         try
@@ -61,7 +63,10 @@ public class Login_Screen implements Initializable
         }
     }
 
-    /** */
+    /** This method takes the users input of username and password and validates it against the MySQL database.
+     * It also records all login attempts.
+     * @param actionEvent
+     * @throws SQLException */
     public void Login_Button_Press(ActionEvent actionEvent) throws SQLException
     {
         try
@@ -92,7 +97,10 @@ public class Login_Screen implements Initializable
             e.printStackTrace();
         }
     }
-    /** */
+
+    /** This method is called if login is successful and opens the main controller screen.
+     * @param actionEvent
+     * @throws IOException */
     private void navigateToMainScreen(ActionEvent actionEvent) throws IOException
     {
         FXMLLoader fxmlLoader = new FXMLLoader(Controller.class.getResource("/views/Main_Screen.fxml"));
@@ -102,7 +110,9 @@ public class Login_Screen implements Initializable
         stage.setScene(scene);
         stage.show();
     }
-    /** */
+
+    /** This method checks the users current time and compares it to all appointments to notify the user if they have an appointment within 15 minutes.
+     * @throws SQLException*/
     private void checkForUpcomingAppointments() throws SQLException
     {
         ObservableList<Appointments> localAppointmentsList = Time.convertTimeDateLocal();
@@ -133,7 +143,9 @@ public class Login_Screen implements Initializable
             showNoAppointmentsAlert();
         }
     }
-    /** */
+    /** This method shows the alert is the appointment is within 15 minutes.
+     * @param appointmentID
+     * @param apptTime */
     private void showAppointmentAlert(int appointmentID, LocalDateTime apptTime)
     {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment within 15 minutes: " + appointmentID +
@@ -141,14 +153,15 @@ public class Login_Screen implements Initializable
         Optional<ButtonType> confirmation = alert.showAndWait();
         System.out.println("There is an appointment within 15 minutes");
     }
-    /** */
+    /** This method shows that no appointments are within 15 minutes.*/
     private void showNoAppointmentsAlert()
     {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "No upcoming appointments.");
         Optional<ButtonType> confirmation = alert.showAndWait();
         System.out.println("No upcoming appointments");
     }
-    /** */
+    /** This method shows the user if the login failed.
+     * @param resourceBundle */
     private void showLoginErrorAlert(ResourceBundle resourceBundle)
     {
         Alert alert = new Alert(Alert.AlertType.ERROR, "errorHeader");
@@ -156,7 +169,8 @@ public class Login_Screen implements Initializable
         alert.setContentText(resourceBundle.getString("errorText"));
         alert.showAndWait();
     }
-    /** */
+    /** This method exits the program.
+     * @param actionEvent */
     public void Cancel_Press(ActionEvent actionEvent)
     {
         System.exit(0);

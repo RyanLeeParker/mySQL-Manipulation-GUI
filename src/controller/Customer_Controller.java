@@ -24,7 +24,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-/** */
+/** This class is the main controller for all Customer related functions and manipulation. */
 public class Customer_Controller implements Initializable
 {
     public TextField Customer_ID_Input;
@@ -47,7 +47,11 @@ public class Customer_Controller implements Initializable
     public ComboBox Customer_State;
     public ComboBox Customer_Country_CB;
     public static int Cust_ID;
-    /** */
+
+    /** This method initializes the customer page by retrieving customer data and populating the tableview.
+     * It also sets the FirstLevelDivision comboboxes to only display States/Provines in their country.
+     * @param url
+     * @param resourceBundle*/
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
         try
@@ -132,8 +136,10 @@ public class Customer_Controller implements Initializable
         }
     }
 
-    /** */
-    public void Cancel_Button(ActionEvent actionEvent) throws IOException
+    /** This method returns to the main page.
+     * @param actionEvent
+     * @throws Exception*/
+    public void Cancel_Button(ActionEvent actionEvent) throws Exception
     {
         try
         {
@@ -144,7 +150,7 @@ public class Customer_Controller implements Initializable
             stage.setScene(scene);
             stage.show();
         }
-        catch (IllegalStateException e)
+        catch (Exception e)
         {
             Alert alert_err = new Alert(Alert.AlertType.WARNING);
             alert_err.setTitle("Something went wrong.");
@@ -153,7 +159,11 @@ public class Customer_Controller implements Initializable
         }
     }
 
-    /** */
+    /** This method saves the data in the input field that were populated and editing by the user, upon hitting edit.
+     * It error checks all input fields before attempting to save.
+     * It overwrites the old customer.
+     * It reloads the page upon completion to refresh the data displayed.
+     * @param actionEvent */
     public void Save_Button(ActionEvent actionEvent)
     {
         try
@@ -249,7 +259,11 @@ public class Customer_Controller implements Initializable
         }
     }
 
-    /** */
+    /** This method deletes the selected customer after deleting all of their associated appointments.
+     * It includes error checking to ensure a customer is selected.
+     * It then reloads the page to update the display data.
+     * @param actionEvent
+     * @throws Exception*/
     public void Delete_Button(ActionEvent actionEvent) throws Exception
     {
         try
@@ -309,7 +323,11 @@ public class Customer_Controller implements Initializable
         }
     }
 
-    /** */
+    /** This method takes input from the text fields, creates a new customer with it, and saves that customer to the database.
+     * It includes extensive error checking or all input fields.
+     * It reloads the page upon completion to refresh the tableview data.
+     * @param actionEvent
+     * @throws Exception*/
     public void Add_Button(ActionEvent actionEvent) throws Exception
     {
         Connection connect = JDBC.openConnection();
@@ -398,8 +416,11 @@ public class Customer_Controller implements Initializable
         stage.show();
     }
 
-    /** */
-    public void Edit_Button(ActionEvent actionEvent)
+    /** This method calls another method to populate the text fields with a pre-existing customers data to edit.
+     * It ensures a customer is selected.
+     * @param actionEvent
+     * @throws Exception*/
+    public void Edit_Button(ActionEvent actionEvent) throws Exception
     {
         try
         {
@@ -417,7 +438,9 @@ public class Customer_Controller implements Initializable
         }
     }
 
-    /** */
+    /** This method populates the text fields with a pre-existing customers data.
+     * It also ensure that the State/Provinces in the comboboxes are correct for their country.
+     * @param selectedCustomer from previous function.*/
     private void populateCustomerData(Customers selectedCustomer)
     {
         try
