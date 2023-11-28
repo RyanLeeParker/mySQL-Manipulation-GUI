@@ -270,7 +270,8 @@ public class Customer_Controller implements Initializable
         {
             Customers selectedCustomer = (Customers) Customer_Table.getSelectionModel().getSelectedItem();
 
-            if (selectedCustomer == null) {
+            if (selectedCustomer == null)
+            {
                 Alert alertErr = new Alert(Alert.AlertType.WARNING);
                 alertErr.setTitle("No Customer Selected");
                 alertErr.setContentText("Please select a customer to delete.");

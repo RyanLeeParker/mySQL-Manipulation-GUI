@@ -36,12 +36,14 @@
                 <TableColumn fx:id="Customer_FLD_Column" prefWidth="107.0" text="First Level Data" />
             </columns>
         </TableView>
-        <Button fx:id="AddButton" layoutX="454.0" layoutY="432.0" mnemonicParsing="false" onAction="#Add_Button" text="Add Customer" />
-        <Button fx:id="Edit_Button" layoutX="600.0" layoutY="432.0" mnemonicParsing="false" onAction="#Edit_Button" text="Edit Customer" />
-        <Button fx:id="DeleteButton" layoutX="739.0" layoutY="432.0" mnemonicParsing="false" onAction="#Delete_Button" text="Delete Customer" />
-        <Button fx:id="SaveButton" layoutX="844.0" layoutY="555.0" mnemonicParsing="false" onAction="#Save_Button" prefHeight="25.0" prefWidth="55.0" text="Save" />
-        <Button fx:id="Cancel_Button" layoutX="924.0" layoutY="555.0" mnemonicParsing="false" onAction="#Cancel_Button" text="Cancel" />
+        <Button fx:id="AddButton" layoutX="374.0" layoutY="432.0" mnemonicParsing="false" onAction="#Add_Button" text="Add Customer" />
+        <Button fx:id="Edit_Button" layoutX="577.0" layoutY="432.0" mnemonicParsing="false" onAction="#Edit_Button" text="Update/Edit Customer" />
+        <Button fx:id="DeleteButton" layoutX="769.0" layoutY="432.0" mnemonicParsing="false" onAction="#Delete_Button" text="Delete Customer" />
+        <Button fx:id="SaveButton" layoutX="578.0" layoutY="474.0" mnemonicParsing="false" onAction="#Save_Button" prefHeight="25.0" prefWidth="135.0" text="Save Edited Cust" />
+        <Button fx:id="Cancel_Button" layoutX="913.0" layoutY="524.0" mnemonicParsing="false" onAction="#Cancel_Button" text="Cancel" />
         <Label layoutX="44.0" layoutY="436.0" text="State/Province" />
         <ComboBox fx:id="Customer_State" layoutX="150.0" layoutY="432.0" prefWidth="150.0" />
+      <Label layoutX="341.0" layoutY="486.0" text="Use Add Cust for new entries." />
+      <Label layoutX="441.0" layoutY="549.0" text="Use Update/Edit Cust to populate fields. Then Save Edited Cust to save any changes." />
     </children>
 </AnchorPane>
