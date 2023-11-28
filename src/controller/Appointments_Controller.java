@@ -136,6 +136,7 @@ public class Appointments_Controller
      * Appointments are kept from overlapping with others for individual customers.
      * Object is saved to MySQL database.
      * Page is reloaded to ensure tableview shows up to date data.
+     * Lambda #1 and #2 used below to ensure valid customer and user IDs.
      * @param actionEvent
      * @throws Exception*/
     public void Add_Button(ActionEvent actionEvent) throws Exception
@@ -227,8 +228,10 @@ public class Appointments_Controller
                 return;
             }
 
-            /** This lambda is used to ensure that the CustomerID is valid,in that a customer with that ID exists.
-             * A lambda #1 was used as it streamlines what was a bulky nested for loop.*/
+            /** lambda #1
+             * This lambda is used to ensure that the CustomerID is valid,in that a customer with that ID exists.
+             * A lambda #1 was used as it streamlines what was a bulky nested for loop.
+             * */
             boolean Cust_Valid = CustomersList.stream()
                     .map(customer -> String.valueOf(customer.getCustomer_ID()))
                     .anyMatch(Cust_tempID -> Appt_Cust_ID_Input.getText().equals(Cust_tempID));
@@ -242,8 +245,10 @@ public class Appointments_Controller
                 return;
             }
 
-            /** This lambda is used to ensure that the UserID is valid,in that a User with that ID exists.
-             * A lambda #2 was used as it streamlines what was a bulky nested for loop.*/
+            /** lambda #2
+             * This lambda is used to ensure that the UserID is valid,in that a User with that ID exists.
+             * A lambda #2 was used as it streamlines what was a bulky nested for loop.
+             * */
             boolean User_Valid = UsersList.stream()                                                           // lambda # 2
                     .anyMatch(user -> Appt_UserID_Input.getText().equals(String.valueOf(user.getUserId())));
 

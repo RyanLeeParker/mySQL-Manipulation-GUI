@@ -3,6 +3,7 @@ package controller;
 
 import helper.Time;
 import java.net.URL;
+import java.time.ZoneId;
 import java.util.Locale;
 import dao.Users_Access;
 import javafx.scene.Node;
@@ -19,6 +20,8 @@ import javafx.scene.control.*;
 import javafx.fxml.FXMLLoader;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
+import java.util.TimeZone;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.collections.ObservableList;
@@ -34,6 +37,9 @@ public class Login_Screen implements Initializable
     public Button CancelButton;
     public Label username_label;
     public Label password_label;
+    public Label timeZone_label;
+    public Label Location;
+    public Label Timezone;
 
     /** This initializes the login page by setting all labels and buttons to either English or French depending on the users location
      * @param url
@@ -43,11 +49,13 @@ public class Login_Screen implements Initializable
         try
         {
             //Locale locale = new Locale("fr");
-            //ZoneId zone_id = ZoneId.systemDefault();
             //resourceBundle = ResourceBundle.getBundle("language/login", locale);
 
             Locale locale = Locale.getDefault();
             Locale.setDefault(locale);
+            ZoneId zone_id = ZoneId.systemDefault();
+            TimeZone timeZone = TimeZone.getTimeZone(zone_id);
+            String timeZoneID = timeZone.getID();
 
             resourceBundle = ResourceBundle.getBundle("language/login", Locale.getDefault());
 
@@ -56,6 +64,9 @@ public class Login_Screen implements Initializable
             password_label.setText(resourceBundle.getString("password"));
             Login_Button.setText(resourceBundle.getString("login"));
             CancelButton.setText(resourceBundle.getString("exit"));
+            Location.setText(resourceBundle.getString("Location"));
+            Timezone.setText(resourceBundle.getString("Timezone"));
+            timeZone_label.setText(timeZoneID);
         }
         catch (Exception e)
         {

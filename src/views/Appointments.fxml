@@ -47,11 +47,11 @@
                 <TableColumn fx:id="Appt_UserID_Column" prefWidth="64.0" text="User ID" />
             </columns>
         </TableView>
-        <Button fx:id="AddButton" layoutX="544.0" layoutY="432.0" mnemonicParsing="false" onAction="#Add_Button" text="Add Appointment" />
-        <Button fx:id="Edit_Button" layoutX="674.0" layoutY="432.0" mnemonicParsing="false" onAction="#Edit_Button" text="Update Appointment" />
-        <Button fx:id="DeleteButton" layoutX="826.0" layoutY="432.0" mnemonicParsing="false" onAction="#Delete_Button" text="Delete Appointment" />
-        <Button fx:id="SaveButton" layoutX="844.0" layoutY="555.0" mnemonicParsing="false" onAction="#Save_Button" prefHeight="25.0" prefWidth="55.0" text="Save" />
-        <Button fx:id="Cancel_Button" layoutX="924.0" layoutY="555.0" mnemonicParsing="false" onAction="#Cancel_Button" text="Cancel" />
+        <Button fx:id="AddButton" layoutX="374.0" layoutY="429.0" mnemonicParsing="false" onAction="#Add_Button" text="Add Appointment" />
+        <Button fx:id="Edit_Button" layoutX="587.0" layoutY="429.0" mnemonicParsing="false" onAction="#Edit_Button" text="Update/Edit Appointment" />
+        <Button fx:id="DeleteButton" layoutX="862.0" layoutY="429.0" mnemonicParsing="false" onAction="#Delete_Button" text="Delete Appointment" />
+        <Button fx:id="SaveButton" layoutX="587.0" layoutY="473.0" mnemonicParsing="false" onAction="#Save_Button" prefHeight="25.0" prefWidth="153.0" text="Save Edited Appt" />
+        <Button fx:id="Cancel_Button" layoutX="1013.0" layoutY="507.0" mnemonicParsing="false" onAction="#Cancel_Button" text="Cancel" />
         <Label layoutX="51.0" layoutY="523.0" text="End Time" />
         <ComboBox fx:id="Appointment_EndTime" layoutX="148.0" layoutY="519.0" onAction="#EndTime_CB_Select" prefWidth="150.0" />
         <ComboBox fx:id="Appointment_Contact_CB" layoutX="148.0" layoutY="555.0" onAction="#Appt_Cont_CB_Select" prefWidth="150.0" />
@@ -63,5 +63,7 @@
         <Label layoutX="49.0" layoutY="489.0" text="Start Time" />
         <ComboBox fx:id="Appointment_TimeStart_CB" layoutX="148.0" layoutY="485.0" onAction="#TimeStart_CB_Select" prefWidth="150.0" />
         <RadioButton fx:id="All_Radio" layoutX="569.0" layoutY="34.0" mnemonicParsing="false" onAction="#All_Radio_Selected" text="All" toggleGroup="$Appt_Toggle" />
+      <Label layoutX="374.0" layoutY="551.0" text="Use Add Appt for new entries." />
+      <Label layoutX="587.0" layoutY="523.0" prefHeight="73.0" prefWidth="452.0" text="Use Update/Edit Appt to populate fields. Then Save Edited Appt to save any changes." />
     </children>
 </AnchorPane>

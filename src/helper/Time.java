@@ -53,6 +53,7 @@ public class Time
         return LocalAppointmentsList;
     }
     /**
+     * lambda #3
      * This is one of the main time conversion methods used throughout the program, to convert local time objects to UTC time.
      * @throws SQLException
      * @return an observablelist which is converted local time appointments into UTC time appointments
