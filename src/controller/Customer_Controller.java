@@ -291,7 +291,12 @@ public class Customer_Controller implements Initializable
             {
                 Connection connection = JDBC.openConnection();
 
-                Appointments_Access.removeAppointment(customerId, connection);
+                String deleteAppointmentsQuery = "DELETE FROM appointments WHERE Customer_ID = ?";
+                JDBC.setPreparedStatement(JDBC.getConnection(), deleteAppointmentsQuery);
+                PreparedStatement preparedStatementDeleteAppointments = JDBC.getPreparedStatement();
+                preparedStatementDeleteAppointments.setInt(1, customerId);
+                preparedStatementDeleteAppointments.execute();
+
 
                 String deleteCustomerQuery = "DELETE FROM customers WHERE Customer_ID = ?";
                 JDBC.setPreparedStatement(JDBC.getConnection(), deleteCustomerQuery);
