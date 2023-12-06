@@ -573,6 +573,7 @@ public class Appointments_Controller
             ObservableList<Customers> CustomersObservableList = Customer_Access.getCustomers(connection);
             ObservableList<Appointments> LocalAppointmentsList;
             int customerID = Integer.parseInt(Appt_Cust_ID_Input.getText());
+            int current_ApptID = Integer.parseInt(Appt_ID_Input.getText());
 
 
             if(Appt_Name_Input.getText().isEmpty())
@@ -700,7 +701,7 @@ public class Appointments_Controller
                 LocalDateTime checkStart = appointment.getStart();
                 LocalDateTime checkEnd = appointment.getEnd();
 
-                if ((customerID == appointment.getCustomer_ID()) && (Appt_ID != appointment.getAppointment_ID()))
+                if ((customerID == appointment.getCustomer_ID()) && (current_ApptID != appointment.getAppointment_ID()))
                 {
                     if ((dateStartTime.isBefore(checkStart)) && (dateEndTime.isAfter(checkEnd)))
                     {
@@ -710,7 +711,7 @@ public class Appointments_Controller
                         return;
                     }
                 }
-                if ((customerID == appointment.getCustomer_ID()) && (Appt_ID != appointment.getAppointment_ID()))
+                if ((customerID == appointment.getCustomer_ID()) && (current_ApptID != appointment.getAppointment_ID()))
                 {
                     if ((dateStartTime.isAfter(checkStart)) && (dateStartTime.isBefore(checkEnd)))
                     {
@@ -720,7 +721,7 @@ public class Appointments_Controller
                         return;
                     }
                 }
-                if ((customerID == appointment.getCustomer_ID()) && (Appt_ID != appointment.getAppointment_ID()))
+                if ((customerID == appointment.getCustomer_ID()) && (current_ApptID != appointment.getAppointment_ID()))
                 {
                     if   ((dateEndTime.isAfter(checkStart)) && (dateEndTime.isBefore(checkEnd)))
                     {
@@ -730,7 +731,7 @@ public class Appointments_Controller
                         return;
                     }
                 }
-                if ((customerID == appointment.getCustomer_ID()) && (Appt_ID != appointment.getAppointment_ID()))
+                if ((customerID == appointment.getCustomer_ID()) && (current_ApptID != appointment.getAppointment_ID()))                       // this triggers only in VM
                 {
                     if   ((dateStartTime.isEqual(checkStart)) && (dateEndTime.isEqual(checkEnd)))
                     {
