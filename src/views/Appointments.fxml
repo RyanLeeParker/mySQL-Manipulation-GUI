@@ -31,6 +31,8 @@
                         <ToggleGroup fx:id="Appt_Toggle" />
                     </toggleGroup></RadioButton>
                 <RadioButton fx:id="Month_Radio" layoutX="458.0" layoutY="27.0" mnemonicParsing="false" onAction="#Month_Radio_Selected" text="Month" toggleGroup="$Appt_Toggle" />
+                <Label layoutX="35.0" layoutY="52.0" text="All times displayed in local time zone." />
+                <Label layoutX="35.0" layoutY="69.0" text="Business hours (8am-10pm EST)" />
             </children>
         </AnchorPane>
         <TableView fx:id="Appointment_Table" layoutX="315.0" layoutY="75.0" prefHeight="336.0" prefWidth="761.0">

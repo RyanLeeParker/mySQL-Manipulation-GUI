@@ -115,7 +115,10 @@ public class Appointments_Controller
         Appointment_TimeStart_CB.setItems(appointmentTimes);
         Appointment_EndTime.setItems(appointmentTimes);
         Appointment_Contact_CB.setItems(allContactsNames);
-        Appointment_Table.setItems(LocalAppointmentsList);
+
+
+        Appointment_Table.setItems(AppointmentsList);
+        //Appointment_Table.setItems(LocalAppointmentsList);
 
         Appt_ID_Input.setDisable(true);
         Appt_ID = AppointmentsList.size();
@@ -163,7 +166,7 @@ public class Appointments_Controller
                 UserIDs.add(user.getUserId());
             }
 
-            if(Appt_Name_Input.getText().isEmpty())
+            if(Appt_Name_Input.getText().isEmpty() || Appt_Name_Input.getText().trim().isEmpty())
             {
                 Alert alert_err = new Alert(Alert.AlertType.WARNING);
                 alert_err.setTitle("Unable to add Appointment.");
@@ -171,7 +174,7 @@ public class Appointments_Controller
                 alert_err.showAndWait();
                 return;
             }
-            if(Appt_Desc_Input.getText().isEmpty())
+            if(Appt_Desc_Input.getText().isEmpty() || Appt_Desc_Input.getText().trim().isEmpty())
             {
                 Alert alert_err = new Alert(Alert.AlertType.WARNING);
                 alert_err.setTitle("Unable to add Appointment.");
@@ -179,7 +182,7 @@ public class Appointments_Controller
                 alert_err.showAndWait();
                 return;
             }
-            if(Appt_Loc_Input.getText().isEmpty())
+            if(Appt_Loc_Input.getText().isEmpty() || Appt_Loc_Input.getText().trim().isEmpty())
             {
                 Alert alert_err = new Alert(Alert.AlertType.WARNING);
                 alert_err.setTitle("Unable to add Appointment.");
@@ -187,7 +190,7 @@ public class Appointments_Controller
                 alert_err.showAndWait();
                 return;
             }
-            if(Appt_Type_Input.getText().isEmpty())
+            if(Appt_Type_Input.getText().isEmpty() || Appt_Type_Input.getText().trim().isEmpty())
             {
                 Alert alert_err = new Alert(Alert.AlertType.WARNING);
                 alert_err.setTitle("Unable to add Appointment.");
@@ -359,7 +362,8 @@ public class Appointments_Controller
                 return;
             }
 
-            LocalAppointmentsList = Time.convertTimeDateLocal();
+            //LocalAppointmentsList = Time.convertTimeDateLocal();
+            LocalAppointmentsList = Appointments_Access.getAppointments();
 
             for (Appointments appointment: LocalAppointmentsList)
             {
@@ -378,7 +382,7 @@ public class Appointments_Controller
                 }
                 if ((customerID == appointment.getCustomer_ID()) && (Appt_ID != appointment.getAppointment_ID()))
                 {
-                    if ((dateTimeStart.isAfter(checkApptStart)) && (dateTimeStart.isBefore(checkApptEnd)))                  // this line causing corner case bug, maybe no corner case after all
+                    if ((dateTimeStart.isAfter(checkApptStart)) && (dateTimeStart.isBefore(checkApptEnd)))
                     {
                         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "The start time coincides with an existing appointment");
                         Optional<ButtonType> confirmation = alert.showAndWait();
@@ -493,7 +497,7 @@ public class Appointments_Controller
                 LocalTime lastAppointment = LocalTime.MAX.minusHours(0).minusMinutes(45);
 
 
-                if (!firstAppointment.equals(0) || !lastAppointment.equals(0))                                                          //if statement fixed issue with infinite loop
+                if (!firstAppointment.equals(0) || !lastAppointment.equals(0))
                 {
                     while (firstAppointment.isBefore(lastAppointment))
                     {
@@ -540,7 +544,7 @@ public class Appointments_Controller
 
                 FXMLLoader fxmlLoader = new FXMLLoader(Controller.class.getResource("/views/Appointments.fxml"));
                 Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-                Scene scene = new Scene(fxmlLoader.load(), 1000, 600);
+                Scene scene = new Scene(fxmlLoader.load(), 1100, 600);
                 stage.setTitle("Add Appointments");
                 stage.setScene(scene);
                 stage.show();
@@ -573,9 +577,10 @@ public class Appointments_Controller
             ObservableList<Customers> CustomersObservableList = Customer_Access.getCustomers(connection);
             ObservableList<Appointments> LocalAppointmentsList;
             int customerID = Integer.parseInt(Appt_Cust_ID_Input.getText());
+            int current_ApptID = Integer.parseInt(Appt_ID_Input.getText());
 
 
-            if(Appt_Name_Input.getText().isEmpty())
+            if(Appt_Name_Input.getText().isEmpty() || Appt_Name_Input.getText().trim().isEmpty())
             {
                 Alert alert_err = new Alert(Alert.AlertType.WARNING);
                 alert_err.setTitle("Unable to add Appointment.");
@@ -583,7 +588,7 @@ public class Appointments_Controller
                 alert_err.showAndWait();
                 return;
             }
-            if(Appt_Desc_Input.getText().isEmpty())
+            if(Appt_Desc_Input.getText().isEmpty() || Appt_Desc_Input.getText().trim().isEmpty())
             {
                 Alert alert_err = new Alert(Alert.AlertType.WARNING);
                 alert_err.setTitle("Unable to add Appointment.");
@@ -591,7 +596,7 @@ public class Appointments_Controller
                 alert_err.showAndWait();
                 return;
             }
-            if(Appt_Loc_Input.getText().isEmpty())
+            if(Appt_Loc_Input.getText().isEmpty() || Appt_Loc_Input.getText().trim().isEmpty())
             {
                 Alert alert_err = new Alert(Alert.AlertType.WARNING);
                 alert_err.setTitle("Unable to add Appointment.");
@@ -599,7 +604,7 @@ public class Appointments_Controller
                 alert_err.showAndWait();
                 return;
             }
-            if(Appt_Type_Input.getText().isEmpty())
+            if(Appt_Type_Input.getText().isEmpty() || Appt_Type_Input.getText().trim().isEmpty())
             {
                 Alert alert_err = new Alert(Alert.AlertType.WARNING);
                 alert_err.setTitle("Unable to add Appointment.");
@@ -693,48 +698,50 @@ public class Appointments_Controller
             LocalDateTime dateStartTime = LocalDateTime.of(localStartDate, localStartTime);
             LocalDateTime dateEndTime = LocalDateTime.of(localEndDate, LocalEndTime);
 
-            LocalAppointmentsList = Time.convertTimeDateLocal();
+            //LocalAppointmentsList = Time.convertTimeDateLocal();
+            LocalAppointmentsList = Appointments_Access.getAppointments();
 
             for (Appointments appointment: LocalAppointmentsList)
             {
                 LocalDateTime checkStart = appointment.getStart();
                 LocalDateTime checkEnd = appointment.getEnd();
 
-                if ((customerID == appointment.getCustomer_ID()) && (Appt_ID != appointment.getAppointment_ID()))
+                if ((customerID == appointment.getCustomer_ID()) && (current_ApptID != appointment.getAppointment_ID()))
                 {
                     if ((dateStartTime.isBefore(checkStart)) && (dateEndTime.isAfter(checkEnd)))
                     {
-                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment overlaps with existing appointment.");
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment overlaps with existing appointment.  1");
                         Optional<ButtonType> confirmation = alert.showAndWait();
                         System.out.println("Appointment overlaps with existing appointment.");
                         return;
                     }
                 }
-                if ((customerID == appointment.getCustomer_ID()) && (Appt_ID != appointment.getAppointment_ID()))
+                if ((customerID == appointment.getCustomer_ID()) && (current_ApptID != appointment.getAppointment_ID()))
                 {
                     if ((dateStartTime.isAfter(checkStart)) && (dateStartTime.isBefore(checkEnd)))
                     {
-                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Start time overlaps with existing appointment.");
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Start time overlaps with existing appointment.   2");
                         Optional<ButtonType> confirmation = alert.showAndWait();
                         System.out.println("Start time overlaps with existing appointment.");
                         return;
                     }
                 }
-                if ((customerID == appointment.getCustomer_ID()) && (Appt_ID != appointment.getAppointment_ID()))
+                if ((customerID == appointment.getCustomer_ID()) && (current_ApptID != appointment.getAppointment_ID()))
                 {
                     if   ((dateEndTime.isAfter(checkStart)) && (dateEndTime.isBefore(checkEnd)))
                     {
-                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "End time overlaps with existing appointment.");
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "End time overlaps with existing appointment.     3");
                         Optional<ButtonType> confirmation = alert.showAndWait();
                         System.out.println("End time overlaps with existing appointment.");
                         return;
                     }
                 }
-                if ((customerID == appointment.getCustomer_ID()) && (Appt_ID != appointment.getAppointment_ID()))
+                //if ((customerID == appointment.getCustomer_ID()) && (Appt_ID != appointment.getAppointment_ID()))
+                if (customerID == appointment.getCustomer_ID() && current_ApptID != appointment.getAppointment_ID())
                 {
                     if   ((dateStartTime.isEqual(checkStart)) && (dateEndTime.isEqual(checkEnd)))
                     {
-                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment overlaps with existing appointment.");
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment overlaps with existing appointment.  4");
                         Optional<ButtonType> confirmation = alert.showAndWait();
                         System.out.println("Appointment overlaps with existing appointment.");
                         return;
@@ -814,7 +821,7 @@ public class Appointments_Controller
 
         FXMLLoader fxmlLoader = new FXMLLoader(Controller.class.getResource("/views/Appointments.fxml"));
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-        Scene scene = new Scene(fxmlLoader.load(), 1000, 600);
+        Scene scene = new Scene(fxmlLoader.load(), 1100, 600);
         stage.setTitle("Add Appointments");
         stage.setScene(scene);
         stage.show();

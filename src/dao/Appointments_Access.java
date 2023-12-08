@@ -53,7 +53,7 @@ public class Appointments_Access
      * @return outcome of deletion*/
     public static int removeAppointment(int Customer, Connection connection) throws SQLException
     {
-        String query = "DELETE FROM appointments WHERE Appointment_ID=?";
+        String query = "DELETE FROM appointments WHERE Appointment_ID = ?";
         PreparedStatement preparedStatement = JDBC.getConnection().prepareStatement(query);
         preparedStatement.setInt(1, Customer);
         int outcome = preparedStatement.executeUpdate();

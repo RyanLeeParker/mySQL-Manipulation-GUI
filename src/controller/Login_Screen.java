@@ -1,6 +1,7 @@
 package controller;
 
 
+import dao.Appointments_Access;
 import helper.Time;
 import java.net.URL;
 import java.time.ZoneId;
@@ -126,7 +127,8 @@ public class Login_Screen implements Initializable
      * @throws SQLException*/
     private void checkForUpcomingAppointments() throws SQLException
     {
-        ObservableList<Appointments> localAppointmentsList = Time.convertTimeDateLocal();
+        //ObservableList<Appointments> localAppointmentsList = Time.convertTimeDateLocal();
+        ObservableList<Appointments> localAppointmentsList = Appointments_Access.getAppointments();
         LocalDateTime FifteenMinUntilNow = LocalDateTime.now().minusMinutes(15);
         LocalDateTime FifteenMinFromNow = LocalDateTime.now().plusMinutes(15);
         int appointmentID = 0;

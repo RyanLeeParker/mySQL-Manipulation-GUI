@@ -29,10 +29,10 @@ public class Time
             ZonedDateTime ZDT_final_start = ZDT_start.withZoneSameInstant(systemZone);
             LocalDateTime Start = ZDT_final_start.toLocalDateTime();
 
-            LocalDateTime temp_End = appointment.getEnd();
-            ZonedDateTime ZDT_end = temp_End.atZone(ZoneId.of("UTC"));
-            ZonedDateTime ZDT_final_end = ZDT_end.withZoneSameInstant(systemZone);
-            LocalDateTime End = ZDT_final_end.toLocalDateTime();
+            LocalDateTime temp_End = appointment.getEnd();                                       // UTC end1
+            ZonedDateTime ZDT_end = temp_End.atZone(ZoneId.of("UTC"));                    // added a UTC zone to end2
+            ZonedDateTime ZDT_final_end = ZDT_end.withZoneSameInstant(systemZone);              // sets end3 to system time zone
+            LocalDateTime End = ZDT_final_end.toLocalDateTime();                                // converts end4 to local time obj
 
             Integer Appointment_ID = appointment.getAppointment_ID();
             String Title = appointment.getTitle();

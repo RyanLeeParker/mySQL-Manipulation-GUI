@@ -170,7 +170,7 @@ public class Customer_Controller implements Initializable
         {
             Connection connect = JDBC.openConnection();
 
-            if(Customer_Name_Input.getText().isEmpty())
+            if(Customer_Name_Input.getText().isEmpty() || Customer_Name_Input.getText().trim().isEmpty())
             {
                 Alert alert_err = new Alert(Alert.AlertType.WARNING);
                 alert_err.setTitle("Unable to add Customer.");
@@ -178,7 +178,7 @@ public class Customer_Controller implements Initializable
                 alert_err.showAndWait();
                 return;
             }
-            if(Customer_Address_Input.getText().isEmpty())
+            if(Customer_Address_Input.getText().isEmpty() || Customer_Address_Input.getText().trim().isEmpty())
             {
                 Alert alert_err = new Alert(Alert.AlertType.WARNING);
                 alert_err.setTitle("Unable to add Customer.");
@@ -186,7 +186,7 @@ public class Customer_Controller implements Initializable
                 alert_err.showAndWait();
                 return;
             }
-            if(Customer_PostalCode_Input.getText().isEmpty())
+            if(Customer_PostalCode_Input.getText().isEmpty() || Customer_PostalCode_Input.getText().trim().isEmpty())
             {
                 Alert alert_err = new Alert(Alert.AlertType.WARNING);
                 alert_err.setTitle("Unable to add Customer.");
@@ -194,7 +194,7 @@ public class Customer_Controller implements Initializable
                 alert_err.showAndWait();
                 return;
             }
-            if(Customer_PhoneNumber_Input.getText().isEmpty())
+            if(Customer_PhoneNumber_Input.getText().isEmpty() || Customer_PhoneNumber_Input.getText().trim().isEmpty())
             {
                 Alert alert_err = new Alert(Alert.AlertType.WARNING);
                 alert_err.setTitle("Unable to add Customer.");
@@ -291,14 +291,17 @@ public class Customer_Controller implements Initializable
             {
                 Connection connection = JDBC.openConnection();
 
-                Appointments_Access.removeAppointment(customerId, connection);
+                String deleteAppointmentsQuery = "DELETE FROM appointments WHERE Customer_ID = ?";
+                JDBC.setPreparedStatement(JDBC.getConnection(), deleteAppointmentsQuery);
+                PreparedStatement preparedStatementDeleteAppointments = JDBC.getPreparedStatement();
+                preparedStatementDeleteAppointments.setInt(1, customerId);
+                preparedStatementDeleteAppointments.execute();
 
                 String deleteCustomerQuery = "DELETE FROM customers WHERE Customer_ID = ?";
                 JDBC.setPreparedStatement(JDBC.getConnection(), deleteCustomerQuery);
                 PreparedStatement preparedStatementDeleteCustomer = JDBC.getPreparedStatement();
                 preparedStatementDeleteCustomer.setInt(1, customerId);
                 preparedStatementDeleteCustomer.execute();
-
                 JDBC.closeConnection();
 
                 Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
@@ -333,7 +336,7 @@ public class Customer_Controller implements Initializable
     {
         Connection connect = JDBC.openConnection();
 
-        if(Customer_Name_Input.getText().isEmpty())
+        if(Customer_Name_Input.getText().isEmpty() || Customer_Name_Input.getText().trim().isEmpty())
         {
             Alert alert_err = new Alert(Alert.AlertType.WARNING);
             alert_err.setTitle("Unable to add Customer.");
@@ -341,7 +344,7 @@ public class Customer_Controller implements Initializable
             alert_err.showAndWait();
             return;
         }
-        if(Customer_Address_Input.getText().isEmpty())
+        if(Customer_Address_Input.getText().isEmpty() || Customer_Address_Input.getText().trim().isEmpty())
         {
             Alert alert_err = new Alert(Alert.AlertType.WARNING);
             alert_err.setTitle("Unable to add Customer.");
@@ -349,7 +352,7 @@ public class Customer_Controller implements Initializable
             alert_err.showAndWait();
             return;
         }
-        if(Customer_PostalCode_Input.getText().isEmpty())
+        if(Customer_PostalCode_Input.getText().isEmpty() || Customer_PostalCode_Input.getText().trim().isEmpty())
         {
             Alert alert_err = new Alert(Alert.AlertType.WARNING);
             alert_err.setTitle("Unable to add Customer.");
@@ -357,7 +360,7 @@ public class Customer_Controller implements Initializable
             alert_err.showAndWait();
             return;
         }
-        if(Customer_PhoneNumber_Input.getText().isEmpty())
+        if(Customer_PhoneNumber_Input.getText().isEmpty() || Customer_PhoneNumber_Input.getText().trim().isEmpty())
         {
             Alert alert_err = new Alert(Alert.AlertType.WARNING);
             alert_err.setTitle("Unable to add Customer.");
