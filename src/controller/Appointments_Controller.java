@@ -810,7 +810,8 @@ public class Appointments_Controller
         }
         catch (Exception f)
         {
-            f.printStackTrace();
+            //f.printStackTrace();
+            System.out.println("Please select an appointment to update before attempting to save.");
         }
 
         FXMLLoader fxmlLoader = new FXMLLoader(Controller.class.getResource("/views/Appointments.fxml"));
