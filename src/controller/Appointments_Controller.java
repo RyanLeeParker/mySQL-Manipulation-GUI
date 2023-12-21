@@ -98,7 +98,7 @@ public class Appointments_Controller
         Appt_ContactID_Column.setCellValueFactory(new PropertyValueFactory<>("Contact_ID"));
         Appt_UserID_Column.setCellValueFactory(new PropertyValueFactory<>("User_ID"));
 
-        LocalAppointmentsList = Time.convertTimeDateLocal();
+        //LocalAppointmentsList = Time.convertTimeDateLocal();
 
         LocalTime firstAppointmentofDay = LocalTime.MIN.plusHours(0);
         LocalTime lastAppointmentofDay = LocalTime.MAX.minusHours(0).minusMinutes(45);
@@ -115,9 +115,8 @@ public class Appointments_Controller
         Appointment_TimeStart_CB.setItems(appointmentTimes);
         Appointment_EndTime.setItems(appointmentTimes);
         Appointment_Contact_CB.setItems(allContactsNames);
-
-
         Appointment_Table.setItems(AppointmentsList);
+
         //Appointment_Table.setItems(LocalAppointmentsList);
 
         Appt_ID_Input.setDisable(true);
@@ -372,41 +371,64 @@ public class Appointments_Controller
 
                 if ((customerID == appointment.getCustomer_ID()) && (Appt_ID != appointment.getAppointment_ID()))
                 {
-                    if ((dateTimeStart.isBefore(checkApptStart)) && (dateTimeEnd.isAfter(checkApptEnd)))
+                    if (((dateTimeStart.isBefore(checkApptStart)) || dateTimeStart.isEqual(checkApptStart)) && (dateTimeEnd.isAfter(checkApptEnd)))
+                    // if new_start is before old_start AND new_end is after old_end
                     {
                         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment coincides with an existing appointment.");
                         Optional<ButtonType> confirmation = alert.showAndWait();
-                        System.out.println("Appointment coincides with an existing appointment.");
+                        System.out.println("Appointment coincides with an existing appointment. 1");
                         return;
                     }
                 }
                 if ((customerID == appointment.getCustomer_ID()) && (Appt_ID != appointment.getAppointment_ID()))
                 {
                     if ((dateTimeStart.isAfter(checkApptStart)) && (dateTimeStart.isBefore(checkApptEnd)))
+                    // if new_start is after old_start AND new_start is before old_end
                     {
                         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "The start time coincides with an existing appointment");
                         Optional<ButtonType> confirmation = alert.showAndWait();
-                        System.out.println("The start time coincides with an existing appointment");
+                        System.out.println("The start time coincides with an existing appointment. 2");
                         return;
                     }
                 }
                 if ((customerID == appointment.getCustomer_ID()) && (Appt_ID != appointment.getAppointment_ID()))
                 {
                      if   ((dateTimeEnd.isAfter(checkApptStart)) && (dateTimeEnd.isBefore(checkApptEnd)))
+                     // new_end is after old_start AND new_end is before old_end
                      {
                          Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "The end time coincides with an existing appointment");
                          Optional<ButtonType> confirmation = alert.showAndWait();
-                         System.out.println("The end time coincides with an existing appointment.");
+                         System.out.println("The end time coincides with an existing appointment. 3");
                          return;
                      }
                 }
                 if ((customerID == appointment.getCustomer_ID()) && (Appt_ID != appointment.getAppointment_ID()))
                 {
                     if   ((dateTimeStart.isEqual(checkApptStart)) && (dateTimeEnd.isEqual(checkApptEnd)))
+                    // if new_start is same time as old_start AND new_end is same time as old_end
                     {
                         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment coincides with an existing appointment.");
                         Optional<ButtonType> confirmation = alert.showAndWait();
-                        System.out.println("Appointment coincides with an existing appointment.");
+                        System.out.println("Appointment coincides with an existing appointment. 4");
+                        return;
+                    }
+                }
+                if ((customerID == appointment.getCustomer_ID()) && (Appt_ID != appointment.getAppointment_ID()))
+                {
+                    if   ((dateTimeStart.isBefore(checkApptStart) && dateTimeEnd.isEqual(checkApptEnd)) && (dateTimeEnd.isEqual(checkApptEnd) || dateTimeEnd.isBefore(checkApptEnd)))    // likely what 1 is supposed to be
+                    //if new_start time is before old_start time AND new_end is before, or equal to old_end
+                    {
+                        System.out.println("New start: " + dateTimeStart);      // correct
+                        System.out.println("Old start: " + checkApptStart);     // wrong, err actually it's logically correct, they ARE both after
+                        System.out.println("New end: " + dateTimeEnd);          // correct
+                        System.out.println("Old end: " + checkApptEnd);         // wrong
+
+                        // If (New start: 2023-12-12T09:30 is before Old start: 2023-12-12T10:00) AND (New end: 2023-12-12T09:45 is equal to OR AFTER Old end: 2023-12-12T11:30)
+
+
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment coincides with an existing appointment.");
+                        Optional<ButtonType> confirmation = alert.showAndWait();
+                        System.out.println("Appointment coincides with an existing appointment. 5");
                         return;
                     }
                 }
@@ -701,49 +723,127 @@ public class Appointments_Controller
             //LocalAppointmentsList = Time.convertTimeDateLocal();
             LocalAppointmentsList = Appointments_Access.getAppointments();
 
+//            for (Appointments appointment: LocalAppointmentsList)
+//            {
+//                LocalDateTime checkStart = appointment.getStart();
+//                LocalDateTime checkEnd = appointment.getEnd();
+//
+//                if ((customerID == appointment.getCustomer_ID()) && (current_ApptID != appointment.getAppointment_ID()))
+//                {
+//                    if ((dateStartTime.isBefore(checkStart)) && (dateEndTime.isAfter(checkEnd)))
+//                    {
+//                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment overlaps with existing appointment.");
+//                        Optional<ButtonType> confirmation = alert.showAndWait();
+//                        System.out.println("Appointment overlaps with existing appointment.");
+//                        return;
+//                    }
+//                }
+//                if ((customerID == appointment.getCustomer_ID()) && (current_ApptID != appointment.getAppointment_ID()))
+//                {
+//                    if ((dateStartTime.isAfter(checkStart)) && (dateStartTime.isBefore(checkEnd)))
+//                    {
+//                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Start time overlaps with existing appointment.");
+//                        Optional<ButtonType> confirmation = alert.showAndWait();
+//                        System.out.println("Start time overlaps with existing appointment.");
+//                        return;
+//                    }
+//                }
+//                if ((customerID == appointment.getCustomer_ID()) && (current_ApptID != appointment.getAppointment_ID()))
+//                {
+//                    if   ((dateEndTime.isAfter(checkStart)) && (dateEndTime.isBefore(checkEnd)))
+//                    {
+//                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "End time overlaps with existing appointment.");
+//                        Optional<ButtonType> confirmation = alert.showAndWait();
+//                        System.out.println("End time overlaps with existing appointment.");
+//                        return;
+//                    }
+//                }
+//                //if ((customerID == appointment.getCustomer_ID()) && (Appt_ID != appointment.getAppointment_ID()))
+//                if (customerID == appointment.getCustomer_ID() && current_ApptID != appointment.getAppointment_ID())
+//                {
+//                    if   ((dateStartTime.isEqual(checkStart)) && (dateEndTime.isEqual(checkEnd)))
+//                    {
+//                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment overlaps with existing appointment.");
+//                        Optional<ButtonType> confirmation = alert.showAndWait();
+//                        System.out.println("Appointment overlaps with existing appointment.");
+//                        return;
+//                    }
+//                }
+//
+//                for (Appointments appointments: LocalAppointmentsList)
+//                {
+//                    LocalDateTime checkApptStart1 = appointment.getStart();
+//                    LocalDateTime checkApptEnd1 = appointment.getEnd();
+//                    LocalDateTime appointmentStartTimeInput = (LocalDateTime) Appointment_TimeStart_CB.getValue();
+//                    LocalDateTime appointmentEndTimeInput = (LocalDateTime) Appointment_EndTime.getValue();
+//
+//                    if ((checkApptStart1.equals(appointmentStartTimeInput)) || (checkApptEnd1.equals(appointmentEndTimeInput)))
+//                    {
+//                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment coincides with an existing appointment.");
+//                        Optional<ButtonType> confirmation = alert.showAndWait();
+//                        System.out.println("Appointment coincides with an existing appointment.");
+//                        return;
+//                    }
+//                }
+//            }
+
             for (Appointments appointment: LocalAppointmentsList)
             {
-                LocalDateTime checkStart = appointment.getStart();
-                LocalDateTime checkEnd = appointment.getEnd();
+                LocalDateTime checkApptStart = appointment.getStart();
+                LocalDateTime checkApptEnd = appointment.getEnd();
 
-                if ((customerID == appointment.getCustomer_ID()) && (current_ApptID != appointment.getAppointment_ID()))
+                if ((customerID == appointment.getCustomer_ID()) && (Appt_ID != appointment.getAppointment_ID()))
                 {
-                    if ((dateStartTime.isBefore(checkStart)) && (dateEndTime.isAfter(checkEnd)))
+                    if (((dateStartTime.isBefore(checkApptStart)) || dateStartTime.isEqual(checkApptStart)) && (dateEndTime.isAfter(checkApptEnd)))
+                    // if new_start is before old_start AND new_end is after old_end
                     {
-                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment overlaps with existing appointment.  1");
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment coincides with an existing appointment.");
                         Optional<ButtonType> confirmation = alert.showAndWait();
-                        System.out.println("Appointment overlaps with existing appointment.");
+                        System.out.println("Appointment coincides with an existing appointment. 1");
                         return;
                     }
                 }
-                if ((customerID == appointment.getCustomer_ID()) && (current_ApptID != appointment.getAppointment_ID()))
+                if ((customerID == appointment.getCustomer_ID()) && (Appt_ID != appointment.getAppointment_ID()))
                 {
-                    if ((dateStartTime.isAfter(checkStart)) && (dateStartTime.isBefore(checkEnd)))
+                    if ((dateStartTime.isAfter(checkApptStart)) && (dateStartTime.isBefore(checkApptEnd)))
+                    // if new_start is after old_start AND new_start is before old_end
                     {
-                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Start time overlaps with existing appointment.   2");
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "The start time coincides with an existing appointment");
                         Optional<ButtonType> confirmation = alert.showAndWait();
-                        System.out.println("Start time overlaps with existing appointment.");
+                        System.out.println("The start time coincides with an existing appointment. 2");
                         return;
                     }
                 }
-                if ((customerID == appointment.getCustomer_ID()) && (current_ApptID != appointment.getAppointment_ID()))
+                if ((customerID == appointment.getCustomer_ID()) && (Appt_ID != appointment.getAppointment_ID()))
                 {
-                    if   ((dateEndTime.isAfter(checkStart)) && (dateEndTime.isBefore(checkEnd)))
+                    if   ((dateEndTime.isAfter(checkApptStart)) && (dateEndTime.isBefore(checkApptEnd)))
+                    // new_end is after old_start AND new_end is before old_end
                     {
-                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "End time overlaps with existing appointment.     3");
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "The end time coincides with an existing appointment");
                         Optional<ButtonType> confirmation = alert.showAndWait();
-                        System.out.println("End time overlaps with existing appointment.");
+                        System.out.println("The end time coincides with an existing appointment. 3");
                         return;
                     }
                 }
-                //if ((customerID == appointment.getCustomer_ID()) && (Appt_ID != appointment.getAppointment_ID()))
-                if (customerID == appointment.getCustomer_ID() && current_ApptID != appointment.getAppointment_ID())
+                if ((customerID == appointment.getCustomer_ID()) && (Appt_ID != appointment.getAppointment_ID()))
                 {
-                    if   ((dateStartTime.isEqual(checkStart)) && (dateEndTime.isEqual(checkEnd)))
+                    if   ((dateStartTime.isEqual(checkApptStart)) && (dateEndTime.isEqual(checkApptEnd)))
+                    // if new_start is same time as old_start AND new_end is same time as old_end
                     {
-                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment overlaps with existing appointment.  4");
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment coincides with an existing appointment.");
                         Optional<ButtonType> confirmation = alert.showAndWait();
-                        System.out.println("Appointment overlaps with existing appointment.");
+                        System.out.println("Appointment coincides with an existing appointment. 4");
+                        return;
+                    }
+                }
+                if ((customerID == appointment.getCustomer_ID()) && (Appt_ID != appointment.getAppointment_ID()))
+                {
+                    if   ((dateStartTime.isBefore(checkApptStart) && dateEndTime.isEqual(checkApptEnd)) && (dateEndTime.isEqual(checkApptEnd) || dateEndTime.isBefore(checkApptEnd)))    // likely what 1 is supposed to be
+                    //if new_start time is before old_start time AND new_end is before, or equal to old_end
+                    {
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Appointment coincides with an existing appointment.");
+                        Optional<ButtonType> confirmation = alert.showAndWait();
+                        System.out.println("Appointment coincides with an existing appointment. 5");
                         return;
                     }
                 }
@@ -856,7 +956,8 @@ public class Appointments_Controller
         try
         {
             ObservableList<Appointments> LocalAppointmentsList;
-            LocalAppointmentsList = Time.convertTimeDateLocal();
+            //LocalAppointmentsList = Time.convertTimeDateLocal();
+            LocalAppointmentsList = Appointments_Access.getAppointments();
 
             if (LocalAppointmentsList != null)
                 for (Appointments appointment : LocalAppointmentsList)
@@ -866,7 +967,8 @@ public class Appointments_Controller
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            //e.printStackTrace();
+            System.out.println("Please select and update a valid appointment before attempting to save.");
         }
     }
 
@@ -879,7 +981,8 @@ public class Appointments_Controller
             ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();
             ObservableList<Appointments> appointmentsWeek = FXCollections.observableArrayList();
             ObservableList<Appointments> LocalAppointmentsList;
-            LocalAppointmentsList = Time.convertTimeDateLocal();
+            //LocalAppointmentsList = Time.convertTimeDateLocal();
+            LocalAppointmentsList = Appointments_Access.getAppointments();
 
             LocalDateTime weekStart = LocalDateTime.now().minusWeeks(1);
             LocalDateTime weekEnd = LocalDateTime.now().plusWeeks(1);
@@ -909,7 +1012,8 @@ public class Appointments_Controller
             ObservableList<Appointments> allAppointmentsList = Appointments_Access.getAppointments();
             ObservableList<Appointments> appointmentsMonth = FXCollections.observableArrayList();
             ObservableList<Appointments> LocalAppointmentsList;
-            LocalAppointmentsList = Time.convertTimeDateLocal();
+            //LocalAppointmentsList = Time.convertTimeDateLocal();
+            LocalAppointmentsList = Appointments_Access.getAppointments();
 
             LocalDateTime currentMonthStart = LocalDateTime.now().minusMonths(1);
             LocalDateTime currentMonthEnd = LocalDateTime.now().plusMonths(1);
