@@ -1,7 +1,7 @@
 Title   - QAM2 — QAM2 TASK 1: JAVA APPLICATION DEVELOPMENT
 Purpose -   Create a customer/application gui to interact with a MySQL database.
 Author  -   Ryan Parker
-Contact info    - ryanleeparkeratx@yahoo.com
+Contact info    - ryanleeparkeratx@gmail.com
 Application version - 1.0
 Date    -   12-10-2023
 IDE version - 2023.1.1
